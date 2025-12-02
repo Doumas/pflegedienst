@@ -1,26 +1,99 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --font-inter: var(--font-inter);
+
+  /* ============================================================
+     THEME SWITCHER
+     Aktuell: GRÜN (Natur & Leben)
+     ============================================================ */
+
+
+  /* --- 🟢 OPTION 1: GRÜN (AKTIV) --- */
+  --color-primary: #15803d;       
+  --color-primary-foreground: #ffffff;
+  --color-primary-hover: #166534; 
+
+  --color-primary-deep: #14532d;  
+  --color-footer-bg: #052e16;     
+
+  --color-secondary: #f0fdf4;    
+  --color-secondary-foreground: #14532d;
+
+  --color-border-soft: #bbf7d0;   
+  --color-accent-soft: #86efac;   
+  --color-text-light: #dcfce7;    
+
+  --color-selection-bg: #dcfce7; 
+  --color-selection-text: #14532d;
+
+  /* --- 🔵 OPTION 2: BLAU (INAKTIV) --- */
+  /*
+  --color-primary: #0369a1;       
+  --color-primary-foreground: #ffffff;
+  --color-primary-hover: #075985; 
+
+  --color-primary-deep: #0c4a6e;  
+  --color-footer-bg: #082f49;     
+
+  --color-secondary: #f0f9ff;     
+  --color-secondary-foreground: #0c4a6e;
+
+  --color-border-soft: #bae6fd;   
+  --color-accent-soft: #7dd3fc;   
+  --color-text-light: #e0f2fe;    
+
+  --color-selection-bg: #e0f2fe;  
+  --color-selection-text: #0c4a6e;
+  */
+
+
+  /* --- 🔴 OPTION 3: ROT (INAKTIV) --- */
+  /*
+  --color-primary: #be123c;       
+  --color-primary-foreground: #ffffff;
+  --color-primary-hover: #9f1239; 
+
+  --color-primary-deep: #881337;  
+  --color-footer-bg: #4c0519;     
+
+  --color-secondary: #fff1f2;     
+  --color-secondary-foreground: #881337;
+
+  --color-border-soft: #fecdd3;   
+  --color-accent-soft: #fda4af;   
+  --color-text-light: #ffe4e6;    
+
+  --color-selection-bg: #ffe4e6;  
+  --color-selection-text: #881337;
+  */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* --- LAYOUT --- */
+.container {
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+  max-width: 1300px;
+  width: 100%;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* --- RESET --- */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  background-color: #ffffff;
+  color: #0f172a;
+}
+
+::selection {
+  background-color: var(--color-selection-bg);
+  color: var(--color-selection-text);
+}
+
+/* --- ANIMATIONEN --- */
+@keyframes ken-burns {
+  from { transform: scale(1); }
+  to { transform: scale(1.1); }
+}
+.animate-ken-burns {
+  animation: ken-burns 20s ease-in-out infinite alternate;
 }
