@@ -3,18 +3,23 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // WICHTIG: Erzeugt den reinen HTML/CSS/JS Output in einem 'out'-Ordner
+  
+  // 1. STATISCHER EXPORT MODUS
+  // Generiert den reinen HTML/CSS/JS Output in einem 'out'-Ordner.
   output: 'export', 
   
-  // Da der Export statisch ist, muss der nachfolgende Slash
-  // in URLs weggelassen werden, da sonst Navigationsfehler auftreten können.
+  // 2. PFAD-KORREKTUR
+  // Wichtig für statische HTML-Dateien zur Vermeidung von Navigationsfehlern (e.g., /about/ statt /about).
   trailingSlash: false, 
   
-  // Wenn du mit dem Image-Komponente von Next.js arbeitest, 
-  // musst du eventuell den unoptimized-Loader aktivieren:
-  // images: { unoptimized: true },
+  // 3. BILDER OPTIMIERUNG
+  // Deaktiviert die Image-Optimierung, da diese einen Node.js-Server benötigt, den statische Exporte nicht haben.
+  images: { unoptimized: true },
   
+  // 4. REACT MODUS
   reactStrictMode: true,
+  
+  // HINWEIS: Die 'experimental'-Sektion wurde entfernt, um die Warnungen bezüglich 'reactCompiler' zu beheben.
 };
 
 export default nextConfig;
