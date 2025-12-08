@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  # ----------------------------------------
+  # SERVICE 1: Entwicklungs-Umgebung (DEV)
+  # Führt 'npm run dev' aus und nutzt Hot Reloading
+  # ----------------------------------------
+  dev:
+    # Definiert den Build-Kontext und nutzt die separate Entwicklungs-Dockerfile
+    build:
+      context: .
+      dockerfile: Dockerfile.dev 
+    
+    container_name: nextjs_dev
+    # Port 3000 für die Entwicklung
+    ports:
+      - '3000:3000'
+      
+    # Volume-Mounts für Live-Änderungen (Hot Reload)
+    volumes:
+      - .:/app
+      - /app/node_modules # Wichtig, um node_modules nicht zu synchronisieren
+      
+    # Startet den Next.js Entwicklungsmodus (mit Hot Reload)
+    command: npm run dev
+    restart: always
+
+  # ----------------------------------------
+  # SERVICE 2: Produktions-Umgebung (PROD)
+  # Führt den optimierten Build aus und startet den Standalone-Server
+  # ----------------------------------------
+  prod:
+    # Definiert den Build-Kontext und nutzt die Multi-Stage Produktions-Dockerfile
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+      
+    container_name: nextjs_prod
+    # Port 3001, um Konflikte mit dem Dev-Service zu vermeiden
+    ports:
+      - '3001:3000'
+      
+    # Führt den Standalone-Server aus (erzeugt durch output: 'standalone')
+    command: node server.js
+    restart: always

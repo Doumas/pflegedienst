@@ -23,14 +23,21 @@ export const siteConfig = {
     },
     { 
       label: "Leistungen", 
-      href: "/leistungen", // Klick auf "Leistungen" führt zur Übersicht
+      href: "/leistungen",
       items: [
+        { label: "Ambulante Pflege", href: "/leistungen/ambulante-pflege" },
         { label: "Intensivpflege", href: "/leistungen/intensivpflege" },
         { label: "24-Stunden-Betreuung", href: "/leistungen/24h-betreuung" },
-        { label: "Ambulante Pflege", href: "/leistungen/ambulante-pflege" },
+        { label: "Palliativpflege (SAPV)", href: "/leistungen/palliativpflege" },
         { label: "Kinderintensivpflege", href: "/leistungen/kinderintensivpflege" },
+        { label: "Verhinderungspflege", href: "/leistungen/verhinderungspflege" },
+        { label: "Hauswirtschaft & Betreuung", href: "/leistungen/betreuung" },
         { label: "Beratungseinsatz § 37.3", href: "/leistungen/beratungseinsatz" },
       ] 
+    },
+    { 
+      label: "Karriere",
+      href: "/karriere" 
     },
     { 
       label: "FAQ", 

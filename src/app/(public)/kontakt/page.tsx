@@ -1,3 +1,4 @@
+import { Suspense } from 'react'; // Neu importiert
 import { ContactTemplate } from "@/modules/contact/templates/contact-template";
 import type { Metadata } from "next";
 
@@ -7,5 +8,10 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
-  return <ContactTemplate />;
+  return (
+    // Füge das Suspense Boundary hinzu
+    <Suspense fallback={<div>Lade Kontaktformular...</div>}>
+      <ContactTemplate />
+    </Suspense>
+  );
 }

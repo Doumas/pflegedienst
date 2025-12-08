@@ -3,97 +3,232 @@
 @theme {
   --font-inter: var(--font-inter);
 
-  /* ============================================================
-     THEME SWITCHER
-     Aktuell: GRÜN (Natur & Leben)
-     ============================================================ */
+  /*
+|--------------------------------------------------------------------------
+| Custom Property Farbdefinitionen
+|--------------------------------------------------------------------------
+|
+| PRIMARY COLORS (Hauptfarben):
+|
+| --color-primary:               Main Brand Color (Buttons, Headlines)
+| --color-primary-foreground:    Text on Primary Background
+| --color-primary-hover:         Hover State for Interactive Elements
+|
+| UTILITY COLORS (Zusatzfarben):
+|
+| --color-primary-deep:          Darker Accents & Strong Borders
+| --color-footer-bg:             Footer Background (Very Dark)
+|
+| SECONDARY COLORS (Sekundärfarben):
+|
+| --color-secondary:             Light Background Surface (Sections)
+| --color-secondary-foreground:  Dark Text on Light Background
+|
+| ACCENTS & TEXT (Akzente und Text):
+|
+| --color-border-soft:           Subtle Borders & Dividers
+| --color-accent-soft:           Decorative Accents & Gradients
+| --color-text-light:            Light Text on Dark Backgrounds
+|
+| SELECTION COLORS (Auswahl):
+|
+| --color-selection-bg:          Text Selection Background
+| --color-selection-text:        Text Selection Color
+|
+*/
+
+  /* ========================================================================
+     🎨 DESIGN SYSTEM & THEME CONFIGURATION
+     ========================================================================
+     Wechsle das Farbschema durch Ein-/Auskommentieren der Blöcke.
+     Standard: GRÜN (Option 1)
+     ======================================================================== */
 
 
-  /* --- 🟢 OPTION 1: GRÜN (AKTIV) --- */
-  --color-primary: #15803d;       
+  /* ------------------------------------------------------------------------
+     OPTION 1: NATUR & VITALITÄT (GRÜN) - [INAKTIV]
+     ------------------------------------------------------------------------
+     Wirkung: Frisch, gesund, beruhigend, lebendig.
+     Ideal für: Ganzheitliche Pflege, Gärtner, Bio-Marken.
+     ------------------------------------------------------------------------ */
+
+
+  /*--color-primary: #15803d;
   --color-primary-foreground: #ffffff;
-  --color-primary-hover: #166534; 
+  --color-primary-hover: #166534;
 
-  --color-primary-deep: #14532d;  
-  --color-footer-bg: #052e16;     
+  --color-primary-deep: #14532d;
+  --color-footer-bg: #052e16;
 
-  --color-secondary: #f0fdf4;    
+  --color-secondary: #f0fdf4;
   --color-secondary-foreground: #14532d;
 
-  --color-border-soft: #bbf7d0;   
-  --color-accent-soft: #86efac;   
-  --color-text-light: #dcfce7;    
+  --color-border-soft: #bbf7d0;
+  --color-accent-soft: #86efac;
+  --color-text-light: #dcfce7;
 
-  --color-selection-bg: #dcfce7; 
+  --color-selection-bg: #dcfce7;
   --color-selection-text: #14532d;
-
-  /* --- 🔵 OPTION 2: BLAU (INAKTIV) --- */
-  /*
-  --color-primary: #0369a1;       
-  --color-primary-foreground: #ffffff;
-  --color-primary-hover: #075985; 
-
-  --color-primary-deep: #0c4a6e;  
-  --color-footer-bg: #082f49;     
-
-  --color-secondary: #f0f9ff;     
-  --color-secondary-foreground: #0c4a6e;
-
-  --color-border-soft: #bae6fd;   
-  --color-accent-soft: #7dd3fc;   
-  --color-text-light: #e0f2fe;    
-
-  --color-selection-bg: #e0f2fe;  
-  --color-selection-text: #0c4a6e;
   */
 
+/* =========================================
+     OPTION 2: OZEAN & GESUNDHEIT (Teal)
+     Wirkung: Kompetent, Ruhig, Medizinisch
+     ========================================= */
 
-  /* --- 🔴 OPTION 3: ROT (INAKTIV) --- */
-  /*
-  --color-primary: #be123c;       
+  /* HAUPTFARBE (Der dunkle Türkis-Balken) */
+  /* War: #be123c (Rot) -> Jetzt: #0f766e (Teal-700) */
+  --color-primary: #0f766e;          
   --color-primary-foreground: #ffffff;
-  --color-primary-hover: #9f1239; 
+  
+  /* HOVER (Etwas dunkler) */
+  --color-primary-hover: #115e59;    /* Teal-800 */
+  
+  /* TIEFE (Footer, ganz dunkle Bereiche) */
+  --color-primary-deep: #134e4a;     /* Teal-900 */
+  --color-footer-bg: #042f2e;        /* Teal-950 */
+  --color-footer-border: #115e59;
 
-  --color-primary-deep: #881337;  
-  --color-footer-bg: #4c0519;     
+  /* HINTERGRÜNDE (Ganz zartes Mint/Weiß) */
+  /* War: #fff1f2 (Rosa) -> Jetzt: #f0fdfa (Teal-50) */
+  --color-secondary: #f0fdfa;        
+  --color-secondary-foreground: #134e4a;
 
-  --color-secondary: #fff1f2;     
+  /* AKZENTE (Frisches Grün für Highlights) */
+  --color-accent: #2dd4bf;           /* Teal-400 */
+  --color-accent-soft: #99f6e4;      /* Teal-200 */
+
+  /* RAHMEN & LINIEN (Zartes Türkis-Grau) */
+  --color-border-soft: #ccfbf1;      /* Teal-100 */
+  
+  /* HELLE TEXTE (Auf dunklem Grund) */
+  --color-text-light: #e0f2fe;       /* Sky-100 (Kühles Weiß) */
+  
+  /* SELECTION (Markierung) */
+  --color-selection-bg: #ccfbf1;
+  --color-selection-text: #0f766e;
+
+
+
+  /* ------------------------------------------------------------------------
+     OPTION 3: HERZLICHKEIT & WÄRME (ROT) - [INAKTIV]
+     ------------------------------------------------------------------------
+     Wirkung: Emotional, aktivierend, menschlich, warm.
+     Ideal für: Familiäre Pflegedienste, Betreuung, Soziales.
+     ------------------------------------------------------------------------ */
+  /*
+  --color-primary: #be123c;          
+  --color-primary-foreground: #ffffff;
+  --color-primary-hover: #9f1239;    
+
+  --color-primary-deep: #881337;     
+  --color-footer-bg: #4c0519;        
+
+  --color-secondary: #fff1f2;        
   --color-secondary-foreground: #881337;
 
-  --color-border-soft: #fecdd3;   
-  --color-accent-soft: #fda4af;   
-  --color-text-light: #ffe4e6;    
+  --color-border-soft: #fecdd3;      
+  --color-accent-soft: #fda4af;      
+  --color-text-light: #ffe4e6;       
 
-  --color-selection-bg: #ffe4e6;  
-  --color-selection-text: #881337;
+  --color-selection-bg: #ffe4e6;     
+  --color-selection-text: #881337;   
   */
 }
 
-/* --- LAYOUT --- */
+/* ========================================================================
+   LAYOUT & TYPOGRAPHY SETTINGS
+   ======================================================================== */
+
+/* --- Container --- */
+/* Zentriert Inhalte mit sicherem Abstand zum Rand */
 .container {
   margin-inline: auto;
   padding-inline: 1.5rem;
-  max-width: 1300px;
+  max-width: 1300px; /* Optimal für moderne Breitbildschirme */
   width: 100%;
 }
 
-/* --- RESET --- */
+/* --- Global Reset --- */
 body {
   font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   background-color: #ffffff;
-  color: #0f172a;
+  color: #0f172a; /* Slate-900 für besten Kontrast */
+  
+  /* Senior Friendly Font Boost */
+  font-size: 17px; 
+  line-height: 1.6;
 }
 
+/* --- Headlines --- */
+/* Engeres Kerning für modernen Look bei großen Schriften */
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: -0.02em;
+}
+
+/* --- Selection --- */
+/* Passt die Farbe beim Markieren von Text an das Theme an */
 ::selection {
   background-color: var(--color-selection-bg);
   color: var(--color-selection-text);
 }
 
-/* --- ANIMATIONEN --- */
+/* ========================================================================
+   ANIMATIONS
+   ======================================================================== */
+
+/* --- Ken Burns Effect (Slow Zoom) --- */
 @keyframes ken-burns {
   from { transform: scale(1); }
   to { transform: scale(1.1); }
 }
+
+/* In globals.css */
+@keyframes bounce-slow {
+  0%, 100% { transform: translateY(-5%); }
+  50% { transform: translateY(5%); }
+}
+.animate-bounce-slow {
+  animation: bounce-slow 3s infinite ease-in-out;
+}
+
 .animate-ken-burns {
   animation: ken-burns 20s ease-in-out infinite alternate;
+  will-change: transform; /* Performance Optimierung */
+}
+/* =========================================
+   GOOGLE TRANSLATE STYLING (Sanft)
+   ========================================= */
+
+/* Wir lassen Google den Body verschieben (kein top: 0 !important mehr!) */
+
+/* Styling für das Dropdown im Popup */
+.goog-te-gadget {
+  font-family: inherit !important;
+  color: transparent !important;
+  font-size: 0px !important;
+}
+
+.goog-te-gadget .goog-te-combo {
+  margin: 0 !important;
+  padding: 8px 12px !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 6px !important;
+  background-color: white !important;
+  color: #0f172a !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+  outline: none !important;
+  width: 100% !important;
+}
+
+/* Versteckt Google Logos */
+.goog-te-gadget img, .goog-te-gadget-icon { display: none !important; }
+#goog-gt-tt { display: none !important; visibility: hidden !important; }
+.goog-text-highlight { background-color: transparent !important; box-shadow: none !important; }
+/* Zwingt die Google-Leiste, nicht zu floaten, sondern Platz einzunehmen */
+.goog-te-banner-frame {
+  position: static !important;
+  box-shadow: none !important;
+  border-bottom: 1px solid #e2e8f0 !important;
 }

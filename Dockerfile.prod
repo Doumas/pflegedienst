@@ -1,0 +1,47 @@
+# ----------------------------------------------------------------
+# Stage 1: Build Phase (Generiert die statischen Assets und den Standalone-Build)
+# ----------------------------------------------------------------
+# Verwende ein offizielles Node.js-Image (20 LTS, schlankes Alpine)
+FROM node:20-alpine AS builder
+
+# Setze das Arbeitsverzeichnis im Container
+WORKDIR /app
+
+# Kopiere die Paket-Definitionen für das Layer Caching (npm wird verwendet)
+COPY package.json .
+COPY package-lock.json .
+
+# Installiere die Abhängigkeiten
+# 'npm ci' ist besser für CI/CD-Pipelines als 'npm install'
+RUN npm ci
+
+# Kopiere den gesamten Quellcode (TypeScript und Next.js-Konfiguration)
+COPY . .
+
+# Führe den Next.js-Build aus
+# Das Ergebnis (wenn output: 'standalone' gesetzt ist) liegt in .next/standalone
+RUN npm run build
+
+# ----------------------------------------------------------------
+# Stage 2: Runner Phase (Das finale, schlanke Produktions-Image)
+# ----------------------------------------------------------------
+# Ein sehr schlankes Image, das nur die nötigen Node.js-Dateien für die Laufzeit enthält
+FROM node:20-alpine AS runner
+
+# Setze Umgebungsvariablen
+ENV NODE_ENV production
+ENV PORT 3000
+
+# Next.js Standard-Verzeichnis für Standalone-Builds
+WORKDIR /app
+
+# Füge die notwendigen Dateien aus dem Builder-Image hinzu
+# 1. Der Standalone-Server-Code und die Node-Abhängigkeiten
+COPY --from=builder /app/.next/standalone ./
+# 2. Die statischen Assets (.js, .css, Bilder, etc.)
+COPY --from=builder /app/.next/static ./.next/static
+# 3. Das public-Verzeichnis (Bilder, Favicons, etc.)
+COPY --from=builder /app/public ./public
+
+# Der Befehl, der die Anwendung startet (muss im Standalone-Modus 'node server.js' sein)
+CMD ["node", "server.js"]

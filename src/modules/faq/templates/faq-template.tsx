@@ -1,94 +1,210 @@
-import { FAQList } from "@/modules/faq/components/accordion";
 import { Button } from "@/shared/ui/button";
-import { HelpCircle, Phone, MessageCircle } from "lucide-react";
+import { HelpCircle, Phone, MessageCircle, ChevronDown, Sparkles, Wallet, Clock, ShieldCheck, HeartHandshake, MapPin, Activity, FileText, ArrowRight, Download } from "lucide-react";
 import Link from "next/link";
 
 const faqData = [
+  // THEMA: EINSTIEG & ABLAUF
   {
     question: "Wie schnell können Sie mit der Pflege beginnen?",
-    answer: "In dringenden Fällen können wir oft innerhalb von 24 bis 48 Stunden die Versorgung aufnehmen. Rufen Sie uns am besten direkt an."
-  },
-  {
-    question: "Abrechnung: Arbeiten Sie mit meiner Krankenkasse zusammen?",
-    answer: "Ja. Als zugelassener Pflegedienst haben wir Versorgungsverträge mit allen gesetzlichen und privaten Kranken- und Pflegekassen."
-  },
-  {
-    question: "Was kostet das Erstgespräch?",
-    answer: "Nichts. Unser erstes Beratungsgespräch ist für Sie vollkommen kostenlos und unverbindlich."
+    answer: "In dringenden Fällen (z.B. plötzliche Entlassung aus dem Krankenhaus) können wir oft innerhalb von 24 Stunden die Versorgung aufnehmen. Bei geplanter Übernahme benötigen wir in der Regel 2-3 Tage für die Pflegeplanung und Klärung der Kostenübernahme.",
+    icon: Clock
   },
   {
     question: "Kommen immer die gleichen Pflegekräfte?",
-    answer: "Wir arbeiten mit einem festen Bezugspflege-System, um den Kreis der Mitarbeiter so klein wie möglich zu halten."
+    answer: "Wir arbeiten mit einem festen Bezugspflege-System. Das bedeutet: Sie haben ein kleines, festes Team von 2-3 Pflegekräften, die sich abwechseln. So müssen Sie sich nicht ständig an neue Gesichter gewöhnen und wir können eine vertraute Beziehung aufbauen.",
+    icon: HeartHandshake
   },
   {
+    question: "In welchen Stadtteilen sind Sie aktiv?",
+    answer: "Wir sind im gesamten Stadtgebiet Münchens sowie im direkten Umland tätig. Rufen Sie uns einfach an, um zu klären, ob Ihre Adresse in unser Tourengebiet fällt.",
+    icon: MapPin
+  },
+  
+  // THEMA: KOSTEN & KASSE
+  {
+    question: "Arbeiten Sie mit meiner Krankenkasse zusammen?",
+    answer: "Ja, uneingeschränkt. Als zugelassener Pflegedienst haben wir Versorgungsverträge mit allen gesetzlichen und privaten Kranken- und Pflegekassen. Wir rechnen die genehmigten Leistungen direkt mit Ihrer Kasse ab.",
+    icon: ShieldCheck
+  },
+  {
+    question: "Was kostet das Erstgespräch?",
+    answer: "Nichts. Unser erstes Beratungsgespräch findet idealerweise bei Ihnen zu Hause statt, ist für Sie vollkommen kostenlos und unverbindlich. Wir lernen uns kennen und erstellen einen Kostenvoranschlag.",
+    icon: Wallet
+  },
+  {
+    question: "Was passiert, wenn das Pflegegeld nicht reicht?",
+    answer: "Sollten die Kosten die Sätze der Pflegeversicherung übersteigen, klären wir vorab mit Ihnen, ob eine Kostenübernahme durch das Sozialamt (Hilfe zur Pflege) möglich ist oder welche Eigenanteile auf Sie zukommen. Wir beraten Sie transparent.",
+    icon: Wallet
+  },
+
+  // THEMA: LEISTUNGEN
+  {
+    question: "Übernehmen Sie auch die hauswirtschaftliche Versorgung?",
+    answer: "Ja. Wir unterstützen Sie beim Einkaufen, Reinigen der Wohnung, Wäschewaschen oder der Zubereitung von Mahlzeiten. Diese Leistungen können oft über den Entlastungsbetrag (§ 45b SGB XI) abgerechnet werden.",
+    icon: Activity
+  },
+  {
+    question: "Helfen Sie bei der Medikamentengabe?",
+    answer: "Selbstverständlich. Im Rahmen der Behandlungspflege (SGB V) richten und verabreichen wir Medikamente, legen Kompressionsstrümpfe an, wechseln Verbände oder messen Blutzucker – immer nach ärztlicher Verordnung.",
+    icon: Activity
+  },
+  
+  // THEMA: SICHERHEIT
+  {
     question: "Was passiert im Notfall?",
-    answer: "Für unsere Patienten haben wir eine 24-Stunden-Rufbereitschaft eingerichtet."
+    answer: "Für unsere Patienten haben wir eine 24-Stunden-Rufbereitschaft eingerichtet. Sie erhalten eine Notfallnummer, unter der Sie uns rund um die Uhr – auch an Wochenenden und Feiertagen – erreichen.",
+    icon: Phone
   },
   {
     question: "Wie beantrage ich einen Pflegegrad?",
-    answer: "Wir unterstützen Sie gerne bei der Antragstellung und bereiten Sie auf den MDK-Besuch vor."
+    answer: "Das übernehmen wir gerne für Sie. Wir unterstützen Sie bei der Antragstellung, bereiten die notwendigen Unterlagen vor und sind auf Wunsch auch bei der Begutachtung durch den MDK (Medizinischer Dienst) vor Ort dabei.",
+    icon: Activity
   }
 ];
 
 export function FAQTemplate() {
   return (
-    <div className="min-h-screen bg-white font-sans pb-20">
+    <div className="min-h-screen bg-white font-sans pb-20 selection:bg-primary/20">
       
-      {/* Header */}
-      <section className="bg-secondary py-20 border-b border-slate-100">
-        <div className="container text-center max-w-3xl">
-          <div className="inline-flex items-center gap-2 mb-6 opacity-70">
-            <HelpCircle className="w-4 h-4 text-primary" />
-            <span className="text-xs font-bold uppercase tracking-widest text-primary">Wissenswertes</span>
+      {/* --- HEADER --- */}
+      <section className="relative pt-32 pb-16 lg:pt-40 lg:pb-24 bg-secondary border-b border-border-soft overflow-hidden">
+        
+        {/* Background FX */}
+        <div className="absolute inset-0 opacity-[0.3]" style={{ backgroundImage: 'radial-gradient(var(--color-border-soft) 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+        
+        <div className="container relative z-10 px-4 md:px-6 text-center max-w-3xl mx-auto">
+          
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-border-soft text-primary text-xs font-bold tracking-wide uppercase shadow-sm mb-6">
+            <Sparkles className="w-3 h-3 text-accent" />
+            <span>Wissenswertes</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
-            Häufige Fragen & <span className="text-primary">Antworten.</span>
+
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 mb-6 tracking-tight leading-[1.1] text-balance">
+            Häufige Fragen & <br/>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
+               Antworten.
+            </span>
           </h1>
-          <p className="text-xl text-slate-600 leading-relaxed">
-            Hier finden Sie schnelle Hilfe zu den wichtigsten Themen rund um Pflege, 
-            Kostenübernahme und Ablauf.
+          
+          <p className="text-xl text-slate-600 leading-relaxed text-pretty">
+            Hier finden Sie detaillierte Informationen zu unseren Leistungen, Kosten und dem Ablauf. 
+            Transparenz ist für uns der erste Schritt zur Vertrauensbasis.
           </p>
+
         </div>
       </section>
 
-      {/* Inhalt */}
-      <div className="container py-16 px-4">
-        <div className="grid lg:grid-cols-3 gap-12">
+      {/* --- MAIN CONTENT --- */}
+      <div className="container py-16 lg:py-24 px-4 md:px-6">
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           
-          {/* Links: Liste */}
-          <div className="lg:col-span-2">
-            <FAQList items={faqData} />
+          {/* LINKS: Die FAQ Liste (8 Spalten) */}
+          <div className="lg:col-span-8 space-y-4">
+            
+            {faqData.map((item, i) => (
+              <div key={i} className="group bg-white rounded-2xl border border-slate-100 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 overflow-hidden">
+                <details className="group/details">
+                  <summary className="flex items-start md:items-center gap-4 p-6 cursor-pointer list-none select-none">
+                    
+                    {/* Icon Box */}
+                    <div className="mt-1 md:mt-0 w-10 h-10 rounded-xl bg-secondary flex items-center justify-center text-primary shrink-0 border border-transparent group-hover:border-primary/20 transition-colors">
+                      <item.icon className="w-5 h-5" />
+                    </div>
+
+                    <div className="flex-1 pr-4">
+                      <h3 className="text-lg font-bold text-slate-900 group-hover:text-primary transition-colors leading-tight">
+                        {item.question}
+                      </h3>
+                    </div>
+
+                    {/* Chevron Animation */}
+                    <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-open/details:bg-primary group-open/details:text-white group-open/details:rotate-180 transition-all duration-300 shrink-0">
+                      <ChevronDown className="w-5 h-5" />
+                    </div>
+                  </summary>
+
+                  <div className="px-6 pb-6 pt-0 pl-[4.5rem]">
+                    <div className="text-slate-600 leading-relaxed border-l-2 border-secondary pl-4 py-1 text-pretty">
+                      {item.answer}
+                    </div>
+                  </div>
+                </details>
+              </div>
+            ))}
+
           </div>
 
-          {/* Rechts: Sidebar (JETZT FREUNDLICH & HELL) */}
-          <div className="space-y-6">
+          {/* RECHTS: Sidebar (4 Spalten) - STICKY */}
+          <div className="lg:col-span-4 space-y-8 sticky top-32">
             
-            <div className="bg-white border border-slate-200 p-8 rounded-2xl shadow-lg sticky top-24">
-              <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mb-6">
-                <MessageCircle className="w-6 h-6 text-primary" />
-              </div>
+            {/* WIDGET 1: Kontakt Box */}
+            <div className="bg-white border border-slate-100 p-8 rounded-[2rem] shadow-xl shadow-slate-200/50 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-secondary rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none" />
               
-              <h3 className="text-xl font-bold text-slate-900 mb-2">Frage nicht gefunden?</h3>
-              <p className="text-slate-600 text-sm mb-8 leading-relaxed">
-                Jede Pflegesituation ist einzigartig. Zögern Sie nicht, uns direkt zu kontaktieren.
-              </p>
-              
-              <div className="space-y-4">
-                <a href="tel:08912345678" className="flex items-center gap-4 p-4 rounded-xl bg-slate-50 hover:bg-secondary transition-colors border border-slate-100 group">
-                  <Phone className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
-                  <div>
-                    <div className="text-xs text-slate-500 uppercase tracking-wide font-bold">Rufen Sie uns an</div>
-                    <div className="font-bold text-slate-900">089 / 123 456 78</div>
-                  </div>
-                </a>
+              <div className="relative z-10">
+                <div className="w-14 h-14 bg-secondary rounded-2xl flex items-center justify-center mb-6 border border-border-soft shadow-sm">
+                  <MessageCircle className="w-7 h-7 text-primary" />
+                </div>
+                
+                <h3 className="text-xl font-bold text-slate-900 mb-2">Frage nicht gefunden?</h3>
+                <p className="text-slate-600 text-sm mb-8 leading-relaxed">
+                  Jede Pflegesituation ist einzigartig. Lassen Sie uns persönlich darüber sprechen.
+                </p>
+                
+                <div className="space-y-4">
+                  <a href={`tel:08912345678`} className="flex items-center gap-4 p-4 rounded-xl bg-slate-50 hover:bg-secondary border border-transparent hover:border-border-soft transition-all group cursor-pointer">
+                    <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-slate-400 group-hover:text-primary transition-colors">
+                       <Phone className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="text-[10px] text-slate-500 uppercase tracking-wide font-bold">Rufen Sie uns an</div>
+                      <div className="font-bold text-slate-900 group-hover:text-primary transition-colors">089 / 123 456 78</div>
+                    </div>
+                  </a>
 
-                <Link href="/kontakt" className="block">
-                  <Button className="w-full bg-primary hover:bg-primary-hover text-white h-12 text-base shadow-md">
-                    Nachricht schreiben
-                  </Button>
-                </Link>
+                  <Link href="/kontakt" className="block w-full">
+                    <Button className="w-full bg-primary hover:bg-primary-hover text-white h-12 text-base font-bold shadow-lg shadow-primary/20 rounded-xl hover:-translate-y-0.5 transition-all">
+                      Nachricht schreiben
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </div>
+
+            {/* WIDGET 2: DOWNLOAD BOX (Wieder dabei!) */}
+            {/* Hier wird auf eine Datei im public/ Ordner verlinkt. */}
+            <a 
+              href="/downloads/checkliste-pflegegrad.pdf" 
+              target="_blank"
+              download
+              className="block bg-footer-bg text-white rounded-[2rem] p-8 relative overflow-hidden group cursor-pointer hover:shadow-2xl hover:shadow-primary-deep/30 transition-all hover:-translate-y-1"
+            >
+               {/* Deko: Abstrakter Glow */}
+               <div className="absolute -top-10 -right-10 w-40 h-40 bg-accent/10 rounded-full blur-2xl group-hover:bg-accent/20 transition-colors" />
+               <div className="absolute bottom-0 left-0 w-32 h-32 bg-primary/20 rounded-full blur-2xl" />
+               
+               <div className="relative z-10">
+                 <div className="flex items-start justify-between mb-6">
+                   <div>
+                     <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-white/10 border border-white/10 text-[10px] font-bold uppercase tracking-wide text-accent mb-3">
+                       <FileText className="w-3 h-3" /> Kostenlos
+                     </div>
+                     <h4 className="font-bold text-xl leading-tight mb-2">Checkliste: <br/>Pflegegrad beantragen</h4>
+                   </div>
+                   <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-primary-deep transition-all">
+                      <Download className="w-5 h-5" />
+                   </div>
+                 </div>
+                 
+                 <p className="text-sm text-text-light/70 mb-6 leading-relaxed">
+                   Schritt-für-Schritt Anleitung zur Vorbereitung auf den MDK-Besuch als PDF.
+                 </p>
+                 
+                 <div className="flex items-center gap-2 text-sm font-bold text-white group-hover:text-accent transition-colors border-t border-white/10 pt-4">
+                    Jetzt herunterladen <ArrowRight className="w-4 h-4" />
+                 </div>
+               </div>
+            </a>
 
           </div>
 

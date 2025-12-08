@@ -1,0 +1,15 @@
+# Dockerfile.dev
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Kopiere nur die Lock-Dateien und installiere die Dev-Abhängigkeiten
+COPY package.json .
+COPY package-lock.json .
+
+RUN npm install
+
+EXPOSE 3000
+
+# Der tatsächliche Startbefehl wird von docker-compose überschrieben
+CMD ["npm", "run", "dev"]
