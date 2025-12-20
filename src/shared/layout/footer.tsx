@@ -5,6 +5,7 @@ import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { Heart, Phone, Mail, MapPin, ArrowRight, Facebook, Instagram, ShieldCheck, Star, Briefcase } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
+import { DalasLogo } from "@/shared/ui/dalas-logo";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -19,13 +20,12 @@ export function Footer() {
   };
 
   return (
-    // Hintergrund nutzt CSS Variable für Footer
     <footer className={cn(
         "bg-[var(--color-footer-bg)] text-white/80 border-t border-white/5 font-sans relative overflow-hidden",
-        "pb-20 lg:pb-0" // Platz für mobile Nav
+        "pb-24 lg:pb-0" 
     )}>
       
-      {/* Background FX (Subtil) */}
+      {/* Background FX */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[var(--color-primary)]/20 rounded-full blur-[150px] pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-[var(--color-accent)]/10 rounded-full blur-[150px] pointer-events-none" />
 
@@ -35,16 +35,18 @@ export function Footer() {
           
           {/* 1. BRAND */}
           <div className="space-y-6">
-            <Link href="/" className="flex items-center gap-3 group w-fit">
-              <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-[var(--color-accent)] border border-white/10 group-hover:bg-[var(--color-primary)] group-hover:text-white transition-all duration-300 shadow-lg shadow-black/20">
-                <Heart className="w-5 h-5 fill-current" />
+            <Link href="/" className="block w-fit opacity-90 hover:opacity-100 transition-opacity">
+              <div className="brightness-0 invert"> 
+                  {/* ANPASSUNG: Compact Variante (ohne Subtext) und größer (220px) */}
+                  <DalasLogo variant="compact" width={220} />
               </div>
-              <span className="font-bold text-2xl text-white tracking-tight">{siteConfig.name}</span>
             </Link>
+            
             <p className="text-sm leading-relaxed max-w-xs text-white/60">
-              Ihr verlässlicher Partner für häusliche Pflege. 
+              Ihr verlässlicher Partner für häusliche Pflege in Frankfurt. 
               Wir sorgen dafür, dass Sie selbstbestimmt und sicher zuhause leben können.
             </p>
+            
             {/* Socials */}
             <div className="flex gap-3 pt-2">
                {[Facebook, Instagram].map((Icon, i) => (
@@ -114,10 +116,9 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* 4. TRUST (Visuell aufgewertet) */}
+          {/* 4. TRUST */}
           <div>
             <h3 className="text-white font-bold text-lg mb-6 flex items-center gap-2">Qualität</h3>
-            {/* Box ist jetzt etwas heller als Footer für Kontrast */}
             <div className="bg-white/5 p-6 rounded-2xl border border-white/10 group hover:border-[var(--color-accent)]/30 transition-colors relative overflow-hidden backdrop-blur-sm">
               <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
                  <ShieldCheck className="w-16 h-16 text-[var(--color-accent)]" />
@@ -147,7 +148,7 @@ export function Footer() {
       {/* COPYRIGHT */}
       <div className="border-t border-white/5 bg-black/20 backdrop-blur-sm relative z-10">
         <div className="container px-4 md:px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-medium text-white/40">
-          <p>© {currentYear} {siteConfig.name}. Made with <Heart className="w-3 h-3 inline text-red-500 mx-0.5 fill-current" /> in Munich.</p>
+          <p>© {currentYear} {siteConfig.name}. Mit <Heart className="w-3 h-3 inline text-[var(--color-accent)] mx-0.5 fill-current" /> für Ihre Pflege.</p>
           <div className="flex gap-6 md:gap-8">
             <Link href="/impressum" className="hover:text-white transition-colors">Impressum</Link>
             <Link href="/datenschutz" className="hover:text-white transition-colors">Datenschutz</Link>

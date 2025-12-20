@@ -2,13 +2,20 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { Button } from "@/shared/ui/button";
-import { ArrowRight, PlayCircle } from "lucide-react"; 
+import Link from "next/link"; 
+import { Button } from "@/shared/ui/button"; 
+import { MapPin, CheckCircle2, Loader2, Star, X } from "lucide-react"; 
 import { cn } from "@/shared/utils/cn";
 import { WhatsappFloatingButton } from "@/shared/ui/whatsapp-floating-button"; 
 
-// --- SLIDES DATEN ---
+// --- BILDER & DATEN ---
+const AVATAR_IMAGES = [
+  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=faces&q=80",
+  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=faces&q=80",
+  "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&h=100&fit=crop&crop=faces&q=80",
+  "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop&crop=faces&q=80"
+];
+
 const STORY_SLIDES = [
   { id: 1, src: "/images/home/hero-bg.jpg", title: "Fürsorge.", sub: "Jeden Tag aufs Neue." },
   { id: 2, src: "/images/home/hero-bg2.jpg", title: "Sicherheit.", sub: "Rund um die Uhr für Sie da." },
@@ -17,137 +24,263 @@ const STORY_SLIDES = [
 
 const SLIDE_INTERVAL = 5000;
 
-function UserIcon({className}: {className?: string}) {
-   return <svg className={className} fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>;
-}
-function StarIcon({className}: {className?: string}) {
-  return <svg viewBox="0 0 24 24" className={className}><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>;
-}
-
 export function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  
+  const [zipCode, setZipCode] = useState("");
+  const [isChecking, setIsChecking] = useState(false);
+  const [resultModalOpen, setResultModalOpen] = useState(false);
+  const [checkResult, setCheckResult] = useState<"success" | "error" | null>(null);
+  const [checkMessage, setCheckMessage] = useState("");
 
   useEffect(() => {
     const timer = setInterval(() => {
         setCurrentSlide((prev) => (prev + 1) % STORY_SLIDES.length); 
     }, SLIDE_INTERVAL);
+    
+    if (resultModalOpen) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = 'unset';
+    }
+
     return () => clearInterval(timer);
-  }, []);
+  }, [resultModalOpen]);
+
+  const handleCheck = (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!zipCode || zipCode.length < 5) return;
+
+      setIsChecking(true);
+      
+      setTimeout(() => {
+          setIsChecking(false);
+          if (zipCode.startsWith("60") || zipCode.startsWith("659")) {
+              setCheckResult("success");
+              setCheckMessage(zipCode);
+          } else {
+              setCheckResult("error");
+              setCheckMessage("Leider außerhalb unseres Gebiets");
+          }
+          setResultModalOpen(true);
+      }, 1500);
+  };
+
+  const closeResultModal = () => {
+      setResultModalOpen(false);
+  };
 
   return (
-    // pb-32 lg:pb-48 sorgt für genug Platz unten, damit der Configurator überlappen kann
-    <section className="relative w-full overflow-hidden pt-32 pb-32 lg:pt-40 lg:pb-48 flex items-center min-h-[85vh]">
+    <>
+    <section className="relative w-full overflow-hidden pt-6 pb-12 lg:pt-28 lg:pb-48 flex items-center lg:min-h-[85vh]">
       
       {/* Background Layer */}
       <div className="absolute inset-0 -z-30 h-full w-full bg-white bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:40px_40px]"></div>
-      <div className="absolute top-0 left-0 -z-20 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px] opacity-60 translate-x-[-20%] translate-y-[-20%]" />
-      <div className="absolute bottom-0 right-0 -z-20 w-[500px] h-[500px] bg-accent/15 rounded-full blur-[100px] opacity-50 translate-x-[20%] translate-y-[20%]" />
+      <div className="absolute top-0 left-0 -z-20 w-[600px] h-[600px] bg-[var(--color-primary)]/10 rounded-full blur-[120px] opacity-60 translate-x-[-20%] translate-y-[-20%]" />
+      <div className="absolute bottom-0 right-0 -z-20 w-[500px] h-[500px] bg-[var(--color-accent)]/15 rounded-full blur-[100px] opacity-50 translate-x-[20%] translate-y-[20%]" />
       <div className="absolute inset-0 -z-10 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay pointer-events-none"></div>
 
       <div className="container relative z-10 px-4 md:px-6">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-20 items-center lg:items-start">
           
-          {/* --- TEXT CONTENT --- */}
-          <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-8 order-1">
+          {/* 1. TEXT CONTENT */}
+          <div className="order-1 flex flex-col items-center lg:items-start text-center lg:text-left space-y-4 lg:space-y-8">
             
             {/* Badge */}
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-50 border border-slate-200 shadow-sm">
+              <div className="inline-flex items-center gap-2 px-3 py-1 lg:px-4 lg:py-1.5 rounded-full bg-white border border-[var(--color-border-soft)] shadow-sm">
                 <span className="flex h-2 w-2 relative">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-accent)] opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--color-accent)]"></span>
                 </span>
-                <span className="text-xs font-semibold text-slate-600 uppercase tracking-wider">
-                  Ihr Pflegedienst in München
+                <span className="text-[10px] lg:text-xs font-bold text-slate-500 uppercase tracking-wider">
+                  Ihr Pflegedienst in Frankfurt
                 </span>
               </div>
             </div>
 
-            {/* Headline */}
-            <h1 className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200 relative text-5xl sm:text-6xl lg:text-7xl font-extrabold text-slate-900 tracking-tight leading-[1.1]">
-              Pflege mit <br />
-              <span className="relative whitespace-nowrap text-primary">
-                <span className="relative z-10">Herz & Verstand.</span>
-                <svg className="absolute w-full h-3 -bottom-1 left-0 text-accent/40 -z-0" viewBox="0 0 100 10" preserveAspectRatio="none">
+           {/* Headline */}
+            <h1 className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200 text-4xl xs:text-5xl lg:text-7xl font-black tracking-tight text-slate-900 mb-1 lg:mb-2 text-balance leading-[1.05]">
+              Gut versorgt. <br/>
+              <span className="relative inline-block px-1">
+                 <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)]">
+                   Zuhause leben.
+                 </span>
+                 <svg className="absolute w-full h-2 lg:h-3 -bottom-1 left-0 text-[var(--color-accent)] -z-0 opacity-60" viewBox="0 0 100 10" preserveAspectRatio="none">
                     <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
-                </svg>
+                 </svg>
               </span>
             </h1>
 
-            <p className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300 text-lg sm:text-xl text-slate-600 leading-relaxed max-w-lg mx-auto lg:mx-0">
-              Selbstbestimmt leben in den eigenen vier Wänden. 
-              Wir verbinden <span className="font-semibold text-slate-800">menschliche Wärme</span> mit modernster medizinischer Versorgung.
+            {/* Subtext */}
+            <p className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300 text-base lg:text-xl text-slate-600 leading-relaxed max-w-lg mx-auto lg:mx-0 font-medium">
+              Ihr verlässlicher Partner in Frankfurt. Wir verbinden <span className="font-bold text-slate-900">fachliche Kompetenz</span> mit echter Zuwendung – damit Sie sich in Ihren vier Wänden sicher fühlen.
             </p>
-
-            {/* Buttons */}
-            <div className="w-full space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-500">
-                <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-4 justify-center lg:justify-start">
-                  <Link href="/kontakt" className="w-full sm:w-auto">
-                    <Button size="lg" className="group relative w-full sm:w-auto h-14 px-8 text-lg font-bold rounded-2xl bg-primary text-white border-0 shadow-lg shadow-primary/20 hover:shadow-primary/30 hover:-translate-y-1 transition-all duration-300">
-                      <span className="relative z-10 flex items-center">
-                        Beratung anfordern <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
-                      </span>
-                    </Button>
-                  </Link>
-                  <Link href="/leistungen" className="w-full sm:w-auto">
-                    <Button variant="ghost" size="lg" className="w-full sm:w-auto h-14 px-8 text-lg font-bold rounded-2xl text-slate-600 hover:text-primary hover:bg-primary/5 transition-all">
-                      <PlayCircle className="mr-2 w-5 h-5" /> Unsere Leistungen
-                    </Button>
-                  </Link>
-                </div>
-
-                {/* Social Proof Mini */}
-                <div className="flex items-center justify-center lg:justify-start gap-4">
-                   <div className="flex -space-x-3">
-                      {[1,2,3,4].map(i => (
-                         <div key={i} className="w-10 h-10 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center overflow-hidden shadow-sm ring-1 ring-slate-100">
-                            <UserIcon className="w-6 h-6 text-slate-300 translate-y-1" />
-                         </div>
-                      ))}
-                   </div>
-                   <div className="text-sm">
-                      <div className="flex items-center gap-1 text-yellow-500 mb-0.5">
-                        {[1,2,3,4,5].map(s => <StarIcon key={s} className="w-4 h-4 fill-current" />)}
-                      </div>
-                      <span className="font-medium text-slate-600">
-                        Vertrauen von <span className="font-bold text-slate-900">500+ Familien</span>.
-                      </span>
-                   </div>
-                </div>
-            </div>
           </div>
 
-          {/* --- VISUAL STACK --- */}
-          <div className="relative order-2 flex justify-center lg:justify-end animate-in fade-in zoom-in-95 duration-1000 delay-300 mt-10 lg:mt-0">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] border border-primary/10 rounded-full animate-[spin_60s_linear_infinite]" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] border border-accent/20 rounded-full animate-[spin_40s_linear_infinite_reverse] border-dashed" />
+          {/* 2. VISUAL STACK */}
+          <div className="order-2 lg:col-start-2 lg:row-span-2 relative flex justify-center lg:justify-end animate-in fade-in zoom-in-95 duration-1000 delay-300 py-2 lg:py-0">
+            {/* Animierte Kreise */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] lg:w-[650px] h-[350px] lg:h-[650px] border border-[var(--color-primary)]/10 rounded-full animate-[spin_60s_linear_infinite]" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] lg:w-[500px] h-[300px] lg:h-[500px] border border-[var(--color-accent)]/20 rounded-full animate-[spin_40s_linear_infinite_reverse] border-dashed" />
 
-            <div className="relative z-10 w-[320px] sm:w-[380px] aspect-[4/5] group perspective-1000">
-               <div className="absolute inset-0 bg-primary/5 rounded-[2.5rem] transform rotate-6 translate-x-4 transition-transform duration-500 group-hover:rotate-12 group-hover:translate-x-6 border border-primary/10" />
-               <div className="absolute inset-0 bg-white rounded-[2.5rem] transform -rotate-3 -translate-x-2 transition-transform duration-500 group-hover:-rotate-6 group-hover:-translate-x-4 border border-slate-100 shadow-xl z-10" />
+            {/* Bildstapel */}
+            <div className="relative z-10 w-[260px] sm:w-[340px] lg:w-[380px] aspect-[4/5] group perspective-1000">
+               <div className="absolute inset-0 bg-[var(--color-primary)]/5 rounded-[2rem] lg:rounded-[2.5rem] transform rotate-6 translate-x-4 transition-transform duration-500 group-hover:rotate-12 group-hover:translate-x-6 border border-[var(--color-primary)]/10" />
+               <div className="absolute inset-0 bg-white rounded-[2rem] lg:rounded-[2.5rem] transform -rotate-3 -translate-x-2 transition-transform duration-500 group-hover:-rotate-6 group-hover:-translate-x-4 border border-slate-100 shadow-xl z-10" />
                
-               <div className="absolute inset-0 rounded-[2.5rem] shadow-2xl shadow-slate-300/50 bg-white p-2 rotate-[-2deg] group-hover:rotate-0 transition-all duration-700 ease-out z-20 overflow-hidden ring-1 ring-slate-100">
-                  <div className="relative w-full h-full rounded-[2rem] overflow-hidden bg-slate-200">
+               <div className="absolute inset-0 rounded-[2rem] lg:rounded-[2.5rem] shadow-2xl shadow-slate-300/50 bg-white p-1.5 lg:p-2 rotate-[-2deg] group-hover:rotate-0 transition-all duration-700 ease-out z-20 overflow-hidden ring-1 ring-slate-100">
+                  <div className="relative w-full h-full rounded-[1.5rem] lg:rounded-[2rem] overflow-hidden bg-slate-200">
                      {STORY_SLIDES.map((slide, index) => {
                        const isActive = index === currentSlide;
                        return (
                          <div key={slide.id} className={cn("absolute inset-0 transition-opacity duration-[1500ms]", isActive ? "opacity-100 z-10" : "opacity-0 z-0")}>
-                            <Image src={slide.src} alt={slide.title} fill className={cn("object-cover transition-transform duration-[8000ms]", isActive ? "scale-110" : "scale-100")} priority={index === 0} />
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent" />
-                            <div className="absolute bottom-0 left-0 right-0 p-8 text-white translate-y-2">
-                               <p className="text-2xl font-bold mb-1">{slide.title}</p>
-                               <p className="text-sm opacity-90 text-slate-100">{slide.sub}</p>
+                            <Image 
+                                src={slide.src} 
+                                alt={slide.title} 
+                                fill 
+                                className={cn("object-cover transition-transform duration-[8000ms]", isActive ? "scale-110" : "scale-100")} 
+                                priority={index === 0} 
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-primary-deep)]/80 via-transparent to-transparent" />
+                            
+                            {/* TEXT CONTAINER IM SLIDER */}
+                            {/* pb-20 sorgt dafür, dass Text mobil nicht vom Button verdeckt wird */}
+                            <div className="absolute bottom-0 left-0 right-0 p-6 pb-20 lg:p-8 lg:pb-8 text-white translate-y-2 pointer-events-none">
+                                  <p className="text-lg sm:text-xl lg:text-2xl font-bold mb-1">{slide.title}</p>
+                                  <p className="text-xs sm:text-sm opacity-90 text-slate-100">{slide.sub}</p>
                             </div>
                          </div>
                        );
                      })}
                   </div>
                </div>
+
+               {/* WhatsApp Button - MIT FIX */}
+               {/* w-max sorgt dafür, dass Text einzeilig bleibt. Positionierung mobil angepasst. */}
+               <div className="absolute z-30 -bottom-3 -left-1 lg:-bottom-6 lg:-left-4 w-max max-w-[calc(100vw-30px)]">
+                  <WhatsappFloatingButton />
+               </div>
             </div>
-            <WhatsappFloatingButton />
+            
           </div>
+
+          {/* 3. PLZ CHECK WIDGET */}
+          <div className="order-3 lg:col-start-1 w-full animate-in fade-in slide-in-from-bottom-8 duration-700 delay-500 max-w-lg mx-auto lg:mx-0 pt-2 lg:pt-0">
+                
+                <div className="bg-white rounded-[2rem] p-4 xs:p-5 lg:p-6 shadow-xl shadow-slate-200/60 border border-slate-100 ring-1 ring-slate-50 relative overflow-hidden">
+                    <form onSubmit={handleCheck} className="flex flex-col gap-4 lg:gap-5">
+                        <div>
+                            <label className="text-[10px] lg:text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1 lg:mb-2 block">
+                                Nehmen Sie noch Patienten auf?
+                            </label>
+                            <h3 className="text-sm xs:text-base sm:text-lg lg:text-xl font-bold text-slate-900 leading-tight text-balance">
+                                Jetzt Verfügbarkeit für Ihre Region prüfen.
+                            </h3>
+                        </div>
+                        <div className="relative flex items-center bg-slate-50 border border-slate-200 rounded-2xl p-1.5 focus-within:ring-2 focus-within:ring-[var(--color-primary)]/20 focus-within:border-[var(--color-primary)]/50 transition-all shadow-inner">
+                            <MapPin className="absolute left-4 w-5 h-5 text-slate-400" />
+                            <input 
+                                type="text" 
+                                placeholder="Ihre Postleitzahl" 
+                                className="w-full h-12 pl-10 pr-28 bg-transparent border-none text-slate-900 font-bold placeholder:font-normal focus:ring-0 text-lg"
+                                value={zipCode}
+                                onChange={(e) => setZipCode(e.target.value.replace(/[^0-9]/g, '').slice(0,5))}
+                            />
+                            <button 
+                                type="submit"
+                                disabled={zipCode.length < 5 || isChecking}
+                                className="absolute right-1.5 top-1.5 bottom-1.5 px-4 lg:px-5 bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white font-bold rounded-xl transition-all shadow-md shadow-[var(--color-primary)]/20 flex items-center justify-center gap-2 disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed text-sm min-w-[90px] lg:min-w-[100px]"
+                            >
+                                {isChecking ? <Loader2 className="w-5 h-5 animate-spin" /> : "Prüfen"}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div className="flex items-center justify-center lg:justify-start gap-4 pt-6 lg:pt-8 ml-2">
+                   <div className="flex -space-x-3">
+                      {AVATAR_IMAGES.map((src, i) => (
+                         <div key={i} className="relative w-8 h-8 lg:w-10 lg:h-10 rounded-full border-[3px] border-white shadow-sm overflow-hidden ring-1 ring-slate-100 bg-slate-100">
+                            <Image src={src} alt="Kunden" fill className="object-cover" />
+                         </div>
+                      ))}
+                   </div>
+                   <div className="text-sm text-left">
+                      <div className="flex items-center gap-0.5 text-amber-400 mb-0.5">
+                        {[1,2,3,4,5].map(s => <Star key={s} className="w-3 h-3 lg:w-3.5 lg:h-3.5 fill-current" />)}
+                      </div>
+                      <span className="font-medium text-slate-600 text-xs sm:text-sm">
+                        Vertrauen von <span className="font-bold text-slate-900">500+ Familien</span>.
+                      </span>
+                   </div>
+                </div>
+
+          </div>
+
         </div>
       </div>
     </section>
+
+    {/* Result Modal - UNVERÄNDERT */}
+    {resultModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-in fade-in duration-300">
+           <div className="absolute inset-0 bg-[var(--color-primary-deep)]/40 backdrop-blur-sm" onClick={closeResultModal} />
+           <div className="relative w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl shadow-slate-900/20 overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-8 duration-300 ring-1 ring-slate-100">
+              <div className="absolute top-4 right-4 z-10">
+                 <button onClick={closeResultModal} className="p-2 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors text-slate-500">
+                    <X className="w-5 h-5" />
+                 </button>
+              </div>
+              <div className="flex flex-col items-center justify-center text-center p-8 pt-12 pb-10">
+                 {checkResult === "success" && (
+                    <>
+                        <div className="w-20 h-20 rounded-full bg-green-50 border-4 border-white shadow-xl shadow-green-100 flex items-center justify-center text-green-600 mb-6">
+                            <CheckCircle2 className="w-10 h-10" />
+                        </div>
+                        <h3 className="text-3xl font-extrabold text-slate-900 mb-2">Kapazität verfügbar!</h3>
+                        <p className="text-slate-600 text-lg mb-8 leading-relaxed max-w-[280px] mx-auto">
+                            Gute Nachrichten! Wir fahren in <strong className="text-slate-900 bg-green-50 px-2 py-0.5 rounded-lg">{zipCode}</strong> an.
+                        </p>
+                        <div className="w-full space-y-3">
+                            <Link href="/kontakt" className="w-full block">
+                                <Button className="w-full h-14 bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white text-lg font-bold rounded-2xl shadow-xl shadow-[var(--color-primary)]/20 transition-all hover:-translate-y-1">
+                                    Jetzt Erstgespräch sichern
+                                </Button>
+                            </Link>
+                            <button onClick={closeResultModal} className="text-sm font-bold text-slate-400 hover:text-[var(--color-primary)] py-2">
+                                Schließen
+                            </button>
+                        </div>
+                    </>
+                 )}
+                 {checkResult === "error" && (
+                    <>
+                        <div className="w-20 h-20 rounded-full bg-slate-50 border-4 border-white shadow-xl shadow-slate-100 flex items-center justify-center text-slate-400 mb-6">
+                            <MapPin className="w-10 h-10" />
+                        </div>
+                        <h3 className="text-2xl font-extrabold text-slate-900 mb-2">Nicht in Ihrem Gebiet</h3>
+                        <p className="text-slate-600 mb-8 leading-relaxed max-w-[280px] mx-auto">
+                            In <strong className="text-slate-900">{zipCode}</strong> sind wir momentan leider noch nicht aktiv.
+                        </p>
+                        <div className="w-full space-y-3">
+                            <Link href="/kontakt" className="w-full block">
+                                <Button variant="outline" className="w-full h-14 border-2 border-slate-100 hover:border-[var(--color-primary)]/30 hover:bg-[var(--color-primary)]/5 text-slate-700 hover:text-[var(--color-primary)] text-lg font-bold rounded-2xl transition-all">
+                                    Dennoch anfragen
+                                </Button>
+                            </Link>
+                            <button onClick={closeResultModal} className="text-sm font-bold text-slate-400 hover:text-slate-600 py-2">
+                                Andere PLZ prüfen
+                            </button>
+                        </div>
+                    </>
+                 )}
+              </div>
+              <div className="h-2 w-full bg-gradient-to-r from-transparent via-[var(--color-primary)]/20 to-transparent opacity-50"></div>
+           </div>
+        </div>
+    )}
+    </>
   );
 }

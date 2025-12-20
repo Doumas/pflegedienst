@@ -5,7 +5,7 @@ export type NavItem = {
 };
 
 export const siteConfig = {
-  name: "Pflegedienst Herz & Hand",
+  name: "DALAS",
   description: "Ihr zuverlässiger Partner für häusliche Intensivpflege und Betreuung.",
   contact: {
     phone: "089 / 123 456 78",
