@@ -1,19 +1,19 @@
 import { 
   Activity, 
   UserCheck, 
-  HeartPulse, 
   Baby, 
   FileText, 
   Home, 
-  Sunset, // Für Palliativ
-  Coffee, // Für Betreuung/Entlastung
-  Umbrella, // Für Verhinderungspflege
-  Stethoscope // Für Wundmanagement/Behandlungspflege
+  Sunset, 
+  Coffee, 
+  Umbrella, 
+  Stethoscope 
 } from "lucide-react";
 
 export const servicesData = [
   {
     title: "Ambulante Pflege",
+    slug: "ambulante-pflege",
     description: "Der Klassiker: Medizinische und pflegerische Unterstützung direkt bei Ihnen zu Hause.",
     icon: Home,
     href: "/leistungen/ambulante-pflege",
@@ -27,6 +27,7 @@ export const servicesData = [
   },
   {
     title: "Außerklinische Intensivpflege",
+    slug: "intensivpflege",
     description: "Höchste medizinische Sicherheit für beatmungspflichtige Patienten im eigenen Zuhause.",
     icon: Activity, // Oder Stethoscope
     href: "/leistungen/intensivpflege",
@@ -40,6 +41,7 @@ export const servicesData = [
   },
   {
     title: "24-Stunden-Betreuung",
+    slug: "24h-betreuung",
     description: "Rund-um-die-Uhr Präsenz für ein Leben ohne Angst und Einsamkeit.",
     icon: UserCheck,
     href: "/leistungen/24h-betreuung",
@@ -53,6 +55,7 @@ export const servicesData = [
   },
   {
     title: "Palliativpflege (SAPV)",
+    slug: "palliativpflege",
     description: "Begleitung auf dem letzten Weg – schmerzfrei, würdevoll und geborgen.",
     icon: Sunset,
     href: "/leistungen/palliativpflege",
@@ -66,6 +69,7 @@ export const servicesData = [
   },
   {
     title: "Kinderintensivpflege",
+    slug: "kinderintensivpflege",
     description: "Große Hilfe für kleine Helden. Fachkompetenz mit ganz viel Herz.",
     icon: Baby,
     href: "/leistungen/kinderintensivpflege",
@@ -79,6 +83,7 @@ export const servicesData = [
   },
   {
     title: "Verhinderungspflege",
+    slug: "verhinderungspflege",
     description: "Ihre Auszeit ist wichtig. Wir übernehmen, wenn Sie verhindert sind.",
     icon: Umbrella,
     href: "/leistungen/verhinderungspflege",
@@ -92,6 +97,7 @@ export const servicesData = [
   },
   {
     title: "Hauswirtschaft & Betreuung",
+    slug: "betreuung",
     description: "Entlastung im Haushalt und Freude im Alltag (§ 45b SGB XI).",
     icon: Coffee,
     href: "/leistungen/betreuung",
@@ -105,6 +111,7 @@ export const servicesData = [
   },
   {
     title: "Beratungseinsatz § 37.3",
+    slug: "beratungseinsatz",
     description: "Pflichttermin? Nein, Ihre Chance auf wertvolle Tipps und höhere Zuschüsse.",
     icon: FileText,
     href: "/leistungen/beratungseinsatz",

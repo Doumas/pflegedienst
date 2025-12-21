@@ -74,12 +74,29 @@ export function Hero() {
     <>
     <section className="relative w-full overflow-hidden pt-6 pb-12 lg:pt-28 lg:pb-48 flex items-center lg:min-h-[85vh]">
       
-      {/* Background Layer */}
-      <div className="absolute inset-0 -z-30 h-full w-full bg-white bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:40px_40px]"></div>
-      <div className="absolute top-0 left-0 -z-20 w-[600px] h-[600px] bg-[var(--color-primary)]/10 rounded-full blur-[120px] opacity-60 translate-x-[-20%] translate-y-[-20%]" />
-      <div className="absolute bottom-0 right-0 -z-20 w-[500px] h-[500px] bg-[var(--color-accent)]/15 rounded-full blur-[100px] opacity-50 translate-x-[20%] translate-y-[20%]" />
-      <div className="absolute inset-0 -z-10 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay pointer-events-none"></div>
+      {/* ========================================================= */}
+      {/* HINTERGRUND FX (Final: Punkt-Raster + Blaue Blobs)        */}
+      {/* ========================================================= */}
+      
+      {/* 1. Statisches Raster (Punkte statt Quadrate für Konsistenz) */}
+      <div className="absolute inset-0 opacity-[0.4] pointer-events-none -z-30" 
+           style={{ backgroundImage: 'radial-gradient(var(--color-border-soft) 1px, transparent 1px)', backgroundSize: '32px 32px' }}>
+      </div>
+      
+      {/* 2. Bewegliche Blobs (Der "blaue Look" wie bei FAQ) */}
+      {/* Oben Mitte - Groß & Sekundärfarbe (Das sanfte Blau) */}
+      <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[1000px] h-[700px] bg-[var(--color-secondary)]/60 rounded-full blur-[120px] opacity-70 pointer-events-none -z-20" />
+      
+      {/* Rechts - Primary Akzent */}
+      <div className="absolute top-[10%] right-[-10%] w-[600px] h-[600px] bg-[var(--color-primary)]/5 rounded-full blur-[100px] animate-pulse pointer-events-none -z-20" style={{ animationDuration: '6s' }} />
+      
+      {/* Unten Links - Warmer Akzent */}
+      <div className="absolute bottom-0 left-[-10%] w-[500px] h-[500px] bg-[var(--color-accent)]/10 rounded-full blur-[80px] pointer-events-none -z-20" />
 
+
+      {/* ========================================================= */}
+      {/* CONTENT                                                   */}
+      {/* ========================================================= */}
       <div className="container relative z-10 px-4 md:px-6">
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-20 items-center lg:items-start">
@@ -146,7 +163,6 @@ export function Hero() {
                             <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-primary-deep)]/80 via-transparent to-transparent" />
                             
                             {/* TEXT CONTAINER IM SLIDER */}
-                            {/* pb-20 sorgt dafür, dass Text mobil nicht vom Button verdeckt wird */}
                             <div className="absolute bottom-0 left-0 right-0 p-6 pb-20 lg:p-8 lg:pb-8 text-white translate-y-2 pointer-events-none">
                                   <p className="text-lg sm:text-xl lg:text-2xl font-bold mb-1">{slide.title}</p>
                                   <p className="text-xs sm:text-sm opacity-90 text-slate-100">{slide.sub}</p>
@@ -157,8 +173,7 @@ export function Hero() {
                   </div>
                </div>
 
-               {/* WhatsApp Button - MIT FIX */}
-               {/* w-max sorgt dafür, dass Text einzeilig bleibt. Positionierung mobil angepasst. */}
+               {/* WhatsApp Button */}
                <div className="absolute z-30 -bottom-3 -left-1 lg:-bottom-6 lg:-left-4 w-max max-w-[calc(100vw-30px)]">
                   <WhatsappFloatingButton />
                </div>

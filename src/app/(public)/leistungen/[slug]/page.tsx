@@ -1,36 +1,37 @@
 import { ServiceDetailTemplate } from "@/modules/services/templates/service-detail-template";
-import { servicesData } from "@/modules/services/data/services";
+// KORREKTUR: Der Pfad zeigt jetzt auf dein Modul
+import { servicesData } from "@/modules/services/data/services"; 
 import { notFound } from "next/navigation";
 
 // 1. SEO Titel generieren
 export async function generateMetadata(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
-  const service = servicesData.find((s) => s.href.endsWith(params.slug));
+  const service = servicesData.find((s) => s.slug === params.slug);
   return {
-    title: service ? `${service.title} | Pflegedienst Herz & Hand` : "Leistung",
+    title: service ? `${service.title} | Pflegedienst Dalas` : "Leistung nicht gefunden",
   };
 }
 
-// 2. Static Params für den Export (Wichtig für Static Site!)
+// 2. Static Params für den Export (Wichtig für Static Site Generation)
 export async function generateStaticParams() {
   return servicesData.map((service) => ({
-    slug: service.href.split("/").pop(),
+    slug: service.slug,
   }));
 }
 
-// 3. Die eigentliche Seite (Der Fix!)
+// 3. Die eigentliche Seite
 export default async function ServicePage(props: { params: Promise<{ slug: string }> }) {
-  // In Next.js 15 MUSS man params erst 'awaiten'
+  // Next.js 15: Params müssen awaited werden
   const params = await props.params;
   
-  // Wir suchen den Service, dessen Link mit dem Slug endet (z.B. "grundpflege")
-  const service = servicesData.find((s) => s.href.endsWith(params.slug));
+  // Wir prüfen, ob ein Service mit diesem Slug existiert
+  const serviceExists = servicesData.some((s) => s.slug === params.slug);
 
-  // Wenn nix gefunden -> 404 Seite
-  if (!service) {
+  if (!serviceExists) {
     return notFound();
   }
 
-  // Wenn gefunden -> Template anzeigen
-  return <ServiceDetailTemplate service={service} />;
+  // WICHTIG: Wir übergeben NUR den String 'slug'. 
+  // Das Template lädt sich die Daten (inkl. Icons) dann selbst.
+  return <ServiceDetailTemplate slug={params.slug} />;
 }
