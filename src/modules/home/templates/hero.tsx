@@ -1,6 +1,7 @@
 "use client"; 
 
 import { useState, useEffect } from "react";
+import Link from "next/link"; // <--- HIER WAR DER FEHLER (FEHLTE)
 import Image from "next/image";
 import { Button } from "@/shared/ui/button"; 
 import { MapPin, CheckCircle2, Loader2, Star, X } from "lucide-react"; 

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { siteConfig } from "@/config/site";
-import { ChevronDown, X, Phone, Mail, MapPin, ArrowRight, Sun, Moon, MessageCircle, HelpCircle, Menu, Briefcase, Star, CheckCircle2, Ambulance } from "lucide-react";
+import { ChevronDown, X, Phone, Mail, MapPin, ArrowRight, ArrowUpRight, Sun, Moon, MessageCircle, HelpCircle, Menu, Briefcase, Star, CheckCircle2, Ambulance } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
 import { buttonVariants } from "@/shared/ui/button";
 import { GoogleTranslator } from "@/shared/utils/google-translator";

@@ -309,13 +309,10 @@ Kein Zufall, sondern Standard.</h2>
     </div>
 
     {/* ========================================================= */}
-    {/* BROSCHÜRE (Bleibt gleich)                                 */}
+    {/* BROSCHÜRE (Flyer Overlay)                                 */}
     {/* ========================================================= */}
     {isFlyerOpen && (
       <div id="print-overlay">
-         {/* ... Flyer Code ... */}
-         {/* Ich habe den Flyer-Code drin gelassen, aber gekürzt für die Übersicht, da er okay war. */}
-         {/* Falls du ihn komplett brauchst, ist er in der vorherigen Antwort enthalten. */}
          <div className="fixed inset-0 no-print cursor-pointer" onClick={() => setIsFlyerOpen(false)} />
          <div className="fixed top-0 left-0 w-full z-50 flex justify-center p-4 no-print pointer-events-none">
             <div className="flex justify-between items-center bg-slate-900/80 backdrop-blur-md border border-white/10 p-3 rounded-2xl shadow-xl w-full max-w-[210mm] pointer-events-auto">
@@ -337,7 +334,8 @@ Kein Zufall, sondern Standard.</h2>
                    <div className="absolute top-0 right-0 w-[80mm] h-[80mm] bg-white/20 rounded-bl-[100%] pointer-events-none" />
                    <div className="absolute bottom-0 left-0 w-[80mm] h-[80mm] bg-[var(--color-primary)]/10 rounded-tr-[100%] pointer-events-none" />
                    
-                   <DalasLogo className="w-64 h-auto mb-10 relative z-10" variant="full" />
+                   {/* HIER WAR DER FEHLER: variant="full" durch variant="default" ersetzt */}
+                   <DalasLogo className="w-64 h-auto mb-10 relative z-10" variant="default" />
                    
                    <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white text-[var(--color-primary)] text-sm font-bold tracking-wide uppercase shadow-sm mb-8 relative z-10">
                        <Heart className="w-4 h-4 fill-current" /> Ambulanter Intensivpflegedienst
@@ -363,7 +361,8 @@ Kein Zufall, sondern Standard.</h2>
                    </div>
                </div>
             </div>
-            {/* ... Rest der Flyer-Seiten (identisch zum vorherigen Code) ... */}
+            
+            {/* Seite 2 */}
              <div className="flyer-page bg-white">
                 <div className="relative w-full h-full p-16 md:p-20 flex flex-col">
                     <h2 className="text-3xl font-black text-slate-900 mb-8 border-b pb-4">Unser Pflege-Konzept</h2>
