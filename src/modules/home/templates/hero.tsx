@@ -1,6 +1,6 @@
 "use client"; 
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/shared/ui/button"; 
@@ -24,38 +24,88 @@ const STORY_SLIDES = [
 
 const SLIDE_INTERVAL = 5000;
 
+// --- HELPER HOOK: Erkenne, ob Element in der Mitte ist (für Mobile Auto-Hover) ---
+function useInCenter(options = { threshold: 0.5 }) {
+    const ref = useRef<HTMLDivElement>(null);
+    const [isInCenter, setIsInCenter] = useState(false);
+
+    useEffect(() => {
+        const element = ref.current;
+        if (!element) return;
+
+        // IntersectionObserver prüft Sichtbarkeit
+        const observer = new IntersectionObserver(([entry]) => {
+            // Wenn Element in der Mitte des Bildschirms ist (durch rootMargin definiert)
+            setIsInCenter(entry.isIntersecting);
+        }, {
+            // Dieser "Margin" definiert einen schmalen Streifen in der Mitte des Bildschirms
+            // Alles was da durchläuft, triggert den Effekt.
+            rootMargin: "-40% 0px -40% 0px", 
+            threshold: 0
+        });
+
+        observer.observe(element);
+        return () => observer.disconnect();
+    }, []);
+
+    return { ref, isInCenter };
+}
+
 export function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
   
+  // States für PLZ Check
   const [zipCode, setZipCode] = useState("");
   const [isChecking, setIsChecking] = useState(false);
   const [resultModalOpen, setResultModalOpen] = useState(false);
   const [checkResult, setCheckResult] = useState<"success" | "error" | null>(null);
   const [checkMessage, setCheckMessage] = useState("");
 
+  // Hook für die Karten-Animation
+  const { ref: cardStackRef, isInCenter: cardStackActive } = useInCenter();
+  // Hook für das PLZ Widget (Optional, falls das auch leuchten soll)
+  const { ref: widgetRef, isInCenter: widgetActive } = useInCenter();
+
+  // Performance: Pausiere den Slider, wenn User nicht hinschaut
+  const [isHeroVisible, setIsHeroVisible] = useState(true);
+
   useEffect(() => {
-    const timer = setInterval(() => {
-        setCurrentSlide((prev) => (prev + 1) % STORY_SLIDES.length); 
-    }, SLIDE_INTERVAL);
+    // Einfacher Observer für den ganzen Hero-Bereich
+    const observer = new IntersectionObserver(([entry]) => {
+        setIsHeroVisible(entry.isIntersecting);
+    });
     
+    const heroSection = document.getElementById('hero-section');
+    if (heroSection) observer.observe(heroSection);
+
+    let timer: NodeJS.Timeout;
+    
+    // Slider läuft nur, wenn Hero sichtbar ist
+    if (isHeroVisible) {
+        timer = setInterval(() => {
+            setCurrentSlide((prev) => (prev + 1) % STORY_SLIDES.length); 
+        }, SLIDE_INTERVAL);
+    }
+
     if (resultModalOpen) {
         document.body.style.overflow = 'hidden';
     } else {
         document.body.style.overflow = 'unset';
     }
 
-    return () => clearInterval(timer);
-  }, [resultModalOpen]);
+    return () => {
+        clearInterval(timer);
+        observer.disconnect();
+    };
+  }, [resultModalOpen, isHeroVisible]);
 
   const handleCheck = (e: React.FormEvent) => {
       e.preventDefault();
       if (!zipCode || zipCode.length < 5) return;
 
       setIsChecking(true);
-      
       setTimeout(() => {
           setIsChecking(false);
-          // Demo-Logik: 60... oder 659... ist erfolgreich
           if (zipCode.startsWith("60") || zipCode.startsWith("659")) {
               setCheckResult("success");
               setCheckMessage(zipCode);
@@ -67,45 +117,35 @@ export function Hero() {
       }, 1500);
   };
 
-  const closeResultModal = () => {
-      setResultModalOpen(false);
-  };
+  const closeResultModal = () => setResultModalOpen(false);
 
   return (
     <>
-    <section className="relative w-full overflow-hidden pt-6 pb-12 lg:pt-28 lg:pb-48 flex items-center lg:min-h-[85vh]">
+    <section id="hero-section" className="relative w-full overflow-hidden pt-6 pb-12 lg:pt-28 lg:pb-48 flex items-center lg:min-h-[85vh]">
       
-      {/* ========================================================= */}
-      {/* HINTERGRUND FX - PERFORMANCE OPTIMIERT                    */}
-      {/* ========================================================= */}
-      
-      {/* 1. Statisches Raster - GPU Beschleunigt */}
+      {/* 1. HINTERGRUND FX - Nur rendern/animieren wenn sichtbar */}
       <div className="absolute inset-0 opacity-[0.4] pointer-events-none -z-30 transform-gpu" 
            style={{ backgroundImage: 'radial-gradient(var(--color-border-soft) 1px, transparent 1px)', backgroundSize: '32px 32px' }}>
       </div>
       
-      {/* 2. Bewegliche Blobs - WICHTIG: Animation nur auf Desktop (md:animate-pulse) */}
-      <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[600px] lg:w-[1000px] h-[500px] lg:h-[700px] bg-[var(--color-secondary)]/60 rounded-full blur-[80px] lg:blur-[120px] opacity-70 pointer-events-none -z-20 md:animate-pulse transform-gpu will-change-transform" style={{ animationDuration: '8s' }} />
-      <div className="absolute top-[10%] right-[-10%] w-[400px] lg:w-[600px] h-[400px] lg:h-[600px] bg-[var(--color-primary)]/5 rounded-full blur-[60px] lg:blur-[100px] md:animate-pulse pointer-events-none -z-20 transform-gpu will-change-transform" style={{ animationDuration: '6s' }} />
+      {/* Auf Mobile statisch, auf Desktop animiert - spart Akku */}
+      {isHeroVisible && (
+          <>
+            <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[600px] lg:w-[1000px] h-[500px] lg:h-[700px] bg-[var(--color-secondary)]/60 rounded-full blur-[80px] lg:blur-[120px] opacity-70 pointer-events-none -z-20 md:animate-pulse transform-gpu will-change-transform" style={{ animationDuration: '8s' }} />
+            <div className="absolute top-[10%] right-[-10%] w-[400px] lg:w-[600px] h-[400px] lg:h-[600px] bg-[var(--color-primary)]/5 rounded-full blur-[60px] lg:blur-[100px] md:animate-pulse pointer-events-none -z-20 transform-gpu will-change-transform" style={{ animationDuration: '6s' }} />
+          </>
+      )}
       <div className="absolute bottom-0 left-[-10%] w-[300px] lg:w-[500px] h-[300px] lg:h-[500px] bg-[var(--color-accent)]/10 rounded-full blur-[50px] lg:blur-[80px] pointer-events-none -z-20 transform-gpu" />
-
-      {/* ========================================================= */}
-      {/* NEU: SMOOTH FADE OUT                                      */}
-      {/* ========================================================= */}
       <div className="absolute bottom-0 left-0 right-0 h-24 lg:h-48 bg-gradient-to-t from-white via-white/80 to-transparent z-0 pointer-events-none transform-gpu" />
 
 
-      {/* ========================================================= */}
-      {/* CONTENT                                                   */}
-      {/* ========================================================= */}
+      {/* 2. CONTENT */}
       <div className="container relative z-10 px-4 md:px-6">
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-20 items-center lg:items-start">
           
-          {/* 1. TEXT CONTENT */}
+          {/* TEXT CONTENT */}
           <div className="order-1 flex flex-col items-center lg:items-start text-center lg:text-left space-y-4 lg:space-y-8">
-            
-            {/* Badge */}
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-0 fill-mode-both">
               <div className="inline-flex items-center gap-2 px-3 py-1 lg:px-4 lg:py-1.5 rounded-full bg-white border border-[var(--color-border-soft)] shadow-sm hover:border-[var(--color-primary)]/30 transition-colors cursor-default">
                 <span className="flex h-2 w-2 relative">
@@ -118,7 +158,6 @@ export function Hero() {
               </div>
             </div>
 
-           {/* Headline */}
            <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1] animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100 fill-mode-both">
               Gut versorgt. <br/>
               <span className="relative inline-block px-1">
@@ -131,32 +170,54 @@ export function Hero() {
               </span>
             </h1>
 
-            {/* Subtext */}
             <p className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200 fill-mode-both text-base lg:text-xl text-slate-600 leading-relaxed max-w-lg mx-auto lg:mx-0 font-medium">
               Ihr verlässlicher Partner in Frankfurt. Wir verbinden <span className="font-bold text-slate-900">fachliche Kompetenz</span> mit echter Zuwendung – damit Sie sich in Ihren vier Wänden sicher fühlen.
             </p>
           </div>
 
-          {/* 2. VISUAL STACK - PERFORMANCE OPTIMIERT */}
+          {/* VISUAL STACK - AUTO-HOVER AUF MOBILE */}
           <div className="order-2 lg:col-start-2 lg:row-span-2 relative flex justify-center lg:justify-end animate-in fade-in zoom-in-95 duration-1000 delay-300 py-2 lg:py-0 fill-mode-both">
             
-            {/* Animierte Kreise - Jetzt mit GPU Beschleunigung */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] lg:w-[650px] h-[350px] lg:h-[650px] border border-[var(--color-primary)]/10 rounded-full animate-[spin_60s_linear_infinite] transform-gpu will-change-transform" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] lg:w-[500px] h-[300px] lg:h-[500px] border border-[var(--color-accent)]/20 rounded-full animate-[spin_40s_linear_infinite_reverse] border-dashed transform-gpu will-change-transform" />
+            {/* Kreise drehen sich nur, wenn sichtbar */}
+            {isHeroVisible && (
+                <>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] lg:w-[650px] h-[350px] lg:h-[650px] border border-[var(--color-primary)]/10 rounded-full animate-[spin_60s_linear_infinite] transform-gpu will-change-transform" />
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] lg:w-[500px] h-[300px] lg:h-[500px] border border-[var(--color-accent)]/20 rounded-full animate-[spin_40s_linear_infinite_reverse] border-dashed transform-gpu will-change-transform" />
+                </>
+            )}
 
-            <div className="relative z-10 w-[260px] sm:w-[340px] lg:w-[380px] aspect-[4/5] group perspective-1000 animate-float">
+            {/* KARTEN STACK - HIER IST DIE MAGIE */}
+            <div 
+                ref={cardStackRef} // Observer Reference
+                className="relative z-10 w-[260px] sm:w-[340px] lg:w-[380px] aspect-[4/5] group perspective-1000 animate-float"
+            >
                
-               {/* Hintere Karte */}
-               <div className="absolute inset-0 bg-[var(--color-primary)]/5 rounded-[2rem] lg:rounded-[2.5rem] transform rotate-6 translate-x-4 transition-transform duration-500 group-hover:rotate-12 group-hover:translate-x-6 border border-[var(--color-primary)]/10 will-change-transform" />
+               {/* Hintere Karte: Reagiert auf Hover (Desktop) ODER Scroll-Position (Mobile) */}
+               <div className={cn(
+                   "absolute inset-0 bg-[var(--color-primary)]/5 rounded-[2rem] lg:rounded-[2.5rem] border border-[var(--color-primary)]/10 will-change-transform transition-transform duration-700 ease-out",
+                   // Wenn Maus drüber ODER in Mobile-Mitte -> Aufklappen!
+                   (cardStackActive) ? "rotate-12 translate-x-6" : "rotate-6 translate-x-4",
+                   "group-hover:rotate-12 group-hover:translate-x-6" // Fallback für Desktop Maus
+               )} />
                
                {/* Mittlere Karte */}
-               <div className="absolute inset-0 bg-white rounded-[2rem] lg:rounded-[2.5rem] transform -rotate-3 -translate-x-2 transition-transform duration-500 group-hover:-rotate-6 group-hover:-translate-x-4 border border-slate-100 shadow-xl z-10 will-change-transform" />
+               <div className={cn(
+                   "absolute inset-0 bg-white rounded-[2rem] lg:rounded-[2.5rem] border border-slate-100 shadow-xl z-10 will-change-transform transition-transform duration-700 ease-out",
+                   (cardStackActive) ? "-rotate-6 -translate-x-4" : "-rotate-3 -translate-x-2",
+                   "group-hover:-rotate-6 group-hover:-translate-x-4"
+               )} />
                
                {/* Vordere Karte */}
-               <div className="absolute inset-0 rounded-[2rem] lg:rounded-[2.5rem] shadow-2xl shadow-slate-300/50 bg-white p-1.5 lg:p-2 rotate-[-2deg] group-hover:rotate-0 transition-all duration-700 ease-out z-20 overflow-hidden ring-1 ring-slate-100 will-change-transform">
+               <div className={cn(
+                   "absolute inset-0 rounded-[2rem] lg:rounded-[2.5rem] shadow-2xl shadow-slate-300/50 bg-white p-1.5 lg:p-2 z-20 overflow-hidden ring-1 ring-slate-100 will-change-transform transition-all duration-700 ease-out",
+                   (cardStackActive) ? "rotate-0 scale-100" : "rotate-[-2deg]",
+                   "group-hover:rotate-0"
+               )}>
                   <div className="relative w-full h-full rounded-[1.5rem] lg:rounded-[2rem] overflow-hidden bg-slate-200 transform-gpu">
                      {STORY_SLIDES.map((slide, index) => {
                        const isActive = index === currentSlide;
+                       // Performance: Render nur aktive und nächste Slide um DOM klein zu halten
+                       // (Hier lassen wir alle, da es nur 3 sind und wir Fading brauchen, aber wir priorisieren das Laden)
                        return (
                          <div key={slide.id} className={cn("absolute inset-0 transition-opacity duration-[1500ms]", isActive ? "opacity-100 z-10" : "opacity-0 z-0")}>
                             <Image 
@@ -179,17 +240,26 @@ export function Hero() {
                   </div>
                </div>
 
-               {/* WhatsApp Button */}
-               <div className="absolute z-30 -bottom-3 -left-1 lg:-bottom-6 lg:-left-4 w-max max-w-[calc(100vw-30px)] hover:scale-105 transition-transform duration-300 transform-gpu">
+               {/* WhatsApp Button - Hüpft kurz, wenn im Fokus */}
+               <div className={cn(
+                   "absolute z-30 -bottom-3 -left-1 lg:-bottom-6 lg:-left-4 w-max max-w-[calc(100vw-30px)] transition-transform duration-500 transform-gpu",
+                   (cardStackActive) ? "scale-105" : "scale-100",
+                   "group-hover:scale-105"
+               )}>
                   <WhatsappFloatingButton />
                </div>
             </div>
             
           </div>
 
-          {/* 3. PLZ CHECK WIDGET */}
-          <div className="order-3 lg:col-start-1 w-full animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300 fill-mode-both max-w-lg mx-auto lg:mx-0 pt-2 lg:pt-0 transform-gpu">
-                <div className="bg-white rounded-[2rem] p-4 xs:p-5 lg:p-6 shadow-xl shadow-slate-200/60 border border-slate-100 ring-1 ring-slate-50 relative overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-[var(--color-primary)]/10 hover:border-[var(--color-primary)]/20 group/widget">
+          {/* 3. PLZ CHECK WIDGET - Reagiert auch auf Scrollen */}
+          <div ref={widgetRef} className="order-3 lg:col-start-1 w-full animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300 fill-mode-both max-w-lg mx-auto lg:mx-0 pt-2 lg:pt-0 transform-gpu">
+                <div className={cn(
+                    "bg-white rounded-[2rem] p-4 xs:p-5 lg:p-6 shadow-xl shadow-slate-200/60 border ring-1 ring-slate-50 relative overflow-hidden transition-all duration-500 group/widget",
+                    // Wenn Widget in der Mitte des Screens -> Leichter Glow Effekt (User Feedback)
+                    (widgetActive) ? "border-[var(--color-primary)]/30 shadow-[var(--color-primary)]/10 scale-[1.02]" : "border-slate-100 shadow-slate-200/60 scale-100",
+                    "hover:shadow-2xl hover:shadow-[var(--color-primary)]/10 hover:border-[var(--color-primary)]/20"
+                )}>
                     <form onSubmit={handleCheck} className="flex flex-col gap-4 lg:gap-5">
                         <div>
                             <label className="text-[10px] lg:text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1 lg:mb-2 block group-hover/widget:text-[var(--color-primary)] transition-colors">
