@@ -11,7 +11,7 @@ interface DalasLogoProps extends React.SVGProps<SVGSVGElement> {
 
 export const DalasLogo: React.FC<DalasLogoProps> = ({ 
   width, 
-  height = "auto", 
+  height, // HIER GEÄNDERT: Kein Standardwert "auto" mehr, das behebt den Fehler
   className,
   scrolled = false, 
   variant = "default",
@@ -25,7 +25,6 @@ export const DalasLogo: React.FC<DalasLogoProps> = ({
   return (
     <>
       <style jsx>{`
-        /* Animation für das Haus beim Laden */
         @keyframes house-entry {
           0% { opacity: 0; transform: translateX(15px) scale(0.6); }
           100% { opacity: 1; transform: translateX(0) scale(1); }
@@ -35,34 +34,28 @@ export const DalasLogo: React.FC<DalasLogoProps> = ({
           transform-origin: center;
           transform-box: fill-box;
         }
-
-        /* 1. BOGEN ANIMATION (Drehung) */
-        .arch-path {
-          transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-          transform-origin: 16px 26px; /* Exaktes Zentrum der Rotation */
-        }
-        .arch-path.is-rotated {
-          /* Dreht sich um 90 Grad gegen den Uhrzeigersinn -> wird zum "Dach" */
-          transform: rotate(-90deg); 
-        }
-
-        /* 2. HAUS ANIMATION (Bleibt stehen, kleiner Zoom) */
-        .house-path {
+        .icon-group {
           transition: transform 0.5s ease;
-          transform-origin: 16px 26px;
+          transform-origin: 15px 26px;
         }
-        .house-path.is-adjusted {
+        .icon-group.is-scrolled {
           transform: scale(0.9);
         }
-
-        /* 3. TEXT ANIMATIONEN */
+        /* BOGEN ANIMATION */
+        .arch-path {
+          transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+          transform-origin: 16px 26px; 
+        }
+        .arch-path.is-rotated {
+          transform: rotate(-90deg); 
+        }
+        /* TEXT ANIMATIONEN */
         .text-main {
           transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .text-main.is-centered {
-          transform: translateY(7px); /* Rutscht in die Mitte */
+          transform: translateY(7px);
         }
-
         .text-sub {
           transition: opacity 0.3s ease, transform 0.3s ease;
           transform-origin: center;
@@ -86,9 +79,7 @@ export const DalasLogo: React.FC<DalasLogoProps> = ({
       >
         <g transform="translate(5, 5)">
           
-          {/* ICON GRUPPE (Elemente getrennt für individuelle Rotation) */}
           <g>
-              {/* Der Bogen: Bekommt die Klasse .arch-path für die Drehung */}
               <path 
                 d="M 16 8 A 18 18 0 0 0 16 44" 
                 stroke={tealColor} 
@@ -96,19 +87,16 @@ export const DalasLogo: React.FC<DalasLogoProps> = ({
                 strokeLinecap="round" 
                 className={cn("arch-path", scrolled && "is-rotated")}
               />
-              
-              {/* Das Haus: Bleibt aufrecht, bekommt nur leichte Skalierung */}
               <path 
                 d="M16 19 L23 25 V33 H9 V25 L16 19 Z" 
                 fill={orangeColor} 
                 stroke="white" 
                 strokeWidth="1.5" 
                 strokeLinejoin="round"
-                className={cn("animate-house-entry house-path", scrolled && "is-adjusted")}
+                className={cn("animate-house-entry icon-group", scrolled && "is-scrolled")}
               />
           </g>
 
-          {/* TEXT GRUPPE */}
           <g transform="translate(42, 0)">
             <text 
               x="0" 
