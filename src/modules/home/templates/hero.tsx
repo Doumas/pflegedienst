@@ -1,7 +1,7 @@
 "use client"; 
 
 import { useState, useEffect } from "react";
-import Link from "next/link"; // <--- HIER WAR DER FEHLER (FEHLTE)
+import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/shared/ui/button"; 
 import { MapPin, CheckCircle2, Loader2, Star, X } from "lucide-react"; 
@@ -76,23 +76,23 @@ export function Hero() {
     <section className="relative w-full overflow-hidden pt-6 pb-12 lg:pt-28 lg:pb-48 flex items-center lg:min-h-[85vh]">
       
       {/* ========================================================= */}
-      {/* HINTERGRUND FX                                            */}
+      {/* HINTERGRUND FX - PERFORMANCE OPTIMIERT                    */}
       {/* ========================================================= */}
       
-      {/* 1. Statisches Raster */}
-      <div className="absolute inset-0 opacity-[0.4] pointer-events-none -z-30" 
+      {/* 1. Statisches Raster - GPU Beschleunigt */}
+      <div className="absolute inset-0 opacity-[0.4] pointer-events-none -z-30 transform-gpu" 
            style={{ backgroundImage: 'radial-gradient(var(--color-border-soft) 1px, transparent 1px)', backgroundSize: '32px 32px' }}>
       </div>
       
-      {/* 2. Bewegliche Blobs */}
-      <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[1000px] h-[700px] bg-[var(--color-secondary)]/60 rounded-full blur-[120px] opacity-70 pointer-events-none -z-20 animate-pulse" style={{ animationDuration: '8s' }} />
-      <div className="absolute top-[10%] right-[-10%] w-[600px] h-[600px] bg-[var(--color-primary)]/5 rounded-full blur-[100px] animate-pulse pointer-events-none -z-20" style={{ animationDuration: '6s' }} />
-      <div className="absolute bottom-0 left-[-10%] w-[500px] h-[500px] bg-[var(--color-accent)]/10 rounded-full blur-[80px] pointer-events-none -z-20" />
+      {/* 2. Bewegliche Blobs - WICHTIG: Animation nur auf Desktop (md:animate-pulse) */}
+      <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[600px] lg:w-[1000px] h-[500px] lg:h-[700px] bg-[var(--color-secondary)]/60 rounded-full blur-[80px] lg:blur-[120px] opacity-70 pointer-events-none -z-20 md:animate-pulse transform-gpu will-change-transform" style={{ animationDuration: '8s' }} />
+      <div className="absolute top-[10%] right-[-10%] w-[400px] lg:w-[600px] h-[400px] lg:h-[600px] bg-[var(--color-primary)]/5 rounded-full blur-[60px] lg:blur-[100px] md:animate-pulse pointer-events-none -z-20 transform-gpu will-change-transform" style={{ animationDuration: '6s' }} />
+      <div className="absolute bottom-0 left-[-10%] w-[300px] lg:w-[500px] h-[300px] lg:h-[500px] bg-[var(--color-accent)]/10 rounded-full blur-[50px] lg:blur-[80px] pointer-events-none -z-20 transform-gpu" />
 
       {/* ========================================================= */}
-      {/* NEU: SMOOTH FADE OUT (Der Fix für die harte Kante)        */}
+      {/* NEU: SMOOTH FADE OUT                                      */}
       {/* ========================================================= */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 lg:h-48 bg-gradient-to-t from-white via-white/80 to-transparent z-0 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-24 lg:h-48 bg-gradient-to-t from-white via-white/80 to-transparent z-0 pointer-events-none transform-gpu" />
 
 
       {/* ========================================================= */}
@@ -137,24 +137,24 @@ export function Hero() {
             </p>
           </div>
 
-          {/* 2. VISUAL STACK */}
+          {/* 2. VISUAL STACK - PERFORMANCE OPTIMIERT */}
           <div className="order-2 lg:col-start-2 lg:row-span-2 relative flex justify-center lg:justify-end animate-in fade-in zoom-in-95 duration-1000 delay-300 py-2 lg:py-0 fill-mode-both">
             
-            {/* Animierte Kreise */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] lg:w-[650px] h-[350px] lg:h-[650px] border border-[var(--color-primary)]/10 rounded-full animate-[spin_60s_linear_infinite]" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] lg:w-[500px] h-[300px] lg:h-[500px] border border-[var(--color-accent)]/20 rounded-full animate-[spin_40s_linear_infinite_reverse] border-dashed" />
+            {/* Animierte Kreise - Jetzt mit GPU Beschleunigung */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] lg:w-[650px] h-[350px] lg:h-[650px] border border-[var(--color-primary)]/10 rounded-full animate-[spin_60s_linear_infinite] transform-gpu will-change-transform" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] lg:w-[500px] h-[300px] lg:h-[500px] border border-[var(--color-accent)]/20 rounded-full animate-[spin_40s_linear_infinite_reverse] border-dashed transform-gpu will-change-transform" />
 
             <div className="relative z-10 w-[260px] sm:w-[340px] lg:w-[380px] aspect-[4/5] group perspective-1000 animate-float">
                
                {/* Hintere Karte */}
-               <div className="absolute inset-0 bg-[var(--color-primary)]/5 rounded-[2rem] lg:rounded-[2.5rem] transform rotate-6 translate-x-4 transition-transform duration-500 group-hover:rotate-12 group-hover:translate-x-6 border border-[var(--color-primary)]/10" />
+               <div className="absolute inset-0 bg-[var(--color-primary)]/5 rounded-[2rem] lg:rounded-[2.5rem] transform rotate-6 translate-x-4 transition-transform duration-500 group-hover:rotate-12 group-hover:translate-x-6 border border-[var(--color-primary)]/10 will-change-transform" />
                
                {/* Mittlere Karte */}
-               <div className="absolute inset-0 bg-white rounded-[2rem] lg:rounded-[2.5rem] transform -rotate-3 -translate-x-2 transition-transform duration-500 group-hover:-rotate-6 group-hover:-translate-x-4 border border-slate-100 shadow-xl z-10" />
+               <div className="absolute inset-0 bg-white rounded-[2rem] lg:rounded-[2.5rem] transform -rotate-3 -translate-x-2 transition-transform duration-500 group-hover:-rotate-6 group-hover:-translate-x-4 border border-slate-100 shadow-xl z-10 will-change-transform" />
                
                {/* Vordere Karte */}
-               <div className="absolute inset-0 rounded-[2rem] lg:rounded-[2.5rem] shadow-2xl shadow-slate-300/50 bg-white p-1.5 lg:p-2 rotate-[-2deg] group-hover:rotate-0 transition-all duration-700 ease-out z-20 overflow-hidden ring-1 ring-slate-100">
-                  <div className="relative w-full h-full rounded-[1.5rem] lg:rounded-[2rem] overflow-hidden bg-slate-200">
+               <div className="absolute inset-0 rounded-[2rem] lg:rounded-[2.5rem] shadow-2xl shadow-slate-300/50 bg-white p-1.5 lg:p-2 rotate-[-2deg] group-hover:rotate-0 transition-all duration-700 ease-out z-20 overflow-hidden ring-1 ring-slate-100 will-change-transform">
+                  <div className="relative w-full h-full rounded-[1.5rem] lg:rounded-[2rem] overflow-hidden bg-slate-200 transform-gpu">
                      {STORY_SLIDES.map((slide, index) => {
                        const isActive = index === currentSlide;
                        return (
@@ -164,7 +164,8 @@ export function Hero() {
                                 alt={slide.title} 
                                 fill 
                                 className={cn("object-cover transition-transform duration-[8000ms]", isActive ? "scale-110" : "scale-100")} 
-                                priority={index === 0} 
+                                priority={index === 0}
+                                sizes="(max-width: 768px) 100vw, 50vw" 
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-primary-deep)]/80 via-transparent to-transparent" />
                             
@@ -179,7 +180,7 @@ export function Hero() {
                </div>
 
                {/* WhatsApp Button */}
-               <div className="absolute z-30 -bottom-3 -left-1 lg:-bottom-6 lg:-left-4 w-max max-w-[calc(100vw-30px)] hover:scale-105 transition-transform duration-300">
+               <div className="absolute z-30 -bottom-3 -left-1 lg:-bottom-6 lg:-left-4 w-max max-w-[calc(100vw-30px)] hover:scale-105 transition-transform duration-300 transform-gpu">
                   <WhatsappFloatingButton />
                </div>
             </div>
@@ -187,7 +188,7 @@ export function Hero() {
           </div>
 
           {/* 3. PLZ CHECK WIDGET */}
-          <div className="order-3 lg:col-start-1 w-full animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300 fill-mode-both max-w-lg mx-auto lg:mx-0 pt-2 lg:pt-0">
+          <div className="order-3 lg:col-start-1 w-full animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300 fill-mode-both max-w-lg mx-auto lg:mx-0 pt-2 lg:pt-0 transform-gpu">
                 <div className="bg-white rounded-[2rem] p-4 xs:p-5 lg:p-6 shadow-xl shadow-slate-200/60 border border-slate-100 ring-1 ring-slate-50 relative overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-[var(--color-primary)]/10 hover:border-[var(--color-primary)]/20 group/widget">
                     <form onSubmit={handleCheck} className="flex flex-col gap-4 lg:gap-5">
                         <div>
@@ -223,7 +224,7 @@ export function Hero() {
                    <div className="flex -space-x-3">
                       {AVATAR_IMAGES.map((src, i) => (
                          <div key={i} className="relative w-8 h-8 lg:w-10 lg:h-10 rounded-full border-[3px] border-white shadow-sm overflow-hidden ring-1 ring-slate-100 bg-slate-100 hover:scale-110 transition-transform z-0 hover:z-10">
-                            <Image src={src} alt="Kunden" fill className="object-cover" />
+                            <Image src={src} alt="Kunden" fill className="object-cover" sizes="40px" />
                          </div>
                       ))}
                    </div>
