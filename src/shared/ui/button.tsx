@@ -3,24 +3,47 @@ import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/shared/utils/cn"
 
-// Deine Varianten können so bleiben wie sie sind, hier nur als Platzhalter
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  // BASIS-STYLES:
+  // 1. rounded-full: Pillenform statt Ecken
+  // 2. font-bold: Bessere Lesbarkeit
+  // 3. active:scale-95: Der "Klick-Effekt" (Eindrücken)
+  // 4. transition-all: Alles animieren (Farbe, Position, Schatten)
+  "inline-flex items-center justify-center whitespace-nowrap rounded-full text-sm font-bold ring-offset-white transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-95",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+        // DEFAULT: Unser Haupt-Button (Petrol)
+        // Schwebt beim Hovern leicht hoch (-translate-y-1) und wirft mehr Schatten
+        default: 
+          "bg-[var(--color-primary)] text-white shadow-xl shadow-[var(--color-primary)]/20 hover:bg-[var(--color-primary)]/90 hover:-translate-y-1 hover:shadow-2xl hover:shadow-[var(--color-primary)]/30",
+        
+        // DESTRUCTIVE: Für Fehler/Löschen (Rot)
+        destructive:
+          "bg-red-500 text-white shadow-sm hover:bg-red-600 hover:-translate-y-0.5",
+        
+        // OUTLINE: Weißer Hintergrund, Petrol Rand
+        outline:
+          "border-2 border-[var(--color-primary)] bg-white text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white hover:-translate-y-0.5 shadow-sm",
+        
+        // SECONDARY: Mint/Hellblau Hintergrund (Sehr passend für dein Design!)
+        secondary:
+          "bg-[var(--color-secondary)] text-[var(--color-primary)] border border-[var(--color-primary)]/5 hover:bg-[var(--color-primary)] hover:text-white hover:-translate-y-0.5 shadow-sm hover:shadow-md",
+        
+        // GHOST: Nur Text, Hover wird Hellblau
+        ghost:
+          "hover:bg-[var(--color-secondary)] hover:text-[var(--color-primary)]",
+        
+        // LINK: Einfacher Text-Link
+        link:
+          "text-[var(--color-primary)] underline-offset-4 hover:underline decoration-2",
       },
       size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8",
-        icon: "h-10 w-10",
+        // Größere Standard-Größe für bessere Touch-Bedienung
+        default: "h-12 px-6 py-2", 
+        sm: "h-10 px-4 text-xs",
+        lg: "h-14 px-8 text-base", // Perfekt für Hero-Sections
+        icon: "h-12 w-12",
       },
     },
     defaultVariants: {
@@ -38,7 +61,6 @@ export interface ButtonProps
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
-    // WICHTIG: Wenn asChild true ist, nutzen wir "Slot", sonst "button"
     const Comp = asChild ? Slot : "button"
     return (
       <Comp

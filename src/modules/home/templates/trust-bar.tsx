@@ -78,7 +78,7 @@ export function CareConfigurator() {
                                 <Sparkles className="w-3 h-3 text-accent animate-pulse" />
                                 30-Sekunden Check
                             </div>
-                            <h2 className="text-2xl md:text-4xl font-black text-slate-900 leading-tight">
+            <h2 className="text-3xl md:text-4xl font-black text-slate-900 leading-tight">
                                 Was steht Ihnen zu? <br className="hidden lg:block" />
                                 <span className="text-primary">Prüfen Sie Ihren Anspruch.</span>
                             </h2>

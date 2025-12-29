@@ -1,162 +1,198 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { siteConfig } from "@/config/site";
-import { Heart, Phone, Mail, MapPin, ArrowRight, Facebook, Instagram, ShieldCheck, Star, Briefcase } from "lucide-react";
+import { Phone, Mail, MapPin, Facebook, Instagram, Linkedin, ArrowRight, HeartHandshake, ArrowUp } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
+import { buttonVariants } from "@/shared/ui/button";
+import { siteConfig } from "@/config/site";
 import { DalasLogo } from "@/shared/ui/dalas-logo";
 
 export function Footer() {
-  const currentYear = new Date().getFullYear();
-  const pathname = usePathname(); 
-
-  const getLinkClass = (href: string) => {
-    const isActive = pathname === href;
-    return cn(
-      "group flex items-center gap-2 transition-colors duration-300",
-      isActive ? "text-[var(--color-accent)] font-bold pl-2" : "text-white/70 hover:text-white hover:pl-2"
-    );
+  
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <footer className={cn(
-        "bg-[var(--color-footer-bg)] text-white/80 border-t border-white/5 font-sans relative overflow-hidden",
-        "pb-24 lg:pb-0" 
-    )}>
+    // 1. FIX: 'overflow-hidden' hier ENTFERNT, damit die blaue Box oben rausraken kann ("schweben")
+    <footer className="relative bg-[var(--color-footer-bg)] text-white font-sans border-t border-white/10 mt-32">
       
-      {/* Background FX */}
-      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[var(--color-primary)]/20 rounded-full blur-[150px] pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-[var(--color-accent)]/10 rounded-full blur-[150px] pointer-events-none" />
+      {/* Hintergrund-Raster (Hier ist overflow-hidden okay, damit das Muster nicht rausläuft) */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute inset-0 opacity-[0.03]" 
+               style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+      </div>
 
-      {/* MAIN CONTENT */}
-      <div className="container relative z-10 px-4 md:px-6 py-16 lg:py-24">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
-          
-          {/* 1. BRAND */}
-          <div className="space-y-6">
-            <Link href="/" className="block w-fit opacity-90 hover:opacity-100 transition-opacity">
-              <div className="brightness-0 invert"> 
-                  {/* ANPASSUNG: Compact Variante (ohne Subtext) und größer (220px) */}
-                  <DalasLogo variant="compact" width={220} />
-              </div>
-            </Link>
+      {/* ========================================================= */}
+      {/* PRE-FOOTER CTA (Der schwebende Kasten)                    */}
+      {/* ========================================================= */}
+      <div className="relative z-50 container px-4 md:px-6">
+        {/* Negative Margin (-mt-24) zieht die Box nach oben */}
+        <div className="-mt-24 bg-[var(--color-primary)] rounded-[2.5rem] p-8 md:p-12 shadow-2xl shadow-black/20 flex flex-col lg:flex-row items-center justify-between gap-8 md:gap-12 relative overflow-hidden group border border-white/10">
             
-            <p className="text-sm leading-relaxed max-w-xs text-white/60">
-              Ihr verlässlicher Partner für häusliche Pflege in Frankfurt. 
-              Wir sorgen dafür, dass Sie selbstbestimmt und sicher zuhause leben können.
-            </p>
-            
-            {/* Socials */}
-            <div className="flex gap-3 pt-2">
-               {[Facebook, Instagram].map((Icon, i) => (
-                 <a key={i} href="#" className="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center hover:bg-[var(--color-primary)] hover:text-white transition-all duration-300 border border-white/5 text-white/70 hover:-translate-y-1">
-                   <Icon className="w-4 h-4" />
-                 </a>
-               ))}
+            {/* Background Animation */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:animate-[shimmer_2s_infinite]" />
+            <div className="absolute -right-10 -top-10 w-64 h-64 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-colors duration-500 pointer-events-none" />
+
+            <div className="relative z-10 text-center lg:text-left">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-wide mb-4 border border-white/10">
+                    <HeartHandshake className="w-4 h-4 text-[var(--color-accent)]" />
+                    Wir sind für Sie da
+                </div>
+                <h2 className="text-3xl md:text-4xl font-black text-white mb-3 leading-tight">
+                    Noch Fragen offen?
+                </h2>
+                <p className="text-white/90 text-lg font-medium max-w-lg leading-relaxed">
+                    Lassen Sie uns persönlich sprechen. Kostenlos und unverbindlich.
+                </p>
             </div>
-          </div>
 
-          {/* 2. NAVIGATION */}
-          <div>
-            <h3 className="text-white font-bold text-lg mb-6 flex items-center gap-2">Navigation</h3>
-            <ul className="space-y-3 text-sm">
-              {[
-                { label: "Startseite", href: "/" },
-                { label: "Über uns", href: "/ueber-uns" },
-                { label: "Leistungen", href: "/leistungen" },
-                { label: "Kontakt", href: "/kontakt" }
-              ].map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href} className={getLinkClass(link.href)}>
-                    <ArrowRight className={cn("w-3 h-3 transition-all duration-300", pathname === link.href ? "text-[var(--color-accent)] opacity-100" : "opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 group-hover:text-[var(--color-accent)]")} />
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-              
-              <li className="pt-2">
-                 <Link href="/karriere" className="group flex items-center gap-2 text-[var(--color-accent)] font-bold hover:text-white transition-colors">
-                    <div className="w-6 h-6 rounded-full bg-[var(--color-primary)]/30 flex items-center justify-center group-hover:bg-white group-hover:text-[var(--color-primary)] transition-colors border border-[var(--color-primary)]/50">
-                       <Briefcase className="w-3 h-3" />
+            <div className="relative z-10 flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+                {/* 2. FIX: ANRUF BUTTON 
+                   - bg-white (Hintergrund Weiß)
+                   - text-cyan-900 (Schrift Dunkel-Petrol) -> Damit man es liest!
+                */}
+                <a href={`tel:${siteConfig.contact.phone}`} className={cn(
+                    buttonVariants({ variant: "secondary", size: "lg" }),
+                    "h-14 px-8 bg-white text-cyan-950 hover:bg-slate-100 font-bold text-lg rounded-full shadow-lg hover:-translate-y-1 transition-transform w-full sm:w-auto justify-center border-none"
+                )}>
+                    <Phone className="w-5 h-5 mr-2 text-[var(--color-primary)]" />
+                    {siteConfig.contact.phone}
+                </a>
+                
+                {/* 3. FIX: NACHRICHT BUTTON
+                   - bg-transparent (Kein weißer Block)
+                   - border-2 border-white (Weißer Rand)
+                   - text-white (Weiße Schrift)
+                */}
+                <Link href="/kontakt" className="w-full sm:w-auto">
+                    <div className={cn(
+                        buttonVariants({ variant: "outline", size: "lg" }),
+                        "bg-transparent h-14 px-8 text-white border-2 border-white/30 font-bold text-lg rounded-full hover:bg-white hover:text-cyan-950 hover:border-white w-full flex justify-center cursor-pointer transition-all"
+                    )}>
+                        Nachricht schreiben
                     </div>
-                    Karriere
-                    <span className="text-[9px] bg-[var(--color-accent)] text-[var(--color-primary-deep)] px-1.5 py-0.5 rounded-full uppercase tracking-wider ml-1 font-black">Jobs</span>
-                 </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* 3. KONTAKT */}
-          <div>
-            <h3 className="text-white font-bold text-lg mb-6 flex items-center gap-2">Kontakt</h3>
-            <ul className="space-y-6 text-sm">
-              <li className="flex items-start gap-4 group">
-                <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-[var(--color-accent)] shrink-0 border border-white/5 group-hover:border-[var(--color-primary)] group-hover:bg-[var(--color-primary)]/20 transition-all">
-                   <MapPin className="w-4 h-4" />
-                </div>
-                <span className="leading-relaxed text-white/80">{siteConfig.contact.address}</span>
-              </li>
-              <li className="flex items-center gap-4 group">
-                <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-[var(--color-accent)] shrink-0 border border-white/5 group-hover:border-[var(--color-primary)] group-hover:bg-[var(--color-primary)]/20 transition-all">
-                   <Phone className="w-4 h-4" />
-                </div>
-                <a href={`tel:${siteConfig.contact.phone}`} className="hover:text-white transition-colors font-medium text-white/80">
-                  {siteConfig.contact.phone}
-                </a>
-              </li>
-              <li className="flex items-center gap-4 group">
-                <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-[var(--color-accent)] shrink-0 border border-white/5 group-hover:border-[var(--color-primary)] group-hover:bg-[var(--color-primary)]/20 transition-all">
-                   <Mail className="w-4 h-4" />
-                </div>
-                <a href={`mailto:${siteConfig.contact.email}`} className="hover:text-white transition-colors text-white/80">
-                  {siteConfig.contact.email}
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* 4. TRUST */}
-          <div>
-            <h3 className="text-white font-bold text-lg mb-6 flex items-center gap-2">Qualität</h3>
-            <div className="bg-white/5 p-6 rounded-2xl border border-white/10 group hover:border-[var(--color-accent)]/30 transition-colors relative overflow-hidden backdrop-blur-sm">
-              <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                 <ShieldCheck className="w-16 h-16 text-[var(--color-accent)]" />
-              </div>
-              
-              <div className="flex items-center gap-4 mb-4 relative z-10">
-                <div className="w-14 h-14 bg-[var(--color-primary)] rounded-xl flex flex-col items-center justify-center text-white font-bold shadow-lg shadow-black/30 border border-white/10">
-                  <span className="text-xl leading-none">1.0</span>
-                  <span className="text-[9px] uppercase opacity-80 mt-0.5">Note</span>
-                </div>
-                <div>
-                  <div className="font-bold text-white text-sm">MDK Qualitätsprüfung</div>
-                  <div className="text-xs text-[var(--color-accent)] mt-1 flex items-center gap-1 font-medium">
-                     <Star className="w-3 h-3 fill-current" /> Sehr gut
-                  </div>
-                </div>
-              </div>
-              <p className="text-xs text-white/50 leading-relaxed border-t border-white/10 pt-3 relative z-10">
-                Zugelassener Vertragspartner aller Kranken- und Pflegekassen.
-              </p>
+                </Link>
             </div>
-          </div>
-
         </div>
       </div>
 
-      {/* COPYRIGHT */}
-      <div className="border-t border-white/5 bg-black/20 backdrop-blur-sm relative z-10">
-        <div className="container px-4 md:px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-medium text-white/40">
-          <p>© {currentYear} {siteConfig.name}. Mit <Heart className="w-3 h-3 inline text-[var(--color-accent)] mx-0.5 fill-current" /> für Ihre Pflege.</p>
-          <div className="flex gap-6 md:gap-8">
-            <Link href="/impressum" className="hover:text-white transition-colors">Impressum</Link>
-            <Link href="/datenschutz" className="hover:text-white transition-colors">Datenschutz</Link>
-            <Link href="/agb" className="hover:text-white transition-colors">AGB</Link>
-          </div>
+
+      {/* ========================================================= */}
+      {/* MAIN FOOTER CONTENT                                       */}
+      {/* ========================================================= */}
+      <div className="container px-4 md:px-6 relative z-10 pb-12 pt-16 md:pt-20">
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-16">
+            
+            {/* SPALTE 1: BRANDING */}
+            <div className="space-y-6">
+               <Link href="/" className="inline-block mb-6">
+    {/* w-72 (288px) oder w-80 (320px) für gute Sichtbarkeit im Footer */}
+    <DalasLogo variant="light" className="w-64 md:w-80" />
+</Link>
+                <p className="text-white/60 leading-relaxed text-sm font-medium pr-4">
+                    Ihr verlässlicher Partner für ambulante Intensivpflege in Frankfurt und Umgebung. 
+                    Menschlich, kompetent und immer an Ihrer Seite.
+                </p>
+                <div className="flex gap-4">
+                    {[Facebook, Instagram, Linkedin].map((Icon, i) => (
+                        <a key={i} href="#" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:bg-[var(--color-accent)] hover:border-[var(--color-accent)] hover:text-white hover:-translate-y-1 transition-all duration-300">
+                            <Icon className="w-5 h-5" />
+                        </a>
+                    ))}
+                </div>
+            </div>
+
+            {/* SPALTE 2: MENÜ */}
+            <div>
+                <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                    Menü <div className="h-px w-8 bg-[var(--color-accent)]" />
+                </h4>
+                <ul className="space-y-3">
+                    {siteConfig.nav.map((item) => (
+                        <li key={item.label}>
+                            <Link href={item.href || "#"} className="group flex items-center gap-2 text-white/70 hover:text-[var(--color-accent)] transition-colors text-sm font-medium">
+                                <span className="w-1.5 h-1.5 rounded-full bg-white/20 group-hover:bg-[var(--color-accent)] transition-colors" />
+                                <span className="group-hover:translate-x-1 transition-transform duration-300">{item.label}</span>
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
+            {/* SPALTE 3: LEISTUNGEN */}
+            <div>
+                <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                    Leistungen <div className="h-px w-8 bg-[var(--color-accent)]" />
+                </h4>
+                <ul className="space-y-3">
+                    {['Grundpflege', 'Behandlungspflege', 'Verhinderungspflege', 'Betreuungsleistungen', 'Beratungseinsatz §37.3'].map((item) => (
+                        <li key={item}>
+                            <Link href="/leistungen" className="group flex items-center gap-2 text-white/70 hover:text-[var(--color-accent)] transition-colors text-sm font-medium">
+                                <ArrowRight className="w-3 h-3 opacity-0 -ml-3 group-hover:opacity-100 group-hover:ml-0 transition-all text-[var(--color-accent)]" />
+                                <span className="group-hover:translate-x-1 transition-transform duration-300">{item}</span>
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
+            {/* SPALTE 4: KONTAKT */}
+            <div>
+                <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                    Kontakt <div className="h-px w-8 bg-[var(--color-accent)]" />
+                </h4>
+                <ul className="space-y-5">
+                    <li className="flex gap-4">
+                        <div className="shrink-0 w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-[var(--color-accent)]">
+                            <MapPin className="w-5 h-5" />
+                        </div>
+                        <div className="text-sm text-white/70 font-medium">
+                            <span className="block text-white font-bold mb-0.5">Hauptstandort</span>
+                            {siteConfig.contact.address} <br/>
+                            60311 Frankfurt am Main
+                        </div>
+                    </li>
+                    <li className="flex gap-4">
+                        <div className="shrink-0 w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-[var(--color-accent)]">
+                            <Phone className="w-5 h-5" />
+                        </div>
+                        <div className="text-sm text-white/70 font-medium">
+                            <span className="block text-white font-bold mb-0.5">24h Notruf</span>
+                            <a href={`tel:${siteConfig.contact.phone}`} className="hover:text-white transition-colors">{siteConfig.contact.phone}</a>
+                        </div>
+                    </li>
+                    <li className="flex gap-4">
+                        <div className="shrink-0 w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-[var(--color-accent)]">
+                            <Mail className="w-5 h-5" />
+                        </div>
+                        <div className="text-sm text-white/70 font-medium">
+                            <span className="block text-white font-bold mb-0.5">E-Mail</span>
+                            <a href={`mailto:${siteConfig.contact.email}`} className="hover:text-white transition-colors">{siteConfig.contact.email}</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
         </div>
+
+        {/* BOTTOM BAR */}
+        <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-medium text-white/40">
+            <div className="flex flex-wrap justify-center gap-6">
+                <span>&copy; {new Date().getFullYear()} Dalas GmbH. Alle Rechte vorbehalten.</span>
+            </div>
+            <div className="flex gap-6">
+                <Link href="/impressum" className="hover:text-white transition-colors">Impressum</Link>
+                <Link href="/datenschutz" className="hover:text-white transition-colors">Datenschutz</Link>
+                <Link href="/agb" className="hover:text-white transition-colors">AGB</Link>
+            </div>
+            <button onClick={scrollToTop} className="p-3 bg-white/5 hover:bg-[var(--color-accent)] text-white rounded-xl transition-colors group">
+                <ArrowUp className="w-4 h-4 group-hover:-translate-y-1 transition-transform" />
+            </button>
+        </div>
+
       </div>
-      
     </footer>
   );
 }

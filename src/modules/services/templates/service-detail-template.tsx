@@ -38,7 +38,7 @@ export function ServiceDetailTemplate({ slug }: { slug: string }) {
       <div className="relative z-10">
 
         {/* --- HEADER --- */}
-        <section className="pt-32 pb-16 lg:pt-48 lg:pb-24 text-center px-4">
+        <section className="pt-24 pb-16 lg:pt-32 lg:pb-24 text-center px-4">
           <div className="max-w-4xl mx-auto">
             
             {/* Breadcrumb: Hover -> Orange (Interaktion) */}
@@ -55,7 +55,7 @@ export function ServiceDetailTemplate({ slug }: { slug: string }) {
               <service.icon className="w-10 h-10" />
             </div>
             
-            <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-slate-900 mb-6 tracking-tight leading-[1.1] text-balance animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
+           <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1] animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
               {service.title}
             </h1>
             
@@ -73,7 +73,8 @@ export function ServiceDetailTemplate({ slug }: { slug: string }) {
             <div className="lg:col-span-8 space-y-16 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500">
               
               <div className="prose prose-lg prose-slate max-w-none">
-                <h2 className="text-3xl font-black text-slate-900 tracking-tight mb-6">Worum geht es bei dieser Leistung?</h2>
+                          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1] animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+Worum geht es bei dieser Leistung?</h2>
                 <p className="text-lg text-slate-600 leading-relaxed">
                   {service.details || "Wir bieten Ihnen eine umfassende und professionelle Versorgung in diesem Bereich. Unser Ziel ist es, Ihre Selbstständigkeit zu fördern und Ihnen Sicherheit im Alltag zu geben."}
                 </p>

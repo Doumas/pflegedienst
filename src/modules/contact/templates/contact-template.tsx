@@ -200,13 +200,13 @@ export function ContactTemplate() {
       <div className="relative z-10">
       
         {/* HEADER */}
-        <section className="pt-32 pb-16 lg:pt-48 lg:pb-24 text-center px-4">
+        <section className="pt-24 pb-16 lg:pt-32 lg:pb-24 text-center px-4">
           <div className="container max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-sm border border-[var(--color-border-soft)] text-[var(--color-primary)] text-xs font-bold tracking-wide uppercase shadow-sm mb-8 animate-in fade-in slide-in-from-bottom-2 duration-700">
               <MessageSquare className="w-3 h-3 text-[var(--color-accent)]" />
               <span>Kontakt & Hilfe</span>
             </div>
-            <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-slate-900 mb-6 tracking-tight leading-[1.1] text-balance">
+           <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1] animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
               Wir sind <br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)] relative inline-block">
                 für Sie da.

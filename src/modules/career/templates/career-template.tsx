@@ -62,7 +62,7 @@ export function CareerTemplate() {
       <div className="relative z-10">
       
         {/* --- 1. HEADER --- */}
-        <section className="pt-32 pb-20 lg:pt-48 lg:pb-32 text-center px-4">
+        <section className="pt-24 pb-16 lg:pt-32 lg:pb-24 text-center px-4">
           <div className="container max-w-4xl mx-auto">
             
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-sm border border-[var(--color-border-soft)] text-[var(--color-primary)] text-xs font-bold tracking-wide uppercase shadow-sm mb-8 animate-in fade-in slide-in-from-bottom-2 duration-700">
@@ -70,7 +70,7 @@ export function CareerTemplate() {
               <span>Komm ins Team</span>
             </div>
             
-            <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-slate-900 mb-8 tracking-tight leading-[1.1] text-balance animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+           <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1] animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
               Arbeit, die <br/>
               <span className="relative inline-block ml-3">
                 <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)]">
@@ -103,7 +103,8 @@ export function CareerTemplate() {
         {/* --- 2. BENEFITS --- */}
         <section className="py-24 container px-4 md:px-6 relative">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight">Deine Vorteile bei uns</h2>
+                       <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1] animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+Deine Vorteile bei uns</h2>
             <p className="text-slate-600 max-w-2xl mx-auto text-lg font-medium">Wir fordern viel, aber wir geben auch viel zurück. Transparenz ist uns wichtig.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -166,7 +167,8 @@ export function CareerTemplate() {
         <section id="stellen" className="py-24 bg-white border-t border-[var(--color-border-soft)] relative">
           <div className="container px-4 md:px-6 max-w-5xl mx-auto relative z-10">
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">Aktuelle Stellenangebote</h2>
+                         <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1] animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+Aktuelle Stellenangebote</h2>
               <p className="text-slate-600 text-lg">Bewirb dich in unter 60 Sekunden – ohne Lebenslauf.</p>
             </div>
 

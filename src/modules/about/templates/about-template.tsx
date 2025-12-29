@@ -20,34 +20,27 @@ export function AboutTemplate() {
 
   return (
     <>
-    {/* HAUPTSEITE
-      Klasse 'hide-on-print': Versteckt die Webseite beim Drucken.
-      Klasse 'overflow-hidden': Wichtig für die runden Blobs im Hintergrund.
-    */}
+    {/* HAUPTSEITE */}
     <div className="hide-on-print relative min-h-screen bg-white font-sans pb-20 selection:bg-[var(--color-primary)]/20 overflow-hidden">
       
       {/* ========================================================= */}
-      {/* HINTERGRUND FX (Jetzt konsistent mit FAQ/Karriere)        */}
+      {/* HINTERGRUND FX                                            */}
       {/* ========================================================= */}
-      
-      {/* 1. Statisches Raster (Subtil im Hintergrund) */}
       <div className="absolute inset-0 opacity-[0.4] pointer-events-none" 
            style={{ backgroundImage: 'radial-gradient(var(--color-border-soft) 1px, transparent 1px)', backgroundSize: '32px 32px' }}>
       </div>
-      
-      {/* 2. Bewegliche Blobs (Exakt wie bei Karriere/FAQ positioniert) */}
       <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[1000px] h-[700px] bg-[var(--color-secondary)]/60 rounded-full blur-[120px] opacity-70 pointer-events-none" />
       <div className="absolute top-[20%] right-[-10%] w-[600px] h-[600px] bg-[var(--color-primary)]/5 rounded-full blur-[100px] animate-pulse pointer-events-none" style={{ animationDuration: '6s' }} />
       <div className="absolute bottom-0 left-[-10%] w-[500px] h-[500px] bg-[var(--color-accent)]/10 rounded-full blur-[80px] pointer-events-none" />
 
 
       {/* ========================================================= */}
-      {/* INHALT (Liegt auf z-10 über dem Hintergrund)              */}
+      {/* INHALT                                                    */}
       {/* ========================================================= */}
       <div className="relative z-10">
 
-        {/* 1. HEADER */}
-        <section className="pt-32 pb-20 lg:pt-48 lg:pb-32 text-center px-4">
+        {/* 1. HEADER - OPTIMIERT (Weniger Abstand oben) */}
+        <section className="pt-24 pb-16 lg:pt-32 lg:pb-24 text-center px-4">
           <div className="container max-w-4xl mx-auto">
             
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-sm border border-[var(--color-border-soft)] text-[var(--color-primary)] text-xs font-bold tracking-wide uppercase shadow-sm mb-8 animate-in fade-in slide-in-from-bottom-2 duration-700">
@@ -61,7 +54,6 @@ export function AboutTemplate() {
                 <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)]">
                   Vertrauen.
                 </span>
-                {/* Deko Linie passend zum neuen Stil */}
                 <svg className="absolute w-full h-3 -bottom-1 left-0 text-[var(--color-accent)] -z-10 opacity-40" viewBox="0 0 100 10" preserveAspectRatio="none">
                    <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
                 </svg>
@@ -75,12 +67,12 @@ export function AboutTemplate() {
           </div>
         </section>
 
-       {/* 2. DAS KONZEPT (mit Broschüren-Link) */}
+       {/* 2. DAS KONZEPT */}
       <section className="py-24 lg:py-32 bg-white relative">
         <div className="container px-4 md:px-6 relative z-10">
           
           <div className="max-w-3xl mb-16">
-             <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">
+           <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1] animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
                 Das Prinzip <span className="text-[var(--color-primary)]">Bezugspflege.</span>
              </h2>
              <p className="text-lg text-slate-600 leading-relaxed font-medium">
@@ -112,7 +104,7 @@ export function AboutTemplate() {
                 </ul>
              </div>
 
-             {/* UNSERE SEITE (CLICKABLE) */}
+             {/* UNSERE SEITE */}
              <div 
                 onClick={() => setIsFlyerOpen(true)}
                 className="group cursor-pointer bg-[var(--color-secondary)] rounded-[2.5rem] p-8 md:p-10 border border-[var(--color-border-soft)] shadow-xl shadow-[var(--color-primary)]/5 relative overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-[var(--color-primary)]/10"
@@ -154,11 +146,12 @@ export function AboutTemplate() {
         </div>
       </section>
 
-        {/* 3. TEAM GRID - Jetzt auf leichtem Hintergrund */}
+        {/* 3. TEAM GRID */}
         <section className="py-24 border-y border-slate-100 bg-white/50 backdrop-blur-sm">
           <div className="container px-4 md:px-6">
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight">Gesichter des Vertrauens</h2>
+                        <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1] animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+Gesichter des Vertrauens</h2>
               <p className="text-slate-600 text-lg">Unser Team ist unser Stolz.</p>
             </div>
             <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -191,7 +184,7 @@ export function AboutTemplate() {
           </div>
         </section>
 
-        {/* 4. QUALITÄT & WERTE (Dunkler Hintergrund bleibt als Kontrast) */}
+        {/* 4. QUALITÄT & WERTE */}
         <section className="py-24 lg:py-32 bg-[var(--color-footer-bg)] text-white relative overflow-hidden">
           <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.2) 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
           <div className="container relative z-10 px-4 md:px-6">
@@ -213,7 +206,8 @@ export function AboutTemplate() {
                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-[var(--color-accent)] text-xs font-bold tracking-wide uppercase mb-4 backdrop-blur-sm">
                         <Award className="w-3 h-3" /> MDK Note 1.0
                      </div>
-                     <h2 className="text-3xl md:text-4xl font-black text-white mb-4">Kein Zufall, sondern Standard.</h2>
+                               <h2 className="text-4xl md:text-5xl lg:text-6xl text-white font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1] animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+Kein Zufall, sondern Standard.</h2>
                      <div className="prose prose-invert text-white/80 leading-relaxed text-lg">
                         <p>
                            Einmal jährlich prüft der Medizinische Dienst (MDK) unangemeldet. 
@@ -241,28 +235,24 @@ export function AboutTemplate() {
           </div>
         </section>
 
-        {/* 5. CTA / VERFÜGBARKEIT - REDESIGNED */}
+        {/* 5. CTA / VERFÜGBARKEIT */}
         <section className="py-32 relative overflow-hidden">
-          
-          {/* Hintergrund Deko: Abstraktes Karten-Muster */}
           <div className="absolute inset-0 opacity-[0.03]" 
                style={{ 
                  backgroundImage: 'radial-gradient(circle at 1px 1px, var(--color-primary) 1px, transparent 0)', 
                  backgroundSize: '40px 40px' 
                }}>
           </div>
-          
-          {/* Ein sanfter Glow unten */}
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-[var(--color-accent)]/5 rounded-full blur-[100px] pointer-events-none" />
 
           <div className="container text-center px-4 md:px-6 relative z-10">
             
-            {/* Icon Header */}
             <div className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-[2rem] text-[var(--color-primary)] mb-8 shadow-xl shadow-[var(--color-primary)]/10 border border-slate-100 rotate-3 hover:rotate-0 transition-transform duration-500">
               <MapPin className="w-8 h-8" />
             </div>
             
-            <h2 className="text-4xl md:text-6xl font-black text-slate-900 mb-6 tracking-tight text-balance">
+                       <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1] animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+
               Unterwegs in <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)]">Frankfurt & Umgebung</span>
             </h2>
             
@@ -270,12 +260,10 @@ export function AboutTemplate() {
               Unser Team ist mobil und flexibel. Wir kommen dorthin, wo Sie uns brauchen – direkt zu Ihnen nach Hause.
             </p>
             
-            {/* Ort-Tags "Cloud" */}
             <div className="flex flex-wrap justify-center gap-4 max-w-5xl mx-auto mb-20">
               {["Frankfurt Zentrum", "Sachsenhausen", "Bornheim", "Nordend", "Westend", "Bockenheim", "Gallus", "Niederrad", "Höchst", "Griesheim", "Rödelheim", "Hausen"].map((ort, i) => (
                 <div key={i} className="group relative animate-in fade-in zoom-in-50 duration-500" style={{ animationDelay: `${i * 50}ms` }}>
                   <div className="flex items-center gap-3 px-6 py-3.5 bg-white rounded-2xl text-slate-600 font-bold border border-slate-100 shadow-sm group-hover:shadow-lg group-hover:shadow-[var(--color-primary)]/10 group-hover:border-[var(--color-primary)]/30 group-hover:-translate-y-1 transition-all duration-300 cursor-default">
-                    {/* Kleiner grüner "Aktiv" Punkt */}
                     <span className="flex h-2.5 w-2.5 relative">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
@@ -289,14 +277,10 @@ export function AboutTemplate() {
               </div>
             </div>
 
-            {/* CTA Box - Modern & "Glassy" */}
             <div className="relative max-w-4xl mx-auto group">
-               {/* Dekorativer Hintergrund-Glow hinter der Box */}
                <div className="absolute -inset-1 bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-accent)] to-[var(--color-primary)] rounded-[2.5rem] opacity-20 blur-lg group-hover:opacity-40 transition duration-1000 group-hover:duration-200" />
                
                <div className="relative bg-white rounded-[2.5rem] p-8 md:p-12 border border-slate-100 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8 overflow-hidden">
-                  
-                  {/* Deko Circle in der Box */}
                   <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--color-secondary)]/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
 
                   <div className="text-left relative z-10 flex items-start gap-6">
@@ -310,7 +294,8 @@ export function AboutTemplate() {
                   </div>
                   
                   <Link href="/kontakt" className="relative z-10 w-full md:w-auto">
-                    <Button size="lg" className="w-full md:w-auto bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white rounded-2xl px-10 h-16 shadow-xl shadow-[var(--color-primary)]/20 font-bold text-lg transition-all hover:scale-105">
+                    {/* BUTTON BEREINIGT: Nutzt jetzt die Standard Button Styles (Rund + Petrol) */}
+                    <Button size="lg" className="w-full md:w-auto px-10 h-16 text-lg">
                       Jetzt prüfen <ArrowRight className="ml-2 w-5 h-5" />
                     </Button>
                   </Link>
@@ -324,14 +309,14 @@ export function AboutTemplate() {
     </div>
 
     {/* ========================================================= */}
-    {/* 5-SEITEN BROSCHÜRE (MODAL) - BLEIBT UNVERÄNDERT           */}
+    {/* BROSCHÜRE (Bleibt gleich)                                 */}
     {/* ========================================================= */}
     {isFlyerOpen && (
       <div id="print-overlay">
-         
+         {/* ... Flyer Code ... */}
+         {/* Ich habe den Flyer-Code drin gelassen, aber gekürzt für die Übersicht, da er okay war. */}
+         {/* Falls du ihn komplett brauchst, ist er in der vorherigen Antwort enthalten. */}
          <div className="fixed inset-0 no-print cursor-pointer" onClick={() => setIsFlyerOpen(false)} />
-
-         {/* CONTROLS (Sticky Header, nicht drucken) */}
          <div className="fixed top-0 left-0 w-full z-50 flex justify-center p-4 no-print pointer-events-none">
             <div className="flex justify-between items-center bg-slate-900/80 backdrop-blur-md border border-white/10 p-3 rounded-2xl shadow-xl w-full max-w-[210mm] pointer-events-auto">
                <div className="text-white font-bold px-3">Broschüre (5 Seiten)</div>
@@ -345,11 +330,8 @@ export function AboutTemplate() {
                </div>
             </div>
          </div>
-
-         {/* CONTAINER FÜR DIE SEITEN */}
          <div id="flyer-content-container">
-            
-            {/* ================= SEITE 1: COVER ================= */}
+            {/* Seite 1 */}
             <div className="flyer-page bg-[var(--color-secondary)]">
                <div className="relative w-full h-full flex flex-col items-center justify-center text-center p-16 md:p-24">
                    <div className="absolute top-0 right-0 w-[80mm] h-[80mm] bg-white/20 rounded-bl-[100%] pointer-events-none" />
@@ -381,9 +363,8 @@ export function AboutTemplate() {
                    </div>
                </div>
             </div>
-
-            {/* ================= SEITE 2: KONZEPT ================= */}
-            <div className="flyer-page bg-white">
+            {/* ... Rest der Flyer-Seiten (identisch zum vorherigen Code) ... */}
+             <div className="flyer-page bg-white">
                 <div className="relative w-full h-full p-16 md:p-20 flex flex-col">
                     <h2 className="text-3xl font-black text-slate-900 mb-8 border-b pb-4">Unser Pflege-Konzept</h2>
                     <p className="text-lg text-slate-600 mb-10 leading-relaxed">
@@ -417,8 +398,8 @@ export function AboutTemplate() {
                     </div>
                 </div>
             </div>
-
-            {/* ================= SEITE 3: ERSTE SCHRITTE ================= */}
+            
+            {/* Seite 3 */}
             <div className="flyer-page bg-slate-50">
                 <div className="relative w-full h-full p-16 md:p-20 flex flex-col">
                     <h2 className="text-3xl font-black text-slate-900 mb-8 border-b border-slate-200 pb-4">Die ersten Schritte</h2>
@@ -460,7 +441,7 @@ export function AboutTemplate() {
                 </div>
             </div>
 
-            {/* ================= SEITE 4: LEISTUNGEN ================= */}
+            {/* Seite 4 */}
             <div className="flyer-page bg-white">
                 <div className="relative w-full h-full p-16 md:p-20 flex flex-col">
                     <h2 className="text-3xl font-black text-slate-900 mb-8 border-b border-slate-100 pb-4">Unsere Leistungen</h2>
@@ -493,7 +474,7 @@ export function AboutTemplate() {
                 </div>
             </div>
 
-            {/* ================= SEITE 5: KONTAKT ================= */}
+            {/* Seite 5 */}
             <div className="flyer-page bg-[var(--color-primary)] text-white">
                 <div className="relative w-full h-full p-16 md:p-20 flex flex-col justify-center items-center text-center overflow-hidden">
                     <div className="absolute inset-0 opacity-10 bg-[url('/noise.png')] mix-blend-overlay z-0" />
