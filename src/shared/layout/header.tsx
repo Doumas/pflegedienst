@@ -103,15 +103,6 @@ export function Header() {
                   scrolled={scrolled}
                   className={cn(
                     "transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] h-auto",
-                    
-                    // MOBILE (bis md): 
-                    // Bleibt fast gleich groß (w-52 -> w-48), damit es lesbar bleibt
-                    // Der "Schrumpf-Effekt" kommt rein durch das Ausblenden der Unterzeile
-                    
-                    // DESKTOP (ab lg):
-                    // Normal: w-64 (256px) -> Passt perfekt neben das Menü
-                    // Scrolled: w-52 (208px) -> Kompakt, aber groß genug
-                    
                     scrolled ? "w-48 lg:w-52" : "w-52 lg:w-64"
                   )}
                 />
@@ -152,24 +143,8 @@ export function Header() {
                 </div>
             </div>
 
-            {/* MOBILE CONTROLS */}
+            {/* MOBILE CONTROLS (Bereinigt: Nur noch Menü-Button) */}
             <div className="flex items-center gap-2.5 lg:hidden">
-               <Link 
-                  href="/kontakt"
-                  className="group flex items-center justify-center w-10 h-10 rounded-full bg-white border border-slate-200 text-slate-600 shadow-sm active:scale-95 transition-all hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
-                  aria-label="Nachricht schreiben"
-               >
-                  <Mail className="w-5 h-5 stroke-[1.5]" />
-               </Link>
-
-               <a 
-                  href={`tel:${siteConfig.contact.phone}`} 
-                  className="group flex items-center justify-center w-10 h-10 rounded-full bg-white border border-slate-200 text-slate-600 shadow-sm active:scale-95 transition-all hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
-                  aria-label="Anrufen"
-               >
-                  <Phone className="w-5 h-5 stroke-[1.5]" />
-               </a>
-
                <button 
                   onClick={() => setIsOpen(!isOpen)} 
                   className="flex items-center justify-center w-10 h-10 rounded-full bg-[var(--color-primary)] text-white border border-transparent shadow-md active:scale-95 transition-all hover:bg-[var(--color-primary-hover)]"
@@ -205,7 +180,7 @@ export function Header() {
       </header>
       
       {/* PLATZHALTER */}
-      <div className={cn("w-full bg-transparent pointer-events-none transition-all", scrolled ? "h-[75px] lg:h-[130px]" : "h-[125px] lg:h-[130px]")} aria-hidden="true" />
+      <div className={cn("w-full bg-transparent pointer-events-none transition-all", scrolled ? "h-[75px] lg:h-[130px]" : "h-[110px] lg:h-[130px]")} aria-hidden="true" />
 
       {/* MOBILE MENU */}
       {isOpen && (
@@ -228,7 +203,7 @@ export function Header() {
                    </div>
                </div>
 
-               {/* FIX: Hover Effekte für Kontakt & WhatsApp */}
+               {/* Buttons im Menü selbst (Hier machen sie Sinn) */}
                <div className="grid grid-cols-2 gap-3 animate-in slide-in-from-bottom-4 fade-in duration-500 delay-200 fill-mode-both">
                   <Link 
                      href="/kontakt" 

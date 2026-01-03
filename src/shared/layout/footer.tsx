@@ -6,6 +6,32 @@ import { cn } from "@/shared/utils/cn";
 import { buttonVariants } from "@/shared/ui/button";
 import { siteConfig } from "@/config/site";
 import { DalasLogo } from "@/shared/ui/dalas-logo";
+import { FadeIn } from "@/shared/ui/fade-in"; // <--- NEU
+import { useState, useEffect, useRef } from "react";
+
+// --- HELPER HOOK ---
+function useInCenter(options = { threshold: 0.5 }) {
+    const ref = useRef<HTMLDivElement>(null);
+    const [isInCenter, setIsInCenter] = useState(false);
+
+    useEffect(() => {
+        const element = ref.current;
+        if (!element) return;
+
+        const observer = new IntersectionObserver(([entry]) => {
+            setIsInCenter(entry.isIntersecting);
+        }, {
+            // Fokusbereich: Ein Streifen in der Bildschirmmitte
+            rootMargin: "-35% 0px -35% 0px", 
+            threshold: 0
+        });
+
+        observer.observe(element);
+        return () => observer.disconnect();
+    }, []);
+
+    return { ref, isInCenter };
+}
 
 export function Footer() {
   
@@ -13,12 +39,15 @@ export function Footer() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  // Hook für den CTA Kasten (Mobile Focus)
+  const { ref: ctaRef, isInCenter: isCtaActive } = useInCenter();
+
   return (
-    // 1. FIX: 'overflow-hidden' hier ENTFERNT, damit die blaue Box oben rausraken kann ("schweben")
+    // 'overflow-hidden' entfernt, damit die blaue Box oben rausraken kann
     <footer className="relative bg-[var(--color-footer-bg)] text-white font-sans border-t border-white/10 mt-32">
       
-      {/* Hintergrund-Raster (Hier ist overflow-hidden okay, damit das Muster nicht rausläuft) */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Hintergrund-Raster - GPU Optimiert */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none transform-gpu">
           <div className="absolute inset-0 opacity-[0.03]" 
                style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
       </div>
@@ -27,54 +56,58 @@ export function Footer() {
       {/* PRE-FOOTER CTA (Der schwebende Kasten)                    */}
       {/* ========================================================= */}
       <div className="relative z-50 container px-4 md:px-6">
-        {/* Negative Margin (-mt-24) zieht die Box nach oben */}
-        <div className="-mt-24 bg-[var(--color-primary)] rounded-[2.5rem] p-8 md:p-12 shadow-2xl shadow-black/20 flex flex-col lg:flex-row items-center justify-between gap-8 md:gap-12 relative overflow-hidden group border border-white/10">
-            
-            {/* Background Animation */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:animate-[shimmer_2s_infinite]" />
-            <div className="absolute -right-10 -top-10 w-64 h-64 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-colors duration-500 pointer-events-none" />
-
-            <div className="relative z-10 text-center lg:text-left">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-wide mb-4 border border-white/10">
-                    <HeartHandshake className="w-4 h-4 text-[var(--color-accent)]" />
-                    Wir sind für Sie da
-                </div>
-                <h2 className="text-3xl md:text-4xl font-black text-white mb-3 leading-tight">
-                    Noch Fragen offen?
-                </h2>
-                <p className="text-white/90 text-lg font-medium max-w-lg leading-relaxed">
-                    Lassen Sie uns persönlich sprechen. Kostenlos und unverbindlich.
-                </p>
-            </div>
-
-            <div className="relative z-10 flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
-                {/* 2. FIX: ANRUF BUTTON 
-                   - bg-white (Hintergrund Weiß)
-                   - text-cyan-900 (Schrift Dunkel-Petrol) -> Damit man es liest!
-                */}
-                <a href={`tel:${siteConfig.contact.phone}`} className={cn(
-                    buttonVariants({ variant: "secondary", size: "lg" }),
-                    "h-14 px-8 bg-white text-cyan-950 hover:bg-slate-100 font-bold text-lg rounded-full shadow-lg hover:-translate-y-1 transition-transform w-full sm:w-auto justify-center border-none"
-                )}>
-                    <Phone className="w-5 h-5 mr-2 text-[var(--color-primary)]" />
-                    {siteConfig.contact.phone}
-                </a>
+        <FadeIn delay={0.1} direction="up" className="w-full">
+            {/* Negative Margin (-mt-24) zieht die Box nach oben */}
+            <div 
+                ref={ctaRef}
+                className={cn(
+                    "-mt-24 bg-[var(--color-primary)] rounded-[2.5rem] p-8 md:p-12 flex flex-col lg:flex-row items-center justify-between gap-8 md:gap-12 relative overflow-hidden group border border-white/10 transition-all duration-500 transform-gpu",
+                    // Mobile Auto-Focus Logik
+                    isCtaActive 
+                        ? "shadow-2xl shadow-[var(--color-primary)]/40 scale-[1.02] border-white/30" 
+                        : "shadow-2xl shadow-black/20 hover:scale-[1.01] hover:shadow-[var(--color-primary)]/30"
+                )}
+            >
                 
-                {/* 3. FIX: NACHRICHT BUTTON
-                   - bg-transparent (Kein weißer Block)
-                   - border-2 border-white (Weißer Rand)
-                   - text-white (Weiße Schrift)
-                */}
-                <Link href="/kontakt" className="w-full sm:w-auto">
-                    <div className={cn(
-                        buttonVariants({ variant: "outline", size: "lg" }),
-                        "bg-transparent h-14 px-8 text-white border-2 border-white/30 font-bold text-lg rounded-full hover:bg-white hover:text-cyan-950 hover:border-white w-full flex justify-center cursor-pointer transition-all"
-                    )}>
-                        Nachricht schreiben
+                {/* Background Animation */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:animate-[shimmer_2s_infinite]" />
+                <div className="absolute -right-10 -top-10 w-64 h-64 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-colors duration-500 pointer-events-none" />
+
+                <div className="relative z-10 text-center lg:text-left">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-wide mb-4 border border-white/10">
+                        <HeartHandshake className="w-4 h-4 text-[var(--color-accent)]" />
+                        Wir sind für Sie da
                     </div>
-                </Link>
+                    <h2 className="text-3xl md:text-4xl font-black text-white mb-3 leading-tight">
+                        Noch Fragen offen?
+                    </h2>
+                    <p className="text-white/90 text-lg font-medium max-w-lg leading-relaxed">
+                        Lassen Sie uns persönlich sprechen. Kostenlos und unverbindlich.
+                    </p>
+                </div>
+
+                <div className="relative z-10 flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+                    {/* ANRUF BUTTON */}
+                    <a href={`tel:${siteConfig.contact.phone}`} className={cn(
+                        buttonVariants({ variant: "secondary", size: "lg" }),
+                        "h-14 px-8 bg-white text-cyan-950 hover:bg-slate-100 font-bold text-lg rounded-full shadow-lg hover:-translate-y-1 transition-transform w-full sm:w-auto justify-center border-none"
+                    )}>
+                        <Phone className="w-5 h-5 mr-2 text-[var(--color-primary)]" />
+                        {siteConfig.contact.phone}
+                    </a>
+                    
+                    {/* NACHRICHT BUTTON */}
+                    <Link href="/kontakt" className="w-full sm:w-auto">
+                        <div className={cn(
+                            buttonVariants({ variant: "outline", size: "lg" }),
+                            "bg-transparent h-14 px-8 text-white border-2 border-white/30 font-bold text-lg rounded-full hover:bg-white hover:text-cyan-950 hover:border-white w-full flex justify-center cursor-pointer transition-all"
+                        )}>
+                            Nachricht schreiben
+                        </div>
+                    </Link>
+                </div>
             </div>
-        </div>
+        </FadeIn>
       </div>
 
 
@@ -86,11 +119,10 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-16">
             
             {/* SPALTE 1: BRANDING */}
-            <div className="space-y-6">
+            <FadeIn delay={0.2} className="space-y-6">
                <Link href="/" className="inline-block mb-6">
-    {/* w-72 (288px) oder w-80 (320px) für gute Sichtbarkeit im Footer */}
-    <DalasLogo variant="light" className="w-64 md:w-80" />
-</Link>
+                    <DalasLogo variant="light" className="w-64 md:w-80" />
+               </Link>
                 <p className="text-white/60 leading-relaxed text-sm font-medium pr-4">
                     Ihr verlässlicher Partner für ambulante Intensivpflege in Frankfurt und Umgebung. 
                     Menschlich, kompetent und immer an Ihrer Seite.
@@ -102,10 +134,10 @@ export function Footer() {
                         </a>
                     ))}
                 </div>
-            </div>
+            </FadeIn>
 
             {/* SPALTE 2: MENÜ */}
-            <div>
+            <FadeIn delay={0.3}>
                 <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
                     Menü <div className="h-px w-8 bg-[var(--color-accent)]" />
                 </h4>
@@ -119,10 +151,10 @@ export function Footer() {
                         </li>
                     ))}
                 </ul>
-            </div>
+            </FadeIn>
 
             {/* SPALTE 3: LEISTUNGEN */}
-            <div>
+            <FadeIn delay={0.4}>
                 <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
                     Leistungen <div className="h-px w-8 bg-[var(--color-accent)]" />
                 </h4>
@@ -136,10 +168,10 @@ export function Footer() {
                         </li>
                     ))}
                 </ul>
-            </div>
+            </FadeIn>
 
             {/* SPALTE 4: KONTAKT */}
-            <div>
+            <FadeIn delay={0.5}>
                 <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
                     Kontakt <div className="h-px w-8 bg-[var(--color-accent)]" />
                 </h4>
@@ -173,24 +205,26 @@ export function Footer() {
                         </div>
                     </li>
                 </ul>
-            </div>
+            </FadeIn>
 
         </div>
 
         {/* BOTTOM BAR */}
-        <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-medium text-white/40">
-            <div className="flex flex-wrap justify-center gap-6">
-                <span>&copy; {new Date().getFullYear()} Dalas GmbH. Alle Rechte vorbehalten.</span>
+        <FadeIn delay={0.6}>
+            <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-medium text-white/40">
+                <div className="flex flex-wrap justify-center gap-6">
+                    <span>&copy; {new Date().getFullYear()} Dalas GmbH. Alle Rechte vorbehalten.</span>
+                </div>
+                <div className="flex gap-6">
+                    <Link href="/impressum" className="hover:text-white transition-colors">Impressum</Link>
+                    <Link href="/datenschutz" className="hover:text-white transition-colors">Datenschutz</Link>
+                    <Link href="/agb" className="hover:text-white transition-colors">AGB</Link>
+                </div>
+                <button onClick={scrollToTop} className="p-3 bg-white/5 hover:bg-[var(--color-accent)] text-white rounded-xl transition-colors group">
+                    <ArrowUp className="w-4 h-4 group-hover:-translate-y-1 transition-transform" />
+                </button>
             </div>
-            <div className="flex gap-6">
-                <Link href="/impressum" className="hover:text-white transition-colors">Impressum</Link>
-                <Link href="/datenschutz" className="hover:text-white transition-colors">Datenschutz</Link>
-                <Link href="/agb" className="hover:text-white transition-colors">AGB</Link>
-            </div>
-            <button onClick={scrollToTop} className="p-3 bg-white/5 hover:bg-[var(--color-accent)] text-white rounded-xl transition-colors group">
-                <ArrowUp className="w-4 h-4 group-hover:-translate-y-1 transition-transform" />
-            </button>
-        </div>
+        </FadeIn>
 
       </div>
     </footer>

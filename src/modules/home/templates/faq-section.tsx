@@ -4,6 +4,8 @@ import Link from "next/link";
 import { HelpCircle, Clock, FileText, ChevronDown, ArrowRight, Scale, Users, Sparkles } from "lucide-react"; 
 import { cn } from "@/shared/utils/cn";
 import { buttonVariants } from "@/shared/ui/button"; 
+import { FadeIn } from "@/shared/ui/fade-in"; // <--- NEU: Animation
+import { useState, useEffect, useRef } from "react";
 
 const faqData = [
     { question: "Was zahlt die Pflegekasse?", answer: "Ab Pflegegrad 2 haben Sie Anspruch auf Pflegesachleistungen. Wir rechnen direkt mit der Kasse ab.", icon: Scale },
@@ -12,14 +14,105 @@ const faqData = [
     { question: "Habe ich feste Bezugspersonen?", answer: "Ja, wir arbeiten mit festen, kleinen Teams. Das schafft Vertrauen und persönliche Nähe.", icon: Users }
 ];
 
+// --- HELPER HOOK (Für Mobile Auto-Focus) ---
+function useInCenter(options = { threshold: 0.5 }) {
+    const ref = useRef<HTMLDivElement>(null);
+    const [isInCenter, setIsInCenter] = useState(false);
+
+    useEffect(() => {
+        const element = ref.current;
+        if (!element) return;
+
+        const observer = new IntersectionObserver(([entry]) => {
+            setIsInCenter(entry.isIntersecting);
+        }, {
+            // Fokusbereich in der Mitte des Screens
+            rootMargin: "-40% 0px -40% 0px", 
+            threshold: 0
+        });
+
+        observer.observe(element);
+        return () => observer.disconnect();
+    }, []);
+
+    return { ref, isInCenter };
+}
+
+// --- SUB-KOMPONENTE: EINZELNES FAQ ITEM (Für Mobile Focus) ---
+function FaqItem({ faq }: { faq: typeof faqData[0] }) {
+    const { ref, isInCenter } = useInCenter();
+
+    return (
+        <div 
+            ref={ref}
+            className={cn(
+                "group bg-white rounded-[2rem] border overflow-hidden transition-all duration-500 transform-gpu",
+                // Mobile Focus Logik vs. Desktop Hover
+                isInCenter 
+                    ? "border-[var(--color-accent)]/40 shadow-xl shadow-[var(--color-accent)]/10 scale-[1.01]" 
+                    : "border-[var(--color-border-soft)] hover:border-[var(--color-accent)]/30 hover:shadow-xl hover:shadow-[var(--color-accent)]/5"
+            )}
+        >
+            <details className="group/details relative">
+                
+                {/* Farb-Indikator links (nur sichtbar wenn geöffnet oder im Fokus) */}
+                <div className={cn(
+                    "absolute inset-y-0 left-0 w-1.5 transition-all duration-300",
+                    isInCenter ? "bg-[var(--color-accent)]/50" : "bg-transparent group-open/details:bg-[var(--color-accent)]"
+                )} />
+                
+                <summary className="flex items-center justify-between cursor-pointer list-none p-5 md:p-6 pl-6 md:pl-8">
+                    <div className="flex items-center gap-5">
+                    
+                        {/* ICON BOX */}
+                        <div className={cn(
+                            "w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 transition-all duration-300 border",
+                            // Styling Logik: Focus vs Hover vs Open
+                            (isInCenter) 
+                                ? "bg-[var(--color-accent)] text-white border-[var(--color-accent)] scale-110" 
+                                : "bg-[var(--color-secondary)] text-[var(--color-primary)] border-[var(--color-primary)]/5 group-open/details:bg-[var(--color-accent)] group-open/details:text-white group-open/details:border-[var(--color-accent)] group-hover:bg-[var(--color-accent)] group-hover:text-white group-hover:scale-110"
+                        )}>
+                            <faq.icon className="w-6 h-6" />
+                        </div>
+                        
+                        {/* TEXT */}
+                        <span className={cn(
+                            "font-bold text-lg pr-4 transition-colors",
+                            isInCenter ? "text-[var(--color-primary)]" : "text-slate-900 group-hover:text-[var(--color-primary)]"
+                        )}>
+                            {faq.question}
+                        </span>
+                    </div>
+
+                    {/* CHEVRON */}
+                    <span className={cn(
+                        "ml-2 p-2 rounded-full shrink-0 transition-all duration-300",
+                        // Styling Chevron
+                        (isInCenter)
+                            ? "text-[var(--color-accent)] bg-white group-open/details:rotate-180 group-open/details:text-white group-open/details:bg-[var(--color-accent)]"
+                            : "text-slate-400 bg-slate-50 group-open/details:rotate-180 group-open/details:text-white group-open/details:bg-[var(--color-accent)] group-hover:text-[var(--color-accent)] group-hover:bg-white"
+                    )}>
+                        <ChevronDown className="w-5 h-5" />
+                    </span>
+                </summary>
+                
+                {/* ANTWORT */}
+                <div className="px-6 pb-8 pl-20 md:pl-24 text-slate-600 leading-relaxed font-medium text-base animate-in fade-in slide-in-from-top-1 duration-200">
+                    <div className="pt-0 border-t border-slate-50 mt-2 pt-4">{faq.answer}</div>
+                </div>
+            </details>
+        </div>
+    );
+}
+
 export function FaqSection() {
   return (
     <section className="py-24 lg:py-32 bg-white font-sans relative overflow-hidden">
       
       {/* ========================================================= */}
-      {/* HINTERGRUND: CLEAN (Visuelle Pause)                       */}
+      {/* HINTERGRUND: CLEAN - GPU Optimiert                        */}
       {/* ========================================================= */}
-      <div className="absolute inset-0 opacity-[0.3] pointer-events-none" 
+      <div className="absolute inset-0 opacity-[0.3] pointer-events-none transform-gpu" 
            style={{ backgroundImage: 'radial-gradient(var(--color-border-soft) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
 
 
@@ -31,80 +124,46 @@ export function FaqSection() {
         {/* HEADER */}
         <div className="text-center mb-16 lg:mb-20">
           
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--color-secondary)] border border-[var(--color-border-soft)] text-[var(--color-primary)] text-xs font-bold tracking-wide uppercase shadow-sm mb-6 animate-in fade-in slide-in-from-bottom-2 duration-700">
-            <Sparkles className="w-3 h-3 text-[var(--color-accent)]" />
-            <span>Wissenswertes</span>
-          </div>
+          <FadeIn delay={0.1}>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--color-secondary)] border border-[var(--color-border-soft)] text-[var(--color-primary)] text-xs font-bold tracking-wide uppercase shadow-sm mb-6">
+                <Sparkles className="w-3 h-3 text-[var(--color-accent)]" />
+                <span>Wissenswertes</span>
+            </div>
+          </FadeIn>
           
-           <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1] animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
-            Häufige Fragen & <br className="hidden md:block" />
-            <span className="relative inline-block px-2">
-               <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)]">
-                 Antworten.
-               </span>
-               <svg className="absolute w-full h-3 -bottom-1 left-0 text-[var(--color-accent)] -z-0 opacity-60" viewBox="0 0 100 10" preserveAspectRatio="none">
-                  <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
-               </svg>
-            </span>
-          </h2>
+          <FadeIn delay={0.2}>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1]">
+                Häufige Fragen & <br className="hidden md:block" />
+                <span className="relative inline-block px-2">
+                <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)]">
+                    Antworten.
+                </span>
+                <svg className="absolute w-full h-3 -bottom-1 left-0 text-[var(--color-accent)] -z-0 opacity-60" viewBox="0 0 100 10" preserveAspectRatio="none">
+                    <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
+                </svg>
+                </span>
+            </h2>
+          </FadeIn>
           
-          <p className="text-slate-600 text-lg max-w-xl mx-auto font-medium animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
-            Wir sorgen für Transparenz im Pflege-Dschungel. Hier finden Sie die wichtigsten Antworten vorab.
-          </p>
+          <FadeIn delay={0.3}>
+            <p className="text-slate-600 text-lg max-w-xl mx-auto font-medium">
+                Wir sorgen für Transparenz im Pflege-Dschungel. Hier finden Sie die wichtigsten Antworten vorab.
+            </p>
+          </FadeIn>
         </div>
 
-        {/* LISTE (Accordion) */}
+        {/* LISTE (Accordion) - Mit Stagger Effect */}
         <div className="grid gap-5 mb-12">
           {faqData.map((faq, i) => (
-            <div 
-                key={i} 
-                className="group bg-white rounded-[2rem] border border-[var(--color-border-soft)] overflow-hidden animate-in fade-in slide-in-from-bottom-4 fill-mode-both transition-all duration-300
-                hover:border-[var(--color-accent)]/30 hover:shadow-xl hover:shadow-[var(--color-accent)]/5"
-                style={{ animationDelay: `${i * 100}ms` }}
-            >
-              <details className="group/details relative">
-                
-                {/* Farb-Indikator links (nur sichtbar wenn geöffnet) */}
-                <div className="absolute inset-y-0 left-0 w-1.5 bg-transparent group-open/details:bg-[var(--color-accent)] transition-all duration-300" />
-                
-                <summary className="flex items-center justify-between cursor-pointer list-none p-5 md:p-6 pl-6 md:pl-8">
-                  <div className="flex items-center gap-5">
-                    
-                    {/* ICON BOX - Interaktiv: Wechselt Farbe beim Öffnen */}
-                    <div className="w-12 h-12 rounded-2xl bg-[var(--color-secondary)] flex items-center justify-center text-[var(--color-primary)] shrink-0 transition-all duration-300 border border-[var(--color-primary)]/5
-                        group-open/details:bg-[var(--color-accent)] group-open/details:text-white group-open/details:border-[var(--color-accent)]
-                        group-hover:bg-[var(--color-accent)] group-hover:text-white group-hover:scale-110">
-                      <faq.icon className="w-6 h-6" />
-                    </div>
-                    
-                    {/* TEXT */}
-                    <span className="font-bold text-lg text-slate-900 pr-4 group-hover:text-[var(--color-primary)] transition-colors">
-                        {faq.question}
-                    </span>
-                  </div>
-
-                  {/* CHEVRON - Rotiert beim Öffnen */}
-                  <span className="ml-2 text-slate-400 bg-slate-50 p-2 rounded-full shrink-0 transition-all duration-300
-                      group-open/details:rotate-180 
-                      group-open/details:text-white group-open/details:bg-[var(--color-accent)]
-                      group-hover:text-[var(--color-accent)] group-hover:bg-white">
-                    <ChevronDown className="w-5 h-5" />
-                  </span>
-                </summary>
-                
-                {/* ANTWORT - Slide-In Effekt */}
-                <div className="px-6 pb-8 pl-20 md:pl-24 text-slate-600 leading-relaxed font-medium text-base animate-in fade-in slide-in-from-top-1 duration-200">
-                  <div className="pt-0 border-t border-slate-50 mt-2 pt-4">{faq.answer}</div>
-                </div>
-              </details>
-            </div>
+            <FadeIn key={i} delay={0.4 + (i * 0.1)} direction="up">
+                <FaqItem faq={faq} />
+            </FadeIn>
           ))}
         </div>
 
         {/* BUTTON */}
-        <div className="flex justify-center mt-12 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-500">
+        <FadeIn delay={0.8} className="flex justify-center mt-12">
           <Link href="/faq">
-            {/* Button Fix: div als Button-Ersatz */}
             <div className={cn(
                 buttonVariants({ variant: "default", size: "lg" }),
                 "h-14 px-10 text-lg rounded-full shadow-xl shadow-[var(--color-primary)]/20 hover:-translate-y-1 active:scale-95 active:shadow-sm transition-all duration-200 cursor-pointer font-bold"
@@ -112,7 +171,7 @@ export function FaqSection() {
               Alle Fragen ansehen <ArrowRight className="ml-2 w-5 h-5" />
             </div>
           </Link>
-        </div>
+        </FadeIn>
 
       </div>
     </section>
