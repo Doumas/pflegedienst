@@ -5,13 +5,13 @@ import { Button } from "@/shared/ui/button";
 import { 
   HelpCircle, Phone, MessageCircle, ChevronDown, Sparkles, Wallet, 
   Clock, ShieldCheck, HeartHandshake, MapPin, Activity, FileText, 
-  ArrowRight, Download, X, Printer, CheckSquare, AlertCircle, FileCheck 
+  ArrowRight, Download, X, Printer, AlertCircle, FileCheck 
 } from "lucide-react";
 import Link from "next/link";
 import { DalasLogo } from "@/shared/ui/dalas-logo";
+import { FadeIn } from "@/shared/ui/fade-in";
 
 const faqData = [
-  // ... (Die FAQ Daten bleiben unverändert, um Platz zu sparen) ...
   {
     question: "Wie schnell können Sie mit der Pflege beginnen?",
     answer: "In dringenden Fällen (z.B. plötzliche Entlassung aus dem Krankenhaus) können wir oft innerhalb von 24 Stunden die Versorgung aufnehmen. Bei geplanter Übernahme benötigen wir in der Regel 2-3 Tage für die Pflegeplanung und Klärung der Kostenübernahme.",
@@ -75,14 +75,14 @@ export function FAQTemplate() {
     <div className="relative min-h-screen bg-white font-sans pb-20 selection:bg-[var(--color-primary)]/20 overflow-hidden">
       
       {/* 1. Statisches Raster */}
-      <div className="hide-on-print absolute inset-0 opacity-[0.4] pointer-events-none" 
+      <div className="hide-on-print absolute inset-0 opacity-[0.4] pointer-events-none transform-gpu" 
            style={{ backgroundImage: 'radial-gradient(var(--color-border-soft) 1px, transparent 1px)', backgroundSize: '32px 32px' }}>
       </div>
       
       {/* 2. Bewegliche Blobs (Verstecken beim Drucken) */}
-      <div className="hide-on-print absolute top-[-10%] left-1/2 -translate-x-1/2 w-[1000px] h-[700px] bg-[var(--color-secondary)]/60 rounded-full blur-[120px] opacity-70 pointer-events-none" />
-      <div className="hide-on-print absolute top-[20%] right-[-10%] w-[600px] h-[600px] bg-[var(--color-primary)]/5 rounded-full blur-[100px] animate-pulse pointer-events-none" style={{ animationDuration: '6s' }} />
-      <div className="hide-on-print absolute bottom-0 left-[-10%] w-[500px] h-[500px] bg-[var(--color-accent)]/10 rounded-full blur-[80px] pointer-events-none" />
+      <div className="hide-on-print absolute top-[-10%] left-1/2 -translate-x-1/2 w-[1000px] h-[700px] bg-[var(--color-secondary)]/60 rounded-full blur-[120px] opacity-70 pointer-events-none transform-gpu will-change-transform" />
+      <div className="hide-on-print absolute top-[20%] right-[-10%] w-[600px] h-[600px] bg-[var(--color-primary)]/5 rounded-full blur-[100px] animate-pulse pointer-events-none transform-gpu" style={{ animationDuration: '6s' }} />
+      <div className="hide-on-print absolute bottom-0 left-[-10%] w-[500px] h-[500px] bg-[var(--color-accent)]/10 rounded-full blur-[80px] pointer-events-none transform-gpu" />
 
 
       {/* ========================================================= */}
@@ -93,25 +93,31 @@ export function FAQTemplate() {
         {/* --- 1. HEADER --- */}
         <section className="pt-24 pb-16 lg:pt-32 lg:pb-24 text-center px-4">
           <div className="container max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-sm border border-[var(--color-border-soft)] text-[var(--color-primary)] text-xs font-bold tracking-wide uppercase shadow-sm mb-8 animate-in fade-in slide-in-from-bottom-2 duration-700">
-              <Sparkles className="w-3 h-3 text-[var(--color-accent)]" />
-              <span>Wissenswertes</span>
-            </div>
+            <FadeIn delay={0.1}>
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-sm border border-[var(--color-border-soft)] text-[var(--color-primary)] text-xs font-bold tracking-wide uppercase shadow-sm mb-8">
+                <Sparkles className="w-3 h-3 text-[var(--color-accent)]" />
+                <span>Wissenswertes</span>
+                </div>
+            </FadeIn>
 
-           <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1] animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
-              Häufige Fragen & <br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)] relative inline-block">
-                 Antworten.
-                 <svg className="absolute w-full h-3 -bottom-1 left-0 text-[var(--color-accent)] -z-10 opacity-40" viewBox="0 0 100 10" preserveAspectRatio="none">
-                    <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
-                 </svg>
-              </span>
-            </h1>
+           <FadeIn delay={0.2}>
+               <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1]">
+                Häufige Fragen & <br/>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)] relative inline-block">
+                    Antworten.
+                    <svg className="absolute w-full h-3 -bottom-1 left-0 text-[var(--color-accent)] -z-10 opacity-40" viewBox="0 0 100 10" preserveAspectRatio="none">
+                        <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
+                    </svg>
+                </span>
+                </h1>
+           </FadeIn>
             
-            <p className="text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
-              Hier finden Sie detaillierte Informationen zu unseren Leistungen, Kosten und dem Ablauf. 
-              Transparenz ist für uns der erste Schritt zur Vertrauensbasis.
-            </p>
+            <FadeIn delay={0.3}>
+                <p className="text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto">
+                Hier finden Sie detaillierte Informationen zu unseren Leistungen, Kosten und dem Ablauf. 
+                Transparenz ist für uns der erste Schritt zur Vertrauensbasis.
+                </p>
+            </FadeIn>
           </div>
         </section>
 
@@ -120,104 +126,108 @@ export function FAQTemplate() {
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
             
             {/* LINKS: Die FAQ Liste */}
-            <div className="lg:col-span-8 space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
+            <div className="lg:col-span-8 space-y-4">
               {faqData.map((item, i) => (
-                <div key={i} className="group bg-white rounded-[1.5rem] border border-[var(--color-border-soft)] hover:border-[var(--color-accent)]/30 hover:shadow-xl hover:shadow-[var(--color-accent)]/5 transition-all duration-300 overflow-hidden">
-                  <details className="group/details">
-                    <summary className="flex items-start md:items-center gap-4 p-6 cursor-pointer list-none select-none">
-                      <div className="mt-1 md:mt-0 w-12 h-12 rounded-2xl bg-[var(--color-secondary)] flex items-center justify-center text-[var(--color-primary)] shrink-0 border border-transparent transition-colors duration-300 group-hover:text-[var(--color-accent)] group-open/details:bg-[var(--color-accent)] group-open/details:text-white group-open/details:group-hover:text-white">
-                        <item.icon className="w-5 h-5" />
-                      </div>
-                      <div className="flex-1 pr-4">
-                        <h3 className="text-lg font-bold text-slate-900 group-hover:text-[var(--color-accent)] transition-colors leading-tight">
-                          {item.question}
-                        </h3>
-                      </div>
-                      <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-open/details:bg-[var(--color-accent)] group-open/details:text-white group-open/details:group-hover:text-white group-open/details:rotate-180 transition-all duration-300 shrink-0">
-                        <ChevronDown className="w-5 h-5" />
-                      </div>
-                    </summary>
-                    <div className="px-6 pb-6 pt-0 pl-[5rem]">
-                      <div className="text-slate-600 leading-relaxed border-l-2 border-[var(--color-secondary)] group-open/details:border-[var(--color-accent)] pl-4 py-1 text-pretty font-medium transition-colors">
-                        {item.answer}
-                      </div>
+                <FadeIn key={i} delay={0.4 + (i * 0.05)} direction="up">
+                    <div className="group bg-white rounded-[1.5rem] border border-[var(--color-border-soft)] hover:border-[var(--color-accent)]/30 hover:shadow-xl hover:shadow-[var(--color-accent)]/5 transition-all duration-300 overflow-hidden transform-gpu">
+                    <details className="group/details">
+                        <summary className="flex items-start md:items-center gap-4 p-6 cursor-pointer list-none select-none">
+                        <div className="mt-1 md:mt-0 w-12 h-12 rounded-2xl bg-[var(--color-secondary)] flex items-center justify-center text-[var(--color-primary)] shrink-0 border border-transparent transition-colors duration-300 group-hover:text-[var(--color-accent)] group-open/details:bg-[var(--color-accent)] group-open/details:text-white group-open/details:group-hover:text-white">
+                            <item.icon className="w-5 h-5" />
+                        </div>
+                        <div className="flex-1 pr-4">
+                            <h3 className="text-lg font-bold text-slate-900 group-hover:text-[var(--color-accent)] transition-colors leading-tight">
+                            {item.question}
+                            </h3>
+                        </div>
+                        <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-open/details:bg-[var(--color-accent)] group-open/details:text-white group-open/details:group-hover:text-white group-open/details:rotate-180 transition-all duration-300 shrink-0">
+                            <ChevronDown className="w-5 h-5" />
+                        </div>
+                        </summary>
+                        <div className="px-6 pb-6 pt-0 pl-[5rem]">
+                        <div className="text-slate-600 leading-relaxed border-l-2 border-[var(--color-secondary)] group-open/details:border-[var(--color-accent)] pl-4 py-1 text-pretty font-medium transition-colors">
+                            {item.answer}
+                        </div>
+                        </div>
+                    </details>
                     </div>
-                  </details>
-                </div>
+                </FadeIn>
               ))}
             </div>
 
             {/* RECHTS: Sidebar */}
-            <div className="lg:col-span-4 space-y-8 sticky top-32 animate-in fade-in slide-in-from-right-4 duration-1000 delay-500">
+            <div className="lg:col-span-4 space-y-8 sticky top-32">
               
               {/* Kontakt Box */}
-              <div className="bg-white border border-[var(--color-border-soft)] p-8 rounded-[2.5rem] shadow-2xl shadow-slate-200/50 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--color-secondary)] rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none opacity-50" />
-                <div className="relative z-10">
-                  <div className="w-14 h-14 bg-[var(--color-secondary)] rounded-2xl flex items-center justify-center mb-6 border border-[var(--color-border-soft)] shadow-sm text-[var(--color-primary)]">
-                    <MessageCircle className="w-7 h-7" />
-                  </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">Frage nicht gefunden?</h3>
-                  <p className="text-slate-600 text-sm mb-8 leading-relaxed">
-                    Jede Pflegesituation ist einzigartig. Lassen Sie uns persönlich darüber sprechen.
-                  </p>
-                  <div className="space-y-4">
-                    <a href={`tel:061097159916`} className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 hover:bg-[var(--color-secondary)] border border-transparent hover:border-[var(--color-border-soft)] transition-all group cursor-pointer">
-                      <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-slate-400 group-hover:text-[var(--color-primary)] transition-colors">
-                         <Phone className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <div className="text-[10px] text-slate-500 uppercase tracking-wide font-bold">Rufen Sie uns an</div>
-                        <div className="font-bold text-slate-900 group-hover:text-[var(--color-primary)] transition-colors">06109 715 99 16</div>
-                      </div>
-                    </a>
-                    <Link href="/kontakt" className="block w-full">
-                      <Button className="w-full bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white h-12 text-base font-bold shadow-lg shadow-[var(--color-primary)]/20 rounded-2xl hover:-translate-y-0.5 transition-all">
-                        Nachricht schreiben
-                      </Button>
-                    </Link>
-                  </div>
+              <FadeIn delay={0.6} direction="left">
+                <div className="bg-white border border-[var(--color-border-soft)] p-8 rounded-[2.5rem] shadow-2xl shadow-slate-200/50 relative overflow-hidden transform-gpu">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--color-secondary)] rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none opacity-50" />
+                    <div className="relative z-10">
+                    <div className="w-14 h-14 bg-[var(--color-secondary)] rounded-2xl flex items-center justify-center mb-6 border border-[var(--color-border-soft)] shadow-sm text-[var(--color-primary)]">
+                        <MessageCircle className="w-7 h-7" />
+                    </div>
+                    <h3 className="text-xl font-bold text-slate-900 mb-2">Frage nicht gefunden?</h3>
+                    <p className="text-slate-600 text-sm mb-8 leading-relaxed">
+                        Jede Pflegesituation ist einzigartig. Lassen Sie uns persönlich darüber sprechen.
+                    </p>
+                    <div className="space-y-4">
+                        <a href={`tel:061097159916`} className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 hover:bg-[var(--color-secondary)] border border-transparent hover:border-[var(--color-border-soft)] transition-all group cursor-pointer">
+                        <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-slate-400 group-hover:text-[var(--color-primary)] transition-colors">
+                            <Phone className="w-5 h-5" />
+                        </div>
+                        <div>
+                            <div className="text-[10px] text-slate-500 uppercase tracking-wide font-bold">Rufen Sie uns an</div>
+                            <div className="font-bold text-slate-900 group-hover:text-[var(--color-primary)] transition-colors">06109 715 99 16</div>
+                        </div>
+                        </a>
+                        <Link href="/kontakt" className="block w-full">
+                        <Button className="w-full bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white h-12 text-base font-bold shadow-lg shadow-[var(--color-primary)]/20 rounded-2xl hover:-translate-y-0.5 transition-all">
+                            Nachricht schreiben
+                        </Button>
+                        </Link>
+                    </div>
+                    </div>
                 </div>
-              </div>
+              </FadeIn>
 
               {/* DOWNLOAD BOX - CLICKABLE */}
-              <div 
-                onClick={() => setIsChecklistOpen(true)}
-                className="block bg-[var(--color-footer-bg)] text-white rounded-[2.5rem] p-8 relative overflow-hidden group cursor-pointer hover:shadow-2xl hover:shadow-black/20 transition-all hover:-translate-y-1"
-              >
-                 <div className="absolute -top-10 -right-10 w-40 h-40 bg-[var(--color-accent)]/10 rounded-full blur-2xl group-hover:bg-[var(--color-accent)]/20 transition-colors" />
-                 <div className="absolute bottom-0 left-0 w-32 h-32 bg-[var(--color-primary)]/20 rounded-full blur-2xl" />
-                 
-                 <div className="relative z-10">
-                   <div className="flex items-start justify-between mb-6">
-                     <div>
-                       <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-white/10 border border-white/10 text-[10px] font-bold uppercase tracking-wide text-[var(--color-accent)] mb-3 backdrop-blur-sm">
-                         <FileText className="w-3 h-3" /> Kostenlos
-                       </div>
-                       <h4 className="font-bold text-xl leading-tight mb-2">Checkliste: <br/>Pflegegrad beantragen</h4>
-                     </div>
-                     <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-[var(--color-accent)] group-hover:bg-[var(--color-accent)] group-hover:text-slate-900 transition-all backdrop-blur-sm">
-                        <Download className="w-5 h-5" />
-                     </div>
-                   </div>
-                   <p className="text-sm text-white/70 mb-6 leading-relaxed">
-                     Schritt-für-Schritt Anleitung zur Vorbereitung auf den MDK-Besuch als PDF.
-                   </p>
-                   <div className="flex items-center gap-2 text-sm font-bold text-white group-hover:text-[var(--color-accent)] transition-colors border-t border-white/10 pt-4">
-                      Jetzt ansehen & drucken <ArrowRight className="w-4 h-4" />
-                   </div>
-                 </div>
-              </div>
+              <FadeIn delay={0.7} direction="left">
+                <div 
+                    onClick={() => setIsChecklistOpen(true)}
+                    className="block bg-[var(--color-footer-bg)] text-white rounded-[2.5rem] p-8 relative overflow-hidden group cursor-pointer hover:shadow-2xl hover:shadow-black/20 transition-all hover:-translate-y-1 transform-gpu"
+                >
+                    <div className="absolute -top-10 -right-10 w-40 h-40 bg-[var(--color-accent)]/10 rounded-full blur-2xl group-hover:bg-[var(--color-accent)]/20 transition-colors" />
+                    <div className="absolute bottom-0 left-0 w-32 h-32 bg-[var(--color-primary)]/20 rounded-full blur-2xl" />
+                    
+                    <div className="relative z-10">
+                    <div className="flex items-start justify-between mb-6">
+                        <div>
+                        <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-white/10 border border-white/10 text-[10px] font-bold uppercase tracking-wide text-[var(--color-accent)] mb-3 backdrop-blur-sm">
+                            <FileText className="w-3 h-3" /> Kostenlos
+                        </div>
+                        <h4 className="font-bold text-xl leading-tight mb-2">Checkliste: <br/>Pflegegrad beantragen</h4>
+                        </div>
+                        <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-[var(--color-accent)] group-hover:bg-[var(--color-accent)] group-hover:text-slate-900 transition-all backdrop-blur-sm">
+                            <Download className="w-5 h-5" />
+                        </div>
+                    </div>
+                    <p className="text-sm text-white/70 mb-6 leading-relaxed">
+                        Schritt-für-Schritt Anleitung zur Vorbereitung auf den MDK-Besuch als PDF.
+                    </p>
+                    <div className="flex items-center gap-2 text-sm font-bold text-white group-hover:text-[var(--color-accent)] transition-colors border-t border-white/10 pt-4">
+                        Jetzt ansehen & drucken <ArrowRight className="w-4 h-4" />
+                    </div>
+                    </div>
+                </div>
+              </FadeIn>
 
             </div>
           </div>
         </div>
       </div>
 
-     {/* ... (Rest der Datei bleibt gleich) ... */}
-
       {/* ========================================================= */}
-      {/* CHECKLISTEN MODAL (DRUCKBAR - OPTIMIERT)                  */}
+      {/* CHECKLISTEN MODAL (DRUCKBAR)                              */}
       {/* ========================================================= */}
       {isChecklistOpen && (
         <div id="print-overlay">
@@ -245,7 +255,7 @@ export function FAQTemplate() {
               {/* === DAS BLATT PAPIER === */}
               <div className="flyer-page bg-white text-slate-900 pointer-events-auto relative overflow-hidden">
                  
-                 {/* Padding Wrapper - Etwas kompakter für sicheren Druck */}
+                 {/* Padding Wrapper */}
                  <div className="absolute inset-0 p-10 md:p-12 flex flex-col h-full justify-between">
                     
                     {/* Deko oben */}

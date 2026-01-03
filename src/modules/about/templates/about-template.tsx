@@ -1,18 +1,46 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Button } from "@/shared/ui/button";
 import { 
   Heart, Award, MapPin, Users, Clock, Quote, ArrowRight, Car,
-  CheckCircle2, UserX, UserCheck, Stethoscope, X, Printer, Download, Phone, FileText, HelpCircle, Euro, Syringe, Bath 
+  CheckCircle2, UserX, UserCheck, Stethoscope, X, Printer, Download, Phone, FileText, HelpCircle, Syringe, Bath 
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/shared/utils/cn";
 import { DalasLogo } from "@/shared/ui/dalas-logo"; 
+import { FadeIn } from "@/shared/ui/fade-in"; // <--- NEU
+
+// --- HELPER HOOK (Für Mobile Auto-Focus) ---
+function useInCenter(options = { threshold: 0.1 }) {
+    const ref = useRef<HTMLDivElement>(null);
+    const [isInCenter, setIsInCenter] = useState(false);
+
+    useEffect(() => {
+        const element = ref.current;
+        if (!element) return;
+
+        const observer = new IntersectionObserver(([entry]) => {
+            setIsInCenter(entry.isIntersecting);
+        }, {
+            // Triggerbereich in der Mitte des Bildschirms
+            rootMargin: "-30% 0px -30% 0px", 
+            threshold: 0
+        });
+
+        observer.observe(element);
+        return () => observer.disconnect();
+    }, []);
+
+    return { ref, isInCenter };
+}
 
 export function AboutTemplate() {
   const [isFlyerOpen, setIsFlyerOpen] = useState(false);
+  
+  // Hook für die "Herz & Hand" Karte
+  const { ref: cardRef, isInCenter: cardActive } = useInCenter();
 
   const handlePrint = () => {
     window.print();
@@ -24,14 +52,15 @@ export function AboutTemplate() {
     <div className="hide-on-print relative min-h-screen bg-white font-sans pb-20 selection:bg-[var(--color-primary)]/20 overflow-hidden">
       
       {/* ========================================================= */}
-      {/* HINTERGRUND FX                                            */}
+      {/* HINTERGRUND FX - GPU OPTIMIERT                            */}
       {/* ========================================================= */}
-      <div className="absolute inset-0 opacity-[0.4] pointer-events-none" 
+      <div className="absolute inset-0 opacity-[0.4] pointer-events-none transform-gpu" 
            style={{ backgroundImage: 'radial-gradient(var(--color-border-soft) 1px, transparent 1px)', backgroundSize: '32px 32px' }}>
       </div>
-      <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[1000px] h-[700px] bg-[var(--color-secondary)]/60 rounded-full blur-[120px] opacity-70 pointer-events-none" />
-      <div className="absolute top-[20%] right-[-10%] w-[600px] h-[600px] bg-[var(--color-primary)]/5 rounded-full blur-[100px] animate-pulse pointer-events-none" style={{ animationDuration: '6s' }} />
-      <div className="absolute bottom-0 left-[-10%] w-[500px] h-[500px] bg-[var(--color-accent)]/10 rounded-full blur-[80px] pointer-events-none" />
+      
+      <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[1000px] h-[700px] bg-[var(--color-secondary)]/60 rounded-full blur-[120px] opacity-70 pointer-events-none transform-gpu will-change-transform" />
+      <div className="absolute top-[20%] right-[-10%] w-[600px] h-[600px] bg-[var(--color-primary)]/5 rounded-full blur-[80px] lg:blur-[100px] md:animate-pulse pointer-events-none transform-gpu will-change-transform" style={{ animationDuration: '6s' }} />
+      <div className="absolute bottom-0 left-[-10%] w-[500px] h-[500px] bg-[var(--color-accent)]/10 rounded-full blur-[60px] lg:blur-[80px] pointer-events-none transform-gpu" />
 
 
       {/* ========================================================= */}
@@ -39,31 +68,37 @@ export function AboutTemplate() {
       {/* ========================================================= */}
       <div className="relative z-10">
 
-        {/* 1. HEADER - OPTIMIERT (Weniger Abstand oben) */}
+        {/* 1. HEADER */}
         <section className="pt-24 pb-16 lg:pt-32 lg:pb-24 text-center px-4">
           <div className="container max-w-4xl mx-auto">
             
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-sm border border-[var(--color-border-soft)] text-[var(--color-primary)] text-xs font-bold tracking-wide uppercase shadow-sm mb-8 animate-in fade-in slide-in-from-bottom-2 duration-700">
-              <Heart className="w-3 h-3 text-[var(--color-accent)] fill-current" />
-              <span>Über uns</span>
-            </div>
+            <FadeIn delay={0.1}>
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-sm border border-[var(--color-border-soft)] text-[var(--color-primary)] text-xs font-bold tracking-wide uppercase shadow-sm mb-8">
+                <Heart className="w-3 h-3 text-[var(--color-accent)] fill-current" />
+                <span>Über uns</span>
+                </div>
+            </FadeIn>
             
-            <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-slate-900 mb-8 tracking-tight leading-[1.1] text-balance animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
-              Pflege bedeutet <br/>
-              <span className="relative inline-block ml-3">
-                <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)]">
-                  Vertrauen.
+            <FadeIn delay={0.2}>
+                <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-slate-900 mb-8 tracking-tight leading-[1.1] text-balance">
+                Pflege bedeutet <br/>
+                <span className="relative inline-block ml-3">
+                    <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)]">
+                    Vertrauen.
+                    </span>
+                    <svg className="absolute w-full h-3 -bottom-1 left-0 text-[var(--color-accent)] -z-10 opacity-40" viewBox="0 0 100 10" preserveAspectRatio="none">
+                    <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
+                    </svg>
                 </span>
-                <svg className="absolute w-full h-3 -bottom-1 left-0 text-[var(--color-accent)] -z-10 opacity-40" viewBox="0 0 100 10" preserveAspectRatio="none">
-                   <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
-                </svg>
-              </span>
-            </h1>
+                </h1>
+            </FadeIn>
             
-            <p className="text-xl md:text-2xl text-slate-600 leading-relaxed max-w-3xl mx-auto font-medium animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
-              Wir möchten Ihnen nicht nur helfen, sondern Ihnen die Sorge nehmen. 
-              Lernen Sie hier die Menschen kennen, denen Sie Ihre Liebsten anvertrauen.
-            </p>
+            <FadeIn delay={0.3}>
+                <p className="text-xl md:text-2xl text-slate-600 leading-relaxed max-w-3xl mx-auto font-medium">
+                Wir möchten Ihnen nicht nur helfen, sondern Ihnen die Sorge nehmen. 
+                Lernen Sie hier die Menschen kennen, denen Sie Ihre Liebsten anvertrauen.
+                </p>
+            </FadeIn>
           </div>
         </section>
 
@@ -72,75 +107,107 @@ export function AboutTemplate() {
         <div className="container px-4 md:px-6 relative z-10">
           
           <div className="max-w-3xl mb-16">
-           <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1] animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
-                Das Prinzip <span className="text-[var(--color-primary)]">Bezugspflege.</span>
-             </h2>
-             <p className="text-lg text-slate-600 leading-relaxed font-medium">
-                In vielen Pflegediensten gleicht der Alltag einem Bahnhof: Jeden Tag ein anderes Gesicht. 
-                Wir haben für Sie eine <strong>5-seitige Broschüre</strong> zusammengestellt, die unser Konzept und erste Hilfestellungen erklärt.
-             </p>
+           <FadeIn direction="right">
+                <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1]">
+                        Das Prinzip <span className="text-[var(--color-primary)]">Bezugspflege.</span>
+                </h2>
+           </FadeIn>
+           <FadeIn delay={0.2} direction="right">
+                <p className="text-lg text-slate-600 leading-relaxed font-medium">
+                    In vielen Pflegediensten gleicht der Alltag einem Bahnhof: Jeden Tag ein anderes Gesicht. 
+                    Wir haben für Sie eine <strong>5-seitige Broschüre</strong> zusammengestellt, die unser Konzept und erste Hilfestellungen erklärt.
+                </p>
+           </FadeIn>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
              
-             {/* Die "Andere" Seite */}
-             <div className="bg-slate-50 rounded-[2.5rem] p-8 md:p-10 border border-slate-100 opacity-80 hover:opacity-100 transition-opacity flex flex-col justify-center">
-                <div className="flex items-center gap-4 mb-6">
-                   <div className="w-12 h-12 bg-slate-200 rounded-full flex items-center justify-center text-slate-500">
-                      <UserX className="w-6 h-6" />
-                   </div>
-                   <h3 className="text-xl font-bold text-slate-700">Klassische Pflege</h3>
+             {/* Die "Andere" Seite - Etwas ausgeblendet wenn unsere Karte aktiv ist */}
+             <FadeIn delay={0.1} direction="right" className="h-full">
+                <div className={cn(
+                    "bg-slate-50 rounded-[2.5rem] p-8 md:p-10 border border-slate-100 transition-all duration-500 flex flex-col justify-center h-full",
+                    cardActive ? "opacity-60 scale-95" : "opacity-80 hover:opacity-100"
+                )}>
+                    <div className="flex items-center gap-4 mb-6">
+                    <div className="w-12 h-12 bg-slate-200 rounded-full flex items-center justify-center text-slate-500">
+                        <UserX className="w-6 h-6" />
+                    </div>
+                    <h3 className="text-xl font-bold text-slate-700">Klassische Pflege</h3>
+                    </div>
+                    <ul className="space-y-4">
+                    <li className="flex gap-3 text-slate-500 font-medium">
+                        <span className="text-red-400 font-bold">✕</span> Ständig wechselndes Personal
+                    </li>
+                    <li className="flex gap-3 text-slate-500 font-medium">
+                        <span className="text-red-400 font-bold">✕</span> Anonyme Abwicklung
+                    </li>
+                    <li className="flex gap-3 text-slate-500 font-medium">
+                        <span className="text-red-400 font-bold">✕</span> Hektik und Zeitdruck
+                    </li>
+                    </ul>
                 </div>
-                <ul className="space-y-4">
-                   <li className="flex gap-3 text-slate-500 font-medium">
-                      <span className="text-red-400 font-bold">✕</span> Ständig wechselndes Personal
-                   </li>
-                   <li className="flex gap-3 text-slate-500 font-medium">
-                      <span className="text-red-400 font-bold">✕</span> Anonyme Abwicklung
-                   </li>
-                   <li className="flex gap-3 text-slate-500 font-medium">
-                      <span className="text-red-400 font-bold">✕</span> Hektik und Zeitdruck
-                   </li>
-                </ul>
-             </div>
+             </FadeIn>
 
-             {/* UNSERE SEITE */}
-             <div 
-                onClick={() => setIsFlyerOpen(true)}
-                className="group cursor-pointer bg-[var(--color-secondary)] rounded-[2.5rem] p-8 md:p-10 border border-[var(--color-border-soft)] shadow-xl shadow-[var(--color-primary)]/5 relative overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-[var(--color-primary)]/10"
-             >
-                <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-[var(--color-accent)]/50 to-[var(--color-accent)]/10 rounded-bl-[100px] transition-transform duration-500 group-hover:scale-110" />
-                
-                <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity text-[var(--color-accent)] font-bold text-xs uppercase tracking-wide flex items-center gap-1">
-                    Broschüre öffnen <FileText className="w-3 h-3" />
-                </div>
+             {/* UNSERE SEITE - MIT AUTO-HOVER EFFEKT */}
+             <FadeIn delay={0.3} direction="left" className="h-full">
+                <div 
+                    ref={cardRef}
+                    onClick={() => setIsFlyerOpen(true)}
+                    className={cn(
+                        "group cursor-pointer bg-[var(--color-secondary)] rounded-[2.5rem] p-8 md:p-10 border relative overflow-hidden transition-all duration-500 transform-gpu h-full",
+                        // Auto-Hover Logik:
+                        cardActive 
+                            ? "scale-[1.03] shadow-2xl shadow-[var(--color-primary)]/20 border-[var(--color-primary)]/30" 
+                            : "scale-100 shadow-xl shadow-[var(--color-primary)]/5 border-[var(--color-border-soft)] hover:scale-[1.02] hover:shadow-2xl hover:shadow-[var(--color-primary)]/10"
+                    )}
+                >
+                    {/* Dynamischer Hintergrund-Blob */}
+                    <div className={cn(
+                        "absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-[var(--color-accent)]/50 to-[var(--color-accent)]/10 rounded-bl-[100px] transition-transform duration-700",
+                        cardActive ? "scale-125" : "scale-100 group-hover:scale-110"
+                    )} />
+                    
+                    {/* Badge "Broschüre öffnen" - Blendet ein */}
+                    <div className={cn(
+                        "absolute top-6 right-6 transition-all duration-500 text-[var(--color-accent)] font-bold text-xs uppercase tracking-wide flex items-center gap-1",
+                        cardActive ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0"
+                    )}>
+                        Broschüre öffnen <FileText className="w-3 h-3" />
+                    </div>
 
-                <div className="flex items-center gap-4 mb-6 relative z-10">
-                   <div className="w-12 h-12 bg-[var(--color-primary)] rounded-full flex items-center justify-center text-white shadow-lg shadow-[var(--color-primary)]/30 transition-transform group-hover:scale-110 group-hover:rotate-6">
-                      <UserCheck className="w-6 h-6" />
-                   </div>
-                   <h3 className="text-2xl font-black text-slate-900 group-hover:text-[var(--color-primary)] transition-colors">Herz & Hand Prinzip</h3>
+                    <div className="flex items-center gap-4 mb-6 relative z-10">
+                    <div className={cn(
+                        "w-12 h-12 bg-[var(--color-primary)] rounded-full flex items-center justify-center text-white shadow-lg shadow-[var(--color-primary)]/30 transition-transform duration-500",
+                        cardActive ? "scale-110 rotate-6" : "group-hover:scale-110 group-hover:rotate-6"
+                    )}>
+                        <UserCheck className="w-6 h-6" />
+                    </div>
+                    <h3 className={cn(
+                        "text-2xl font-black text-slate-900 transition-colors duration-300",
+                        (cardActive) && "text-[var(--color-primary)]"
+                    )}>Herz & Hand Prinzip</h3>
+                    </div>
+                    <ul className="space-y-4 relative z-10">
+                    <li className="flex gap-3 items-start">
+                        <CheckCircle2 className="w-5 h-5 text-[var(--color-primary)] mt-0.5 shrink-0" /> 
+                        <span className="font-bold text-slate-800">Feste, kleine Teams (max. 3 Personen)</span>
+                    </li>
+                    <li className="flex gap-3 items-start">
+                        <CheckCircle2 className="w-5 h-5 text-[var(--color-primary)] mt-0.5 shrink-0" /> 
+                        <span className="font-bold text-slate-800">Persönliche Beziehung & Vertrauen</span>
+                    </li>
+                    <li className="flex gap-3 items-start">
+                        <CheckCircle2 className="w-5 h-5 text-[var(--color-primary)] mt-0.5 shrink-0" /> 
+                        <span className="font-bold text-slate-800">Realistische Zeitplanung für Gespräche</span>
+                    </li>
+                    </ul>
+                    <div className="mt-6 pt-6 border-t border-[var(--color-primary)]/10 relative z-10">
+                    <p className="text-sm font-bold text-[var(--color-primary)] flex items-center gap-2">
+                        <Download className="w-4 h-4" /> Klicken Sie hier für die Info-Broschüre (PDF)
+                    </p>
+                    </div>
                 </div>
-                <ul className="space-y-4 relative z-10">
-                   <li className="flex gap-3 items-start">
-                      <CheckCircle2 className="w-5 h-5 text-[var(--color-primary)] mt-0.5 shrink-0" /> 
-                      <span className="font-bold text-slate-800">Feste, kleine Teams (max. 3 Personen)</span>
-                   </li>
-                   <li className="flex gap-3 items-start">
-                      <CheckCircle2 className="w-5 h-5 text-[var(--color-primary)] mt-0.5 shrink-0" /> 
-                      <span className="font-bold text-slate-800">Persönliche Beziehung & Vertrauen</span>
-                   </li>
-                   <li className="flex gap-3 items-start">
-                      <CheckCircle2 className="w-5 h-5 text-[var(--color-primary)] mt-0.5 shrink-0" /> 
-                      <span className="font-bold text-slate-800">Realistische Zeitplanung für Gespräche</span>
-                   </li>
-                </ul>
-                <div className="mt-6 pt-6 border-t border-[var(--color-primary)]/10 relative z-10">
-                   <p className="text-sm font-bold text-[var(--color-primary)] flex items-center gap-2">
-                     <Download className="w-4 h-4" /> Klicken Sie hier für die Info-Broschüre (PDF)
-                   </p>
-                </div>
-             </div>
+             </FadeIn>
 
           </div>
         </div>
@@ -150,36 +217,47 @@ export function AboutTemplate() {
         <section className="py-24 border-y border-slate-100 bg-white/50 backdrop-blur-sm">
           <div className="container px-4 md:px-6">
             <div className="text-center max-w-3xl mx-auto mb-16">
-                        <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1] animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
-Gesichter des Vertrauens</h2>
-              <p className="text-slate-600 text-lg">Unser Team ist unser Stolz.</p>
+                <FadeIn>
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1]">
+                        Gesichter des Vertrauens
+                    </h2>
+                </FadeIn>
+                <FadeIn delay={0.1}>
+                    <p className="text-slate-600 text-lg">Unser Team ist unser Stolz.</p>
+                </FadeIn>
             </div>
             <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               {/* Anna */}
-              <div className="group bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 text-center hover:-translate-y-1">
-                <div className="w-32 h-32 mx-auto rounded-full overflow-hidden mb-6 border-4 border-[var(--color-secondary)] group-hover:border-[var(--color-primary)] transition-colors">
-                  <div className="w-full h-full bg-slate-200 flex items-center justify-center text-slate-400"><Users className="w-12 h-12" /></div>
+              <FadeIn delay={0.1} className="h-full">
+                <div className="group bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 text-center hover:-translate-y-1 h-full">
+                    <div className="w-32 h-32 mx-auto rounded-full overflow-hidden mb-6 border-4 border-[var(--color-secondary)] group-hover:border-[var(--color-primary)] transition-colors">
+                    <div className="w-full h-full bg-slate-200 flex items-center justify-center text-slate-400"><Users className="w-12 h-12" /></div>
+                    </div>
+                    <h3 className="text-xl font-bold text-slate-900">Anna Müller</h3>
+                    <p className="text-[var(--color-primary)] font-bold text-xs uppercase tracking-wide mb-4">Pflegedienstleitung</p>
                 </div>
-                <h3 className="text-xl font-bold text-slate-900">Anna Müller</h3>
-                <p className="text-[var(--color-primary)] font-bold text-xs uppercase tracking-wide mb-4">Pflegedienstleitung</p>
-              </div>
+              </FadeIn>
               {/* Thomas */}
-              <div className="group bg-white rounded-3xl p-8 shadow-md hover:shadow-xl transition-all duration-300 border border-[var(--color-primary)]/10 text-center relative md:-top-6 z-10">
-                 <div className="absolute top-4 right-4 text-[var(--color-accent)]"><Award className="w-6 h-6" /></div>
-                <div className="w-32 h-32 mx-auto rounded-full overflow-hidden mb-6 border-4 border-[var(--color-secondary)] group-hover:border-[var(--color-primary)] transition-colors">
-                  <div className="w-full h-full bg-slate-200 flex items-center justify-center text-slate-400"><Users className="w-12 h-12" /></div>
+              <FadeIn delay={0.2} className="h-full">
+                <div className="group bg-white rounded-3xl p-8 shadow-md hover:shadow-xl transition-all duration-300 border border-[var(--color-primary)]/10 text-center relative md:-top-6 z-10 h-full">
+                    <div className="absolute top-4 right-4 text-[var(--color-accent)]"><Award className="w-6 h-6" /></div>
+                    <div className="w-32 h-32 mx-auto rounded-full overflow-hidden mb-6 border-4 border-[var(--color-secondary)] group-hover:border-[var(--color-primary)] transition-colors">
+                    <div className="w-full h-full bg-slate-200 flex items-center justify-center text-slate-400"><Users className="w-12 h-12" /></div>
+                    </div>
+                    <h3 className="text-xl font-bold text-slate-900">Thomas Weber</h3>
+                    <p className="text-[var(--color-primary)] font-bold text-xs uppercase tracking-wide mb-4">Stellv. PDL</p>
                 </div>
-                <h3 className="text-xl font-bold text-slate-900">Thomas Weber</h3>
-                <p className="text-[var(--color-primary)] font-bold text-xs uppercase tracking-wide mb-4">Stellv. PDL</p>
-              </div>
+              </FadeIn>
                {/* Sarah */}
-               <div className="group bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 text-center hover:-translate-y-1">
-                <div className="w-32 h-32 mx-auto rounded-full overflow-hidden mb-6 border-4 border-[var(--color-secondary)] group-hover:border-[var(--color-primary)] transition-colors">
-                  <div className="w-full h-full bg-slate-200 flex items-center justify-center text-slate-400"><Users className="w-12 h-12" /></div>
+               <FadeIn delay={0.3} className="h-full">
+                <div className="group bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 text-center hover:-translate-y-1 h-full">
+                    <div className="w-32 h-32 mx-auto rounded-full overflow-hidden mb-6 border-4 border-[var(--color-secondary)] group-hover:border-[var(--color-primary)] transition-colors">
+                    <div className="w-full h-full bg-slate-200 flex items-center justify-center text-slate-400"><Users className="w-12 h-12" /></div>
+                    </div>
+                    <h3 className="text-xl font-bold text-slate-900">Sarah Klein</h3>
+                    <p className="text-[var(--color-primary)] font-bold text-xs uppercase tracking-wide mb-4">Verwaltung</p>
                 </div>
-                <h3 className="text-xl font-bold text-slate-900">Sarah Klein</h3>
-                <p className="text-[var(--color-primary)] font-bold text-xs uppercase tracking-wide mb-4">Verwaltung</p>
-              </div>
+               </FadeIn>
             </div>
           </div>
         </section>
@@ -189,45 +267,55 @@ Gesichter des Vertrauens</h2>
           <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.2) 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
           <div className="container relative z-10 px-4 md:px-6">
             <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-               <div className="relative group">
-                  <div className="absolute inset-0 border-2 border-[var(--color-accent)]/20 rounded-[2.5rem] -rotate-3 transition-transform duration-700 group-hover:rotate-0" />
-                  <div className="relative aspect-video rounded-[2.5rem] overflow-hidden border-4 border-white/10 shadow-2xl bg-black/20">
-                     <Image src="/images/team/team.jpg" alt="Qualität" fill className="object-cover opacity-90" />
-                     <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-footer-bg)] via-transparent to-transparent opacity-90" />
-                     <div className="absolute bottom-8 left-8 right-8">
-                        <Quote className="w-8 h-8 text-[var(--color-accent)] mb-2 opacity-80" />
-                        <div className="text-xl font-bold text-white mb-1">Geprüfte Qualität</div>
-                        <p className="text-white/70 text-sm">Unser Team besteht zu 100% aus festangestellten Fachkräften.</p>
-                     </div>
-                  </div>
-               </div>
+               
+               <FadeIn direction="right">
+                <div className="relative group">
+                    <div className="absolute inset-0 border-2 border-[var(--color-accent)]/20 rounded-[2.5rem] -rotate-3 transition-transform duration-700 group-hover:rotate-0" />
+                    <div className="relative aspect-video rounded-[2.5rem] overflow-hidden border-4 border-white/10 shadow-2xl bg-black/20">
+                        <Image src="/images/team/team.jpg" alt="Qualität" fill className="object-cover opacity-90" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-footer-bg)] via-transparent to-transparent opacity-90" />
+                        <div className="absolute bottom-8 left-8 right-8">
+                            <Quote className="w-8 h-8 text-[var(--color-accent)] mb-2 opacity-80" />
+                            <div className="text-xl font-bold text-white mb-1">Geprüfte Qualität</div>
+                            <p className="text-white/70 text-sm">Unser Team besteht zu 100% aus festangestellten Fachkräften.</p>
+                        </div>
+                    </div>
+                </div>
+               </FadeIn>
+
                <div className="space-y-8">
-                  <div>
-                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-[var(--color-accent)] text-xs font-bold tracking-wide uppercase mb-4 backdrop-blur-sm">
-                        <Award className="w-3 h-3" /> MDK Note 1.0
-                     </div>
-                               <h2 className="text-4xl md:text-5xl lg:text-6xl text-white font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1] animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
-Kein Zufall, sondern Standard.</h2>
-                     <div className="prose prose-invert text-white/80 leading-relaxed text-lg">
-                        <p>
-                           Einmal jährlich prüft der Medizinische Dienst (MDK) unangemeldet. 
-                           Die Bestnote ist für uns Ansporn, jeden Tag unser Bestes zu geben. Wir legen Wert auf:
-                        </p>
-                     </div>
-                  </div>
+                  <FadeIn delay={0.2} direction="left">
+                    <div>
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-[var(--color-accent)] text-xs font-bold tracking-wide uppercase mb-4 backdrop-blur-sm">
+                            <Award className="w-3 h-3" /> MDK Note 1.0
+                        </div>
+                        <h2 className="text-4xl md:text-5xl lg:text-6xl text-white font-black mb-6 tracking-tight text-balance leading-[1.1]">
+                            Kein Zufall, sondern Standard.
+                        </h2>
+                        <div className="prose prose-invert text-white/80 leading-relaxed text-lg">
+                            <p>
+                            Einmal jährlich prüft der Medizinische Dienst (MDK) unangemeldet. 
+                            Die Bestnote ist für uns Ansporn, jeden Tag unser Bestes zu geben. Wir legen Wert auf:
+                            </p>
+                        </div>
+                    </div>
+                  </FadeIn>
+
                   <div className="grid gap-4">
                      {[
                         { title: "Medizinische Genauigkeit", desc: "Korrekte Wundversorgung & Medikamentengabe.", icon: Stethoscope },
                         { title: "Verlässliche Organisation", desc: "Erreichbarkeit & transparente Abrechnung.", icon: Clock },
                         { title: "Menschliche Wärme", desc: "Wie wohl fühlen sich die Menschen bei uns?", icon: Heart },
                      ].map((fact, i) => (
-                        <div key={i} className="flex gap-5 p-5 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors group">
-                           <div className="shrink-0 w-12 h-12 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-white shadow-lg shadow-black/20 group-hover:scale-110 transition-transform"><fact.icon className="w-6 h-6" /></div>
-                           <div>
-                              <div className="font-bold text-white text-lg mb-1 group-hover:text-[var(--color-accent)] transition-colors">{fact.title}</div>
-                              <div className="text-base text-white/60">{fact.desc}</div>
-                           </div>
-                        </div>
+                        <FadeIn key={i} delay={0.3 + (i * 0.1)} direction="left">
+                            <div className="flex gap-5 p-5 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors group">
+                            <div className="shrink-0 w-12 h-12 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-white shadow-lg shadow-black/20 group-hover:scale-110 transition-transform"><fact.icon className="w-6 h-6" /></div>
+                            <div>
+                                <div className="font-bold text-white text-lg mb-1 group-hover:text-[var(--color-accent)] transition-colors">{fact.title}</div>
+                                <div className="text-base text-white/60">{fact.desc}</div>
+                            </div>
+                            </div>
+                        </FadeIn>
                      ))}
                   </div>
                </div>
@@ -247,60 +335,71 @@ Kein Zufall, sondern Standard.</h2>
 
           <div className="container text-center px-4 md:px-6 relative z-10">
             
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-[2rem] text-[var(--color-primary)] mb-8 shadow-xl shadow-[var(--color-primary)]/10 border border-slate-100 rotate-3 hover:rotate-0 transition-transform duration-500">
-              <MapPin className="w-8 h-8" />
-            </div>
+            <FadeIn>
+                <div className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-[2rem] text-[var(--color-primary)] mb-8 shadow-xl shadow-[var(--color-primary)]/10 border border-slate-100 rotate-3 hover:rotate-0 transition-transform duration-500">
+                <MapPin className="w-8 h-8" />
+                </div>
+            </FadeIn>
             
-                       <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1] animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
-
-              Unterwegs in <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)]">Frankfurt & Umgebung</span>
-            </h2>
+            <FadeIn delay={0.1}>
+                <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1]">
+                Unterwegs in <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)]">Frankfurt & Umgebung</span>
+                </h2>
+            </FadeIn>
             
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto mb-16 leading-relaxed">
-              Unser Team ist mobil und flexibel. Wir kommen dorthin, wo Sie uns brauchen – direkt zu Ihnen nach Hause.
-            </p>
+            <FadeIn delay={0.2}>
+                <p className="text-xl text-slate-600 max-w-2xl mx-auto mb-16 leading-relaxed">
+                Unser Team ist mobil und flexibel. Wir kommen dorthin, wo Sie uns brauchen – direkt zu Ihnen nach Hause.
+                </p>
+            </FadeIn>
             
             <div className="flex flex-wrap justify-center gap-4 max-w-5xl mx-auto mb-20">
               {["Frankfurt Zentrum", "Sachsenhausen", "Bornheim", "Nordend", "Westend", "Bockenheim", "Gallus", "Niederrad", "Höchst", "Griesheim", "Rödelheim", "Hausen"].map((ort, i) => (
-                <div key={i} className="group relative animate-in fade-in zoom-in-50 duration-500" style={{ animationDelay: `${i * 50}ms` }}>
-                  <div className="flex items-center gap-3 px-6 py-3.5 bg-white rounded-2xl text-slate-600 font-bold border border-slate-100 shadow-sm group-hover:shadow-lg group-hover:shadow-[var(--color-primary)]/10 group-hover:border-[var(--color-primary)]/30 group-hover:-translate-y-1 transition-all duration-300 cursor-default">
-                    <span className="flex h-2.5 w-2.5 relative">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
-                    </span>
-                    {ort}
-                  </div>
-                </div>
+                <FadeIn key={i} delay={0.3 + (i * 0.05)} className="w-auto">
+                    <div className="group relative">
+                    <div className="flex items-center gap-3 px-6 py-3.5 bg-white rounded-2xl text-slate-600 font-bold border border-slate-100 shadow-sm group-hover:shadow-lg group-hover:shadow-[var(--color-primary)]/10 group-hover:border-[var(--color-primary)]/30 group-hover:-translate-y-1 transition-all duration-300 cursor-default">
+                        <span className="flex h-2.5 w-2.5 relative">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                        </span>
+                        {ort}
+                    </div>
+                    </div>
+                </FadeIn>
               ))}
-              <div className="px-6 py-3.5 text-slate-400 font-medium italic flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-slate-300" /> ... und in Ihrer Nähe.
-              </div>
+              <FadeIn delay={0.8} className="w-auto">
+                <div className="px-6 py-3.5 text-slate-400 font-medium italic flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-slate-300" /> ... und in Ihrer Nähe.
+                </div>
+              </FadeIn>
             </div>
 
-            <div className="relative max-w-4xl mx-auto group">
-               <div className="absolute -inset-1 bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-accent)] to-[var(--color-primary)] rounded-[2.5rem] opacity-20 blur-lg group-hover:opacity-40 transition duration-1000 group-hover:duration-200" />
-               
-               <div className="relative bg-white rounded-[2.5rem] p-8 md:p-12 border border-slate-100 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8 overflow-hidden">
-                  <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--color-secondary)]/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+            <FadeIn delay={0.4} direction="up">
+                <div className="relative max-w-4xl mx-auto group">
+                <div className="absolute -inset-1 bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-accent)] to-[var(--color-primary)] rounded-[2.5rem] opacity-20 blur-lg group-hover:opacity-40 transition duration-1000 group-hover:duration-200" />
+                
+                <div className="relative bg-white rounded-[2.5rem] p-8 md:p-12 border border-slate-100 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8 overflow-hidden">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--color-secondary)]/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
 
-                  <div className="text-left relative z-10 flex items-start gap-6">
-                     <div className="hidden md:flex w-16 h-16 bg-slate-50 rounded-2xl items-center justify-center text-[var(--color-primary)] shrink-0 border border-slate-100">
-                        <Car className="w-8 h-8" />
-                     </div>
-                     <div>
-                        <h3 className="text-2xl font-black text-slate-900 mb-2">Liegt Ihre Adresse im Gebiet?</h3>
-                        <p className="text-slate-600 font-medium text-lg">Wir prüfen das gerne unverbindlich und planen Ihre Route.</p>
-                     </div>
-                  </div>
-                  
-                  <Link href="/kontakt" className="relative z-10 w-full md:w-auto">
-                    {/* BUTTON BEREINIGT: Nutzt jetzt die Standard Button Styles (Rund + Petrol) */}
-                    <Button size="lg" className="w-full md:w-auto px-10 h-16 text-lg">
-                      Jetzt prüfen <ArrowRight className="ml-2 w-5 h-5" />
-                    </Button>
-                  </Link>
-               </div>
-            </div>
+                    <div className="text-left relative z-10 flex items-start gap-6">
+                        <div className="hidden md:flex w-16 h-16 bg-slate-50 rounded-2xl items-center justify-center text-[var(--color-primary)] shrink-0 border border-slate-100">
+                            <Car className="w-8 h-8" />
+                        </div>
+                        <div>
+                            <h3 className="text-2xl font-black text-slate-900 mb-2">Liegt Ihre Adresse im Gebiet?</h3>
+                            <p className="text-slate-600 font-medium text-lg">Wir prüfen das gerne unverbindlich und planen Ihre Route.</p>
+                        </div>
+                    </div>
+                    
+                    <Link href="/kontakt" className="relative z-10 w-full md:w-auto">
+                        {/* BUTTON BEREINIGT: Nutzt jetzt die Standard Button Styles (Rund + Petrol) */}
+                        <Button size="lg" className="w-full md:w-auto px-10 h-16 text-lg">
+                        Jetzt prüfen <ArrowRight className="ml-2 w-5 h-5" />
+                        </Button>
+                    </Link>
+                </div>
+                </div>
+            </FadeIn>
 
           </div>
         </section>

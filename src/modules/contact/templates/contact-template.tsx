@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { siteConfig } from "@/config/site";
 import { 
@@ -10,9 +10,8 @@ import {
 } from "lucide-react";
 import { useForm, ValidationError } from "@formspree/react";
 import { Button } from "@/shared/ui/button";
-
-// WICHTIG: Importiere den Configurator aus deinem Home-Modul
-import { CareConfigurator } from "@/modules/home/templates/care-configurator";
+import { FadeIn } from "@/shared/ui/fade-in"; // <--- NEU
+import { CareConfigurator } from "@/modules/home/templates/care-configurator"; // <--- NEU: Der Wegweiser
 
 type ModalType = "none" | "appointment" | "invoice";
 
@@ -64,6 +63,7 @@ export function ContactTemplate() {
     setSubject(id);
     
     if (id === "Pflegeberatung") {
+      // Öffne den Configurator (via URL Parameter Trick)
       const params = new URLSearchParams(searchParams.toString());
       params.set("openConfigurator", "true");
       router.push(`${pathname}?${params.toString()}`, { scroll: false });
@@ -79,26 +79,14 @@ export function ContactTemplate() {
 
   // --- INTELLIGENTE KALENDER LOGIK ---
   
-  // 1. Feiertags-Checker (inkl. 24.12 & 31.12)
+  // 1. Feiertags-Checker
   const isHoliday = (date: Date) => {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const dateString = `${day}.${month}`;
     const year = date.getFullYear();
 
-    // Feste Feiertage + Heiligabend/Silvester
-    const fixedHolidays = [
-      "01.01", // Neujahr
-      "01.05", // Tag der Arbeit
-      "03.10", // Tag der Deutschen Einheit
-      "24.12", // Heiligabend (Betriebsferien)
-      "25.12", // 1. Weihnachtstag
-      "26.12", // 2. Weihnachtstag
-      "31.12"  // Silvester (Betriebsferien)
-    ];
-
-    // Bewegliche Feiertage (Manuell für 2025/26 für Performance)
-    // Karfreitag, Ostermontag, Himmelfahrt, Pfingstmontag, Fronleichnam
+    const fixedHolidays = ["01.01", "01.05", "03.10", "24.12", "25.12", "26.12", "31.12"];
     const moving2025 = ["18.04", "21.04", "29.05", "09.06", "19.06"];
     const moving2026 = ["03.04", "06.04", "14.05", "25.05", "04.06"];
 
@@ -113,10 +101,8 @@ export function ContactTemplate() {
   const getMinSelectableDate = () => {
     let count = 0;
     let d = new Date();
-    // Solange wir noch keine 3 gültigen Werktage addiert haben...
     while (count < 3) {
       d.setDate(d.getDate() + 1);
-      // Wenn kein Wochenende UND kein Feiertag -> Zähler hoch
       if (d.getDay() !== 0 && d.getDay() !== 6 && !isHoliday(d)) {
         count++;
       }
@@ -137,7 +123,6 @@ export function ContactTemplate() {
     const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
     const dayOfWeek = date.getDay();
     
-    // Validierung: Nicht Vergangenheit, Kein Wochenende, Kein Feiertag
     if (date >= minDate && dayOfWeek !== 0 && dayOfWeek !== 6 && !isHoliday(date)) {
       setSelectedDate(date);
       applyAppointmentText("planned", date);
@@ -148,7 +133,6 @@ export function ContactTemplate() {
   const prevMonth = () => {
     const prev = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1);
     const today = new Date();
-    // Zurückblättern nur erlauben, wenn wir nicht in der Vergangenheit landen
     if (prev.getMonth() >= today.getMonth() || prev.getFullYear() > today.getFullYear()) {
          setCurrentMonth(prev);
     }
@@ -191,32 +175,38 @@ export function ContactTemplate() {
   return (
     <div className="relative min-h-screen bg-white font-sans pb-20 selection:bg-[var(--color-primary)]/20 overflow-hidden">
       
-      {/* Background FX */}
-      <div className="absolute inset-0 opacity-[0.4] pointer-events-none" style={{ backgroundImage: 'radial-gradient(var(--color-border-soft) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
-      <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[1000px] h-[700px] bg-[var(--color-secondary)]/60 rounded-full blur-[120px] opacity-70 pointer-events-none" />
-      <div className="absolute top-[20%] right-[-10%] w-[600px] h-[600px] bg-[var(--color-primary)]/5 rounded-full blur-[100px] animate-pulse pointer-events-none" style={{ animationDuration: '6s' }} />
-      <div className="absolute bottom-0 left-[-10%] w-[500px] h-[500px] bg-[var(--color-accent)]/10 rounded-full blur-[80px] pointer-events-none" />
+      {/* Background FX - GPU */}
+      <div className="absolute inset-0 opacity-[0.4] pointer-events-none transform-gpu" style={{ backgroundImage: 'radial-gradient(var(--color-border-soft) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
+      <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[1000px] h-[700px] bg-[var(--color-secondary)]/60 rounded-full blur-[120px] opacity-70 pointer-events-none transform-gpu" />
+      <div className="absolute top-[20%] right-[-10%] w-[600px] h-[600px] bg-[var(--color-primary)]/5 rounded-full blur-[100px] md:animate-pulse pointer-events-none transform-gpu" style={{ animationDuration: '6s' }} />
+      <div className="absolute bottom-0 left-[-10%] w-[500px] h-[500px] bg-[var(--color-accent)]/10 rounded-full blur-[80px] pointer-events-none transform-gpu" />
 
       <div className="relative z-10">
       
         {/* HEADER */}
         <section className="pt-24 pb-16 lg:pt-32 lg:pb-24 text-center px-4">
           <div className="container max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-sm border border-[var(--color-border-soft)] text-[var(--color-primary)] text-xs font-bold tracking-wide uppercase shadow-sm mb-8 animate-in fade-in slide-in-from-bottom-2 duration-700">
-              <MessageSquare className="w-3 h-3 text-[var(--color-accent)]" />
-              <span>Kontakt & Hilfe</span>
-            </div>
-           <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1] animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
-              Wir sind <br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)] relative inline-block">
-                für Sie da.
-                <svg className="absolute w-full h-3 -bottom-1 left-0 text-[var(--color-accent)] -z-10 opacity-40" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" /></svg>
-              </span>
-            </h1>
-            <p className="text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto">
-              Ob Pflegegrad, Erstgespräch oder einfach nur eine Frage: <br className="hidden md:block"/>
-              Wir nehmen uns Zeit für Ihr Anliegen.
-            </p>
+            <FadeIn delay={0.1}>
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-sm border border-[var(--color-border-soft)] text-[var(--color-primary)] text-xs font-bold tracking-wide uppercase shadow-sm mb-8">
+                <MessageSquare className="w-3 h-3 text-[var(--color-accent)]" />
+                <span>Kontakt & Hilfe</span>
+                </div>
+            </FadeIn>
+           <FadeIn delay={0.2}>
+               <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1]">
+                Wir sind <br/>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)] relative inline-block">
+                    für Sie da.
+                    <svg className="absolute w-full h-3 -bottom-1 left-0 text-[var(--color-accent)] -z-10 opacity-40" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" /></svg>
+                </span>
+                </h1>
+           </FadeIn>
+            <FadeIn delay={0.3}>
+                <p className="text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto">
+                Ob Pflegegrad, Erstgespräch oder einfach nur eine Frage: <br className="hidden md:block"/>
+                Wir nehmen uns Zeit für Ihr Anliegen.
+                </p>
+            </FadeIn>
           </div>
         </section>
 
@@ -225,154 +215,175 @@ export function ContactTemplate() {
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
             
             {/* LINKS: Kontakt Infos */}
-            <div className="lg:col-span-5 space-y-6 animate-in fade-in slide-in-from-left-4 duration-1000 delay-300">
+            <div className="lg:col-span-5 space-y-6">
               
               {/* Phone */}
-              <a href={`tel:${siteConfig.contact.phone}`} className="flex items-center gap-5 p-6 rounded-[2rem] bg-white border border-[var(--color-border-soft)] hover:border-[var(--color-accent)]/30 hover:shadow-xl hover:shadow-[var(--color-accent)]/5 transition-all group cursor-pointer relative overflow-hidden">
-                 <div className="absolute right-0 top-0 w-24 h-full bg-gradient-to-l from-[var(--color-secondary)]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                 <div className="w-14 h-14 bg-[var(--color-secondary)] rounded-2xl flex items-center justify-center text-[var(--color-primary)] shrink-0 transition-all duration-300 group-hover:scale-110 group-hover:bg-[var(--color-accent)] group-hover:text-white">
-                    <Phone className="w-6 h-6" />
-                 </div>
-                 <div>
-                    <p className="font-bold text-slate-900 mb-0.5 group-hover:text-[var(--color-accent)] transition-colors">Rufen Sie uns an</p>
-                    <p className="text-lg text-slate-600 font-medium transition-colors">{siteConfig.contact.phone}</p>
-                 </div>
-              </a>
+              <FadeIn delay={0.4} direction="right">
+                <a href={`tel:${siteConfig.contact.phone}`} className="flex items-center gap-5 p-6 rounded-[2rem] bg-white border border-[var(--color-border-soft)] hover:border-[var(--color-accent)]/30 hover:shadow-xl hover:shadow-[var(--color-accent)]/5 transition-all group cursor-pointer relative overflow-hidden transform-gpu">
+                    <div className="absolute right-0 top-0 w-24 h-full bg-gradient-to-l from-[var(--color-secondary)]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="w-14 h-14 bg-[var(--color-secondary)] rounded-2xl flex items-center justify-center text-[var(--color-primary)] shrink-0 transition-all duration-300 group-hover:scale-110 group-hover:bg-[var(--color-accent)] group-hover:text-white">
+                        <Phone className="w-6 h-6" />
+                    </div>
+                    <div>
+                        <p className="font-bold text-slate-900 mb-0.5 group-hover:text-[var(--color-accent)] transition-colors">Rufen Sie uns an</p>
+                        <p className="text-lg text-slate-600 font-medium transition-colors">{siteConfig.contact.phone}</p>
+                    </div>
+                </a>
+              </FadeIn>
               
               {/* Mail */}
-              <a href={`mailto:${siteConfig.contact.email}`} className="flex items-center gap-5 p-6 rounded-[2rem] bg-white border border-[var(--color-border-soft)] hover:border-[var(--color-accent)]/30 hover:shadow-xl hover:shadow-[var(--color-accent)]/5 transition-all group cursor-pointer relative overflow-hidden">
-                 <div className="w-14 h-14 bg-[var(--color-secondary)] rounded-2xl flex items-center justify-center text-[var(--color-primary)] shrink-0 transition-all duration-300 group-hover:scale-110 group-hover:bg-[var(--color-accent)] group-hover:text-white">
-                    <Mail className="w-6 h-6" />
-                 </div>
-                 <div className="overflow-hidden">
-                    <p className="font-bold text-slate-900 mb-0.5 group-hover:text-[var(--color-accent)] transition-colors">Schreiben Sie uns</p>
-                    <p className="text-lg text-slate-600 font-medium transition-colors truncate">{siteConfig.contact.email}</p>
-                 </div>
-              </a>
+              <FadeIn delay={0.5} direction="right">
+                <a href={`mailto:${siteConfig.contact.email}`} className="flex items-center gap-5 p-6 rounded-[2rem] bg-white border border-[var(--color-border-soft)] hover:border-[var(--color-accent)]/30 hover:shadow-xl hover:shadow-[var(--color-accent)]/5 transition-all group cursor-pointer relative overflow-hidden transform-gpu">
+                    <div className="w-14 h-14 bg-[var(--color-secondary)] rounded-2xl flex items-center justify-center text-[var(--color-primary)] shrink-0 transition-all duration-300 group-hover:scale-110 group-hover:bg-[var(--color-accent)] group-hover:text-white">
+                        <Mail className="w-6 h-6" />
+                    </div>
+                    <div className="overflow-hidden">
+                        <p className="font-bold text-slate-900 mb-0.5 group-hover:text-[var(--color-accent)] transition-colors">Schreiben Sie uns</p>
+                        <p className="text-lg text-slate-600 font-medium transition-colors truncate">{siteConfig.contact.email}</p>
+                    </div>
+                </a>
+              </FadeIn>
 
               {/* WhatsApp Card */}
-              <a href="#" className="flex items-center gap-5 p-6 rounded-[2rem] bg-green-50/50 border border-green-100 hover:border-green-300 hover:bg-green-50 hover:shadow-lg hover:shadow-green-100 transition-all group cursor-pointer relative overflow-hidden">
-                 <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-green-600 shrink-0 shadow-sm group-hover:scale-110 transition-transform">
-                    <MessageSquare className="w-6 h-6" />
-                 </div>
-                 <div>
-                    <p className="font-bold text-green-900 mb-0.5 group-hover:text-green-700 transition-colors">WhatsApp Chat</p>
-                    <p className="text-sm text-green-700">Antwort in wenigen Minuten</p>
-                 </div>
-                 <ArrowRight className="ml-auto w-5 h-5 text-green-600 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
-              </a>
+              <FadeIn delay={0.6} direction="right">
+                <a href="#" className="flex items-center gap-5 p-6 rounded-[2rem] bg-green-50/50 border border-green-100 hover:border-green-300 hover:bg-green-50 hover:shadow-lg hover:shadow-green-100 transition-all group cursor-pointer relative overflow-hidden transform-gpu">
+                    <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-green-600 shrink-0 shadow-sm group-hover:scale-110 transition-transform">
+                        <MessageSquare className="w-6 h-6" />
+                    </div>
+                    <div>
+                        <p className="font-bold text-green-900 mb-0.5 group-hover:text-green-700 transition-colors">WhatsApp Chat</p>
+                        <p className="text-sm text-green-700">Antwort in wenigen Minuten</p>
+                    </div>
+                    <ArrowRight className="ml-auto w-5 h-5 text-green-600 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
+                </a>
+              </FadeIn>
 
               {/* Maps */}
-              <div className="rounded-[2.5rem] bg-white border border-[var(--color-border-soft)] p-3 overflow-hidden group relative shadow-lg">
-                 <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer" className="block h-48 w-full rounded-[2rem] bg-slate-100 relative overflow-hidden opacity-90 group-hover:opacity-100 transition-opacity cursor-pointer">
-                     <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(#cbd5e1 2px, transparent 2px)', backgroundSize: '20px 20px', opacity: 0.6 }}></div>
-                     <div className="absolute inset-0 flex items-center justify-center z-10">
-                         <div className="bg-white/90 backdrop-blur-sm px-5 py-2.5 rounded-full flex items-center gap-2 shadow-sm text-slate-700 font-bold text-sm group-hover:scale-105 transition-transform border border-slate-100 group-hover:text-[var(--color-accent)] group-hover:border-[var(--color-accent)]/20">
-                            <MapPin className="w-4 h-4 text-[var(--color-primary)] group-hover:text-[var(--color-accent)]" /> Karte öffnen
-                         </div>
-                     </div>
-                 </a>
-                 <div className="p-5">
-                    <h4 className="font-bold text-slate-900 text-lg mb-1">{siteConfig.contact.address}</h4>
-                    <p className="text-sm text-slate-500 mb-5 flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[var(--color-accent)]"/> Kostenlose Parkplätze im Hof.</p>
-                    <Button asChild variant="outline" className="w-full justify-between bg-white hover:bg-[var(--color-accent)] hover:text-white hover:border-[var(--color-accent)] border-slate-200 text-slate-700 cursor-pointer rounded-xl h-12 transition-all group/btn">
-                       <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer">
-                          Route planen <Navigation className="w-4 h-4 text-[var(--color-primary)] group-hover/btn:text-white" />
-                       </a>
-                    </Button>
-                 </div>
-              </div>
+              <FadeIn delay={0.7} direction="right">
+                <div className="rounded-[2.5rem] bg-white border border-[var(--color-border-soft)] p-3 overflow-hidden group relative shadow-lg transform-gpu">
+                    <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer" className="block h-48 w-full rounded-[2rem] bg-slate-100 relative overflow-hidden opacity-90 group-hover:opacity-100 transition-opacity cursor-pointer">
+                        <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(#cbd5e1 2px, transparent 2px)', backgroundSize: '20px 20px', opacity: 0.6 }}></div>
+                        <div className="absolute inset-0 flex items-center justify-center z-10">
+                            <div className="bg-white/90 backdrop-blur-sm px-5 py-2.5 rounded-full flex items-center gap-2 shadow-sm text-slate-700 font-bold text-sm group-hover:scale-105 transition-transform border border-slate-100 group-hover:text-[var(--color-accent)] group-hover:border-[var(--color-accent)]/20">
+                                <MapPin className="w-4 h-4 text-[var(--color-primary)] group-hover:text-[var(--color-accent)]" /> Karte öffnen
+                            </div>
+                        </div>
+                    </a>
+                    <div className="p-5">
+                        <h4 className="font-bold text-slate-900 text-lg mb-1">{siteConfig.contact.address}</h4>
+                        <p className="text-sm text-slate-500 mb-5 flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[var(--color-accent)]"/> Kostenlose Parkplätze im Hof.</p>
+                        <Button asChild variant="outline" className="w-full justify-between bg-white hover:bg-[var(--color-accent)] hover:text-white hover:border-[var(--color-accent)] border-slate-200 text-slate-700 cursor-pointer rounded-xl h-12 transition-all group/btn">
+                        <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer">
+                            Route planen <Navigation className="w-4 h-4 text-[var(--color-primary)] group-hover/btn:text-white" />
+                        </a>
+                        </Button>
+                    </div>
+                </div>
+              </FadeIn>
               
               {/* Notruf Mini */}
-              <div className="p-6 rounded-[2rem] bg-[var(--color-footer-bg)] text-white flex items-center gap-5 shadow-xl shadow-black/5 relative overflow-hidden">
-                 <div className="absolute -right-4 -top-4 w-24 h-24 bg-[var(--color-accent)]/10 rounded-full blur-xl"></div>
-                 <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center animate-pulse shrink-0 border border-white/10">
-                    <Clock className="w-6 h-6" />
-                 </div>
-                 <div>
-                    <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">24h Notruf für Patienten</div>
-                    <div className="text-xl font-bold tracking-wide">089 / 123 456 99</div>
-                 </div>
-              </div>
+              <FadeIn delay={0.8} direction="right">
+                <div className="p-6 rounded-[2rem] bg-[var(--color-footer-bg)] text-white flex items-center gap-5 shadow-xl shadow-black/5 relative overflow-hidden transform-gpu">
+                    <div className="absolute -right-4 -top-4 w-24 h-24 bg-[var(--color-accent)]/10 rounded-full blur-xl"></div>
+                    <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center animate-pulse shrink-0 border border-white/10">
+                        <Clock className="w-6 h-6" />
+                    </div>
+                    <div>
+                        <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">24h Notruf für Patienten</div>
+                        <div className="text-xl font-bold tracking-wide">089 / 123 456 99</div>
+                    </div>
+                </div>
+              </FadeIn>
 
             </div>
 
             {/* RECHTS: Das Formular */}
-            <div id="anfrage-formular" className="lg:col-span-7 bg-white p-8 md:p-10 rounded-[3rem] shadow-2xl shadow-slate-200/50 border border-[var(--color-border-soft)] relative animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200 scroll-mt-32">
+            <div id="anfrage-formular" className="lg:col-span-7 bg-white p-8 md:p-10 rounded-[3rem] shadow-2xl shadow-slate-200/50 border border-[var(--color-border-soft)] relative scroll-mt-32 transform-gpu">
               <Sparkles className="absolute top-10 right-10 w-6 h-6 text-[var(--color-accent)] animate-pulse" />
 
               {state.succeeded ? (
-                <div className="text-center py-20 h-full flex flex-col items-center justify-center">
+                <div className="text-center py-20 h-full flex flex-col items-center justify-center animate-in zoom-in-95">
                   <div className="w-24 h-24 bg-green-50 text-green-600 rounded-full flex items-center justify-center mx-auto mb-8 shadow-sm"><CheckCircle2 className="w-12 h-12" /></div>
                   <h3 className="text-3xl font-bold text-slate-900 mb-4">Nachricht gesendet!</h3>
                   <Button variant="outline" onClick={() => window.location.reload()} className="rounded-2xl h-12 px-8 cursor-pointer">Zurück</Button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-8">
-                  <div>
-                     <h3 className="text-3xl font-bold text-slate-900 mb-2">Schreiben Sie uns</h3>
-                     <p className="text-slate-500">Worum geht es bei Ihrer Anfrage?</p>
-                  </div>
+                  <FadeIn delay={0.4}>
+                    <div>
+                        <h3 className="text-3xl font-bold text-slate-900 mb-2">Schreiben Sie uns</h3>
+                        <p className="text-slate-500">Worum geht es bei Ihrer Anfrage?</p>
+                    </div>
+                  </FadeIn>
 
                   {/* TOPIC BUTTONS */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                     {topics.map((topic) => (
-                        <button
-                          key={topic.id}
-                          type="button"
-                          onClick={() => handleTopicClick(topic.id)}
-                          className={`group relative flex items-center gap-3 p-4 rounded-2xl border text-left transition-all duration-300 cursor-pointer
-                            ${subject === topic.id 
-                               ? 'bg-[var(--color-primary)]/5 border-[var(--color-primary)] text-[var(--color-primary)] shadow-md scale-[1.02]' 
-                               : 'bg-white border-slate-100 text-slate-600 hover:border-[var(--color-primary)]/30 hover:bg-slate-50'}`}
-                        >
-                           <topic.icon className={`w-5 h-5 transition-colors duration-300 ${subject === topic.id ? 'text-[var(--color-accent)]' : 'text-slate-400 group-hover:text-[var(--color-accent)]'}`} />
-                           <span className="font-bold text-sm">{topic.label}</span>
-                           {subject === topic.id && <CheckCircle2 className="absolute right-4 w-5 h-5 text-[var(--color-primary)]" />}
-                        </button>
+                     {topics.map((topic, i) => (
+                        <FadeIn key={topic.id} delay={0.5 + (i * 0.1)}>
+                            <button
+                            type="button"
+                            onClick={() => handleTopicClick(topic.id)}
+                            className={`group w-full relative flex items-center gap-3 p-4 rounded-2xl border text-left transition-all duration-300 cursor-pointer
+                                ${subject === topic.id 
+                                ? 'bg-[var(--color-primary)]/5 border-[var(--color-primary)] text-[var(--color-primary)] shadow-md scale-[1.02]' 
+                                : 'bg-white border-slate-100 text-slate-600 hover:border-[var(--color-primary)]/30 hover:bg-slate-50'}`}
+                            >
+                            <topic.icon className={`w-5 h-5 transition-colors duration-300 ${subject === topic.id ? 'text-[var(--color-accent)]' : 'text-slate-400 group-hover:text-[var(--color-accent)]'}`} />
+                            <span className="font-bold text-sm">{topic.label}</span>
+                            {subject === topic.id && <CheckCircle2 className="absolute right-4 w-5 h-5 text-[var(--color-primary)]" />}
+                            </button>
+                        </FadeIn>
                      ))}
                   </div>
                   <input type="hidden" name="_subject" value={`Neue Anfrage: ${subject}`} />
 
                   {/* INPUTS */}
                   <div className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Vorname</label>
-                        <input name="vorname" type="text" required className="w-full h-14 px-5 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:border-[var(--color-accent)] focus:ring-4 focus:ring-[var(--color-accent)]/10 transition-all font-medium text-slate-900" placeholder="Max" />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Nachname</label>
-                        <input name="nachname" type="text" required className="w-full h-14 px-5 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:border-[var(--color-accent)] focus:ring-4 focus:ring-[var(--color-accent)]/10 transition-all font-medium text-slate-900" placeholder="Mustermann" />
-                      </div>
-                    </div>
-                    <div className="grid md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">E-Mail</label>
-                        <input name="email" type="email" required className="w-full h-14 px-5 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:border-[var(--color-accent)] focus:ring-4 focus:ring-[var(--color-accent)]/10 transition-all font-medium text-slate-900" placeholder="ihre@email.de" />
-                        <ValidationError prefix="Email" field="email" errors={state.errors} className="text-red-500 text-xs mt-1 block" />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Telefon</label>
-                        <input name="phone" type="tel" className="w-full h-14 px-5 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:border-[var(--color-accent)] focus:ring-4 focus:ring-[var(--color-accent)]/10 transition-all font-medium text-slate-900" placeholder="Für Rückrufe" />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Ihre Nachricht</label>
-                      <textarea 
-                        name="message" 
-                        rows={6} 
-                        required 
-                        className="w-full p-5 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:border-[var(--color-accent)] focus:ring-4 focus:ring-[var(--color-accent)]/10 transition-all resize-none font-medium text-slate-900 placeholder:text-slate-400 leading-relaxed" 
-                        value={messageText} 
-                        onChange={(e) => setMessageText(e.target.value)} 
-                      />
-                    </div>
+                    <FadeIn delay={0.7}>
+                        <div className="grid md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Vorname</label>
+                            <input name="vorname" type="text" required className="w-full h-14 px-5 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:border-[var(--color-accent)] focus:ring-4 focus:ring-[var(--color-accent)]/10 transition-all font-medium text-slate-900" placeholder="Max" />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Nachname</label>
+                            <input name="nachname" type="text" required className="w-full h-14 px-5 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:border-[var(--color-accent)] focus:ring-4 focus:ring-[var(--color-accent)]/10 transition-all font-medium text-slate-900" placeholder="Mustermann" />
+                        </div>
+                        </div>
+                    </FadeIn>
+                    <FadeIn delay={0.8}>
+                        <div className="grid md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">E-Mail</label>
+                            <input name="email" type="email" required className="w-full h-14 px-5 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:border-[var(--color-accent)] focus:ring-4 focus:ring-[var(--color-accent)]/10 transition-all font-medium text-slate-900" placeholder="ihre@email.de" />
+                            <ValidationError prefix="Email" field="email" errors={state.errors} className="text-red-500 text-xs mt-1 block" />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Telefon</label>
+                            <input name="phone" type="tel" className="w-full h-14 px-5 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:border-[var(--color-accent)] focus:ring-4 focus:ring-[var(--color-accent)]/10 transition-all font-medium text-slate-900" placeholder="Für Rückrufe" />
+                        </div>
+                        </div>
+                    </FadeIn>
+                    <FadeIn delay={0.9}>
+                        <div className="space-y-2">
+                        <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Ihre Nachricht</label>
+                        <textarea 
+                            name="message" 
+                            rows={6} 
+                            required 
+                            className="w-full p-5 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:border-[var(--color-accent)] focus:ring-4 focus:ring-[var(--color-accent)]/10 transition-all resize-none font-medium text-slate-900 placeholder:text-slate-400 leading-relaxed" 
+                            value={messageText} 
+                            onChange={(e) => setMessageText(e.target.value)} 
+                        />
+                        </div>
+                    </FadeIn>
                   </div>
 
-                  <Button type="submit" disabled={state.submitting} className="cursor-pointer w-full h-16 text-lg bg-[var(--color-primary)] hover:bg-[var(--color-accent)] text-white rounded-2xl shadow-xl shadow-[var(--color-primary)]/20 font-bold transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-[var(--color-accent)]/30">
-                      {state.submitting ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <span className="flex items-center gap-2">Anfrage absenden <ArrowRight className="w-5 h-5" /></span>}
-                  </Button>
+                  <FadeIn delay={1.0}>
+                    <Button type="submit" disabled={state.submitting} className="cursor-pointer w-full h-16 text-lg bg-[var(--color-primary)] hover:bg-[var(--color-accent)] text-white rounded-2xl shadow-xl shadow-[var(--color-primary)]/20 font-bold transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-[var(--color-accent)]/30">
+                        {state.submitting ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <span className="flex items-center gap-2">Anfrage absenden <ArrowRight className="w-5 h-5" /></span>}
+                    </Button>
+                  </FadeIn>
                 </form>
               )}
             </div>
@@ -431,10 +442,9 @@ export function ContactTemplate() {
                       {Array.from({ length: getDaysInMonth(currentMonth.getFullYear(), currentMonth.getMonth()) }).map((_, i) => {
                          const day = i + 1;
                          const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
-                         date.setHours(0,0,0,0); // Wichtig für Vergleich
+                         date.setHours(0,0,0,0);
 
                          const isWeekend = date.getDay() === 0 || date.getDay() === 6;
-                         // Check auf Feiertage & Wochenende & Mindestdatum
                          const isTooEarly = date < minDate;
                          const isHolidayDate = isHoliday(date);
                          
@@ -504,10 +514,7 @@ export function ContactTemplate() {
         </div>
       )}
 
-      {/* DER UNSICHTBARE HELFER:
-         CareConfigurator ist hier eingebunden, aber im "minimal" Modus (kein Teaser).
-         Er lauscht auf den URL Parameter ?openConfigurator=true und öffnet dann das Modal.
-      */}
+      {/* DER UNSICHTBARE HELFER (Configurator) */}
       <CareConfigurator minimal={true} />
     </div>
   );
