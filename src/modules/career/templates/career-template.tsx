@@ -8,7 +8,7 @@ import {
   Sparkles, Quote, X, Send, MessageCircle, Star, ArrowRight, User, Check 
 } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
-import { FadeIn } from "@/shared/ui/fade-in"; // <--- NEU
+import { FadeIn } from "@/shared/ui/fade-in";
 import { motion, AnimatePresence } from "framer-motion";
 
 // DUMMY JOBS
@@ -36,7 +36,7 @@ const jobs = [
   }
 ];
 
-// --- HELPER HOOK (Für Mobile Auto-Focus) ---
+// --- HELPER HOOK ---
 function useInCenter(options = { threshold: 0.5 }) {
     const ref = useRef<HTMLDivElement>(null);
     const [isInCenter, setIsInCenter] = useState(false);
@@ -59,7 +59,7 @@ function useInCenter(options = { threshold: 0.5 }) {
     return { ref, isInCenter };
 }
 
-// --- SUB-KOMPONENTE: JOB CARD (Für Mobile Focus) ---
+// --- SUB-KOMPONENTE: JOB CARD ---
 function JobCard({ job, onSelect }: { job: typeof jobs[0], onSelect: (job: typeof jobs[0]) => void }) {
     const { ref, isInCenter } = useInCenter();
 
@@ -68,17 +68,15 @@ function JobCard({ job, onSelect }: { job: typeof jobs[0], onSelect: (job: typeo
             ref={ref}
             onClick={() => onSelect(job)}
             className={cn(
-                "group cursor-pointer bg-white rounded-[2.5rem] p-3 pr-8 border transition-all duration-500 flex flex-col md:flex-row items-center gap-6 relative overflow-hidden transform-gpu",
-                // Mobile Focus Logik
+                "group cursor-pointer bg-white rounded-[2.5rem] p-3 pr-8 border transition-all duration-500 flex flex-col lg:flex-row items-center gap-6 relative overflow-hidden transform-gpu",
                 isInCenter 
                     ? "border-[var(--color-accent)]/50 shadow-2xl shadow-[var(--color-accent)]/15 scale-[1.02]" 
                     : "border-[var(--color-border-soft)] hover:border-[var(--color-accent)]/50 hover:shadow-xl hover:shadow-[var(--color-accent)]/10 hover:scale-[1.01]"
             )}
         >
-            
-            {/* Icon Box: Reagiert auf Focus */}
+            {/* Icon Box */}
             <div className={cn(
-                "self-stretch md:self-auto w-full md:w-36 h-36 rounded-[2rem] flex flex-col items-center justify-center text-center p-4 shrink-0 transition-all duration-300",
+                "self-stretch lg:self-auto w-full lg:w-36 h-36 rounded-[2rem] flex flex-col items-center justify-center text-center p-4 shrink-0 transition-all duration-300",
                 isInCenter 
                     ? "bg-[var(--color-accent)] text-white scale-105" 
                     : "bg-[var(--color-secondary)] group-hover:bg-[var(--color-accent)] group-hover:text-white"
@@ -90,14 +88,14 @@ function JobCard({ job, onSelect }: { job: typeof jobs[0], onSelect: (job: typeo
                 )}>Wir suchen</span>
             </div>
 
-            {/* Job Info */}
-            <div className="flex-1 py-4 px-4 md:px-0 text-center md:text-left w-full">
+            {/* Job Info: Mobile Center / Desktop Left */}
+            <div className="flex-1 py-4 px-4 lg:px-0 text-center lg:text-left w-full">
                 <h3 className={cn(
                     "text-2xl font-bold mb-3 transition-colors",
                     isInCenter ? "text-[var(--color-accent)]" : "text-slate-900 group-hover:text-[var(--color-accent)]"
                 )}>{job.title}</h3>
                 
-                <div className="flex flex-wrap justify-center md:justify-start gap-3 mb-5">
+                <div className="flex flex-wrap justify-center lg:justify-start gap-3 mb-5">
                     <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-slate-50 border border-slate-100 text-sm font-bold text-slate-600">
                         <Clock className="w-4 h-4 text-slate-400" /> {job.type}
                     </span>
@@ -106,7 +104,7 @@ function JobCard({ job, onSelect }: { job: typeof jobs[0], onSelect: (job: typeo
                     </span>
                 </div>
                 
-                <div className="flex flex-wrap justify-center md:justify-start gap-4">
+                <div className="flex flex-wrap justify-center lg:justify-start gap-4">
                     {job.tags.map(tag => (
                         <span key={tag} className="text-sm text-slate-500 flex items-center gap-1.5 font-medium">
                             <CheckCircle2 className="w-4 h-4 text-[var(--color-primary)]" /> {tag}
@@ -116,7 +114,7 @@ function JobCard({ job, onSelect }: { job: typeof jobs[0], onSelect: (job: typeo
             </div>
 
             {/* Button */}
-            <div className="pb-6 md:pb-0">
+            <div className="pb-6 lg:pb-0">
                 <Button 
                     className={cn(
                         "rounded-2xl h-14 px-8 font-bold shadow-lg transition-all pointer-events-none",
@@ -132,21 +130,21 @@ function JobCard({ job, onSelect }: { job: typeof jobs[0], onSelect: (job: typeo
     );
 }
 
-// --- SUB-KOMPONENTE: BENEFIT CARD (Für Mobile Focus) ---
+// --- SUB-KOMPONENTE: BENEFIT CARD ---
 function BenefitCard({ benefit }: { benefit: any }) {
     const { ref, isInCenter } = useInCenter();
 
     return (
         <div 
             ref={ref}
+            // KORREKTUR: Text-Alignment responsive
             className={cn(
-                "group p-8 rounded-[2rem] bg-white border transition-all duration-500 relative overflow-hidden transform-gpu h-full",
+                "group p-8 rounded-[2rem] bg-white border transition-all duration-500 relative overflow-hidden transform-gpu h-full flex flex-col items-center lg:items-start text-center lg:text-left",
                 isInCenter 
                     ? "border-[var(--color-primary)]/40 shadow-xl shadow-[var(--color-primary)]/10 -translate-y-1" 
                     : "border-[var(--color-border-soft)] hover:border-[var(--color-primary)]/30 hover:shadow-xl hover:shadow-[var(--color-primary)]/5 hover:-translate-y-1"
             )}
         >
-            {/* Zartes Blau im Hintergrund */}
             <div className={cn(
                 "absolute inset-0 bg-gradient-to-br from-[var(--color-secondary)]/30 to-transparent transition-opacity duration-500",
                 isInCenter ? "opacity-100" : "opacity-0 group-hover:opacity-100"
@@ -177,11 +175,10 @@ export function CareerTemplate() {
   return (
     <div className="relative min-h-screen bg-white font-sans pb-20 selection:bg-[var(--color-primary)]/20 overflow-hidden">
       
-      {/* HINTERGRUND FX - GPU Optimiert */}
+      {/* HINTERGRUND FX */}
       <div className="absolute inset-0 opacity-[0.4] pointer-events-none transform-gpu" 
            style={{ backgroundImage: 'radial-gradient(var(--color-border-soft) 1px, transparent 1px)', backgroundSize: '32px 32px' }}>
       </div>
-      
       <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[1000px] h-[700px] bg-[var(--color-secondary)]/60 rounded-full blur-[120px] opacity-70 pointer-events-none transform-gpu will-change-transform" />
       <div className="absolute top-[20%] right-[-10%] w-[600px] h-[600px] bg-[var(--color-primary)]/5 rounded-full blur-[100px] md:animate-pulse pointer-events-none transform-gpu will-change-transform" style={{ animationDuration: '6s' }} />
       <div className="absolute bottom-0 left-[-10%] w-[500px] h-[500px] bg-[var(--color-accent)]/10 rounded-full blur-[80px] pointer-events-none transform-gpu" />
@@ -189,9 +186,9 @@ export function CareerTemplate() {
 
       <div className="relative z-10">
       
-        {/* --- 1. HEADER --- */}
-        <section className="pt-24 pb-16 lg:pt-32 lg:pb-24 text-center px-4">
-          <div className="container max-w-4xl mx-auto">
+        {/* --- 1. HEADER: Mobile Center / Desktop Left --- */}
+        <section className="pt-24 pb-16 lg:pt-32 lg:pb-24 px-4">
+          <div className="container mx-auto flex flex-col items-center lg:items-start text-center lg:text-left max-w-4xl lg:mx-0 lg:max-w-5xl">
             
             <FadeIn delay={0.1}>
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-sm border border-[var(--color-border-soft)] text-[var(--color-primary)] text-xs font-bold tracking-wide uppercase shadow-sm mb-8">
@@ -203,7 +200,7 @@ export function CareerTemplate() {
            <FadeIn delay={0.2}>
                <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1]">
                 Arbeit, die <br/>
-                <span className="relative inline-block ml-3">
+                <span className="relative inline-block ml-0 lg:ml-3">
                     <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)]">
                     wertgeschätzt wird.
                     </span>
@@ -215,19 +212,19 @@ export function CareerTemplate() {
            </FadeIn>
             
             <FadeIn delay={0.3}>
-                <p className="text-xl md:text-2xl text-slate-600 leading-relaxed max-w-2xl mx-auto font-medium">
+                <p className="text-xl md:text-2xl text-slate-600 leading-relaxed max-w-2xl font-medium mx-auto lg:mx-0">
                 Keine leeren Versprechen. Wir bieten dir Zeit für Patienten, ein faires Gehalt 
                 und ein Team, das wirklich zusammenhält.
                 </p>
             </FadeIn>
 
-            <FadeIn delay={0.4} className="mt-12 flex flex-col sm:flex-row gap-4 justify-center">
-               <Link href="#stellen">
-                 <Button size="lg" className="h-14 px-8 text-lg bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white rounded-2xl shadow-xl shadow-[var(--color-primary)]/20 hover:-translate-y-1 transition-all font-bold">
+            <FadeIn delay={0.4} className="mt-12 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start w-full sm:w-auto">
+               <Link href="#stellen" className="w-full sm:w-auto">
+                 <Button size="lg" className="w-full sm:w-auto h-14 px-8 text-lg bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white rounded-2xl shadow-xl shadow-[var(--color-primary)]/20 hover:-translate-y-1 transition-all font-bold">
                    Zu den offenen Stellen
                  </Button>
                </Link>
-               <Button variant="outline" size="lg" className="h-14 px-8 text-lg border-green-200 text-green-700 bg-green-50 hover:bg-green-100 rounded-2xl font-bold flex gap-2 border-2">
+               <Button variant="outline" size="lg" className="w-full sm:w-auto h-14 px-8 text-lg border-green-200 text-green-700 bg-green-50 hover:bg-green-100 rounded-2xl font-bold flex gap-2 border-2 justify-center">
                    <MessageCircle className="w-5 h-5" /> WhatsApp Chat
                </Button>
             </FadeIn>
@@ -236,16 +233,19 @@ export function CareerTemplate() {
 
         {/* --- 2. BENEFITS --- */}
         <section className="py-24 container px-4 md:px-6 relative">
-          <div className="text-center mb-16">
+          
+          {/* HEADER: Mobile Center / Desktop Left */}
+          <div className="mb-16 flex flex-col items-center lg:items-start text-center lg:text-left max-w-2xl mx-auto lg:mx-0">
             <FadeIn delay={0.1}>
                 <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1]">
                     Deine Vorteile bei uns
                 </h2>
             </FadeIn>
             <FadeIn delay={0.2}>
-                <p className="text-slate-600 max-w-2xl mx-auto text-lg font-medium">Wir fordern viel, aber wir geben auch viel zurück. Transparenz ist uns wichtig.</p>
+                <p className="text-slate-600 text-lg font-medium">Wir fordern viel, aber wir geben auch viel zurück. Transparenz ist uns wichtig.</p>
             </FadeIn>
           </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
              {[
                { icon: Euro, title: "Top Bezahlung", text: "Überdurchschnittliches Gehalt nach Tarif, plus steuerfreie Zuschläge." },
@@ -270,7 +270,8 @@ export function CareerTemplate() {
            
            <div className="container relative z-10 px-4 md:px-6">
               <FadeIn direction="up">
-                <div className="bg-white/5 border border-white/10 rounded-[3rem] p-8 md:p-16 backdrop-blur-sm max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-12 shadow-2xl">
+                {/* Layout: Mobile Stack / Desktop Row -> Entspricht Design */}
+                <div className="bg-white/5 border border-white/10 rounded-[3rem] p-8 md:p-16 backdrop-blur-sm max-w-5xl mx-auto flex flex-col lg:flex-row items-center gap-12 shadow-2xl">
                     <div className="relative shrink-0">
                         <div className="w-40 h-40 md:w-56 md:h-56 rounded-full border-4 border-white/10 overflow-hidden shadow-2xl relative bg-slate-800 flex items-center justify-center">
                         <User className="w-24 h-24 text-white/20" />
@@ -279,8 +280,9 @@ export function CareerTemplate() {
                         <Quote className="w-6 h-6 fill-current" />
                         </div>
                     </div>
-                    <div className="text-center md:text-left text-white">
-                        <div className="flex gap-1 justify-center md:justify-start text-[var(--color-accent)] mb-6">
+                    {/* Text-Container: Mobile Center / Desktop Left */}
+                    <div className="text-center lg:text-left text-white flex flex-col items-center lg:items-start">
+                        <div className="flex gap-1 justify-center lg:justify-start text-[var(--color-accent)] mb-6">
                         {[...Array(5)].map((_, i) => <Star key={i} className="w-6 h-6 fill-current" />)}
                         </div>
                         <blockquote className="text-2xl md:text-3xl font-medium leading-relaxed mb-8 opacity-90">
@@ -297,7 +299,9 @@ export function CareerTemplate() {
         {/* --- 4. JOB LISTING --- */}
         <section id="stellen" className="py-24 bg-white border-t border-[var(--color-border-soft)] relative">
           <div className="container px-4 md:px-6 max-w-5xl mx-auto relative z-10">
-            <div className="text-center mb-16">
+            
+            {/* HEADER: Mobile Center / Desktop Left */}
+            <div className="mb-16 flex flex-col items-center lg:items-start text-center lg:text-left mx-auto lg:mx-0">
               <FadeIn>
                 <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1]">
                     Aktuelle Stellenangebote
@@ -316,7 +320,7 @@ export function CareerTemplate() {
               ))}
             </div>
 
-            {/* Initiativ Box */}
+            {/* Initiativ Box (Bleibt zentriert als "Footer"-Element der Liste) */}
             <FadeIn delay={0.6} className="mt-16 text-center">
                <div className="inline-block bg-white border border-[var(--color-border-soft)] p-8 rounded-[2rem] shadow-xl shadow-slate-200/40 hover:border-[var(--color-accent)]/30 transition-colors">
                   <h4 className="font-bold text-slate-900 mb-2 flex items-center justify-center gap-2 text-xl">
@@ -349,7 +353,7 @@ export function CareerTemplate() {
   );
 }
 
-// --- SUB-KOMPONENTE: ULTRA-SCHNELLES MODAL MIT ANIMATION ---
+// --- SUB-KOMPONENTE: ULTRA-SCHNELLES MODAL ---
 function QuickApplyModal({ jobTitle, onClose }: { jobTitle: string; onClose: () => void }) {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -357,7 +361,6 @@ function QuickApplyModal({ jobTitle, onClose }: { jobTitle: string; onClose: () 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulation API Call
     setTimeout(() => {
        setIsSubmitting(false);
        setStep(2);
@@ -388,12 +391,12 @@ function QuickApplyModal({ jobTitle, onClose }: { jobTitle: string; onClose: () 
             </div>
             <h3 className="text-2xl font-black text-slate-900 leading-tight pr-4">{jobTitle}</h3>
           </div>
-          <button onClick={onClose} className="p-2 bg-white rounded-full text-slate-400 hover:text-slate-900 hover:bg-red-50 hover:text-red-500 transition-colors shadow-sm">
+          <button onClick={onClose} className="p-2 bg-white rounded-full text-slate-400 hover:text-slate-900 hover:bg-red-50 hover:text-red-500 transition-colors shadow-sm cursor-pointer">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Content - AnimatePresence für Step-Wechsel */}
+        {/* Content */}
         <div className="p-8 min-h-[300px]">
           <AnimatePresence mode="wait">
             {step === 1 && (
@@ -467,7 +470,7 @@ function QuickApplyModal({ jobTitle, onClose }: { jobTitle: string; onClose: () 
                <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-slate-100"></span></div>
                <div className="relative flex justify-center text-[10px] font-bold uppercase tracking-wider"><span className="bg-white px-3 text-slate-400">Alternativ</span></div>
              </div>
-             <button className="flex items-center justify-center gap-2 w-full py-4 rounded-2xl border border-green-200 bg-green-50 text-green-700 font-bold hover:bg-green-100 transition-colors">
+             <button className="flex items-center justify-center gap-2 w-full py-4 rounded-2xl border border-green-200 bg-green-50 text-green-700 font-bold hover:bg-green-100 transition-colors cursor-pointer">
                 <MessageCircle className="w-5 h-5" /> Per WhatsApp bewerben
              </button>
            </div>

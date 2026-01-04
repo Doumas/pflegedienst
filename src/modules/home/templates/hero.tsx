@@ -116,7 +116,7 @@ export function Hero() {
 
   return (
     <>
-    <section id="hero-section" className="relative w-full overflow-hidden pt-6 pb-12 lg:pt-28 lg:pb-48 flex items-center lg:min-h-[85vh]">
+    <section id="hero-section" className="relative w-full overflow-hidden pt-24 pb-16 lg:pt-32 lg:pb-24 text-center px-4 flex items-center lg:min-h-[85vh]">
       
       {/* 1. HINTERGRUND FX */}
       <div className="absolute inset-0 opacity-[0.4] pointer-events-none -z-30 transform-gpu" 
@@ -155,9 +155,9 @@ export function Hero() {
                     </div>
                     
                     <div className="flex flex-col items-start leading-none text-left">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Standort Frankfurt</span>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Ihr Pflegedienst in Frankfurt</span>
                         <span className="text-xs lg:text-sm font-bold text-slate-900 group-hover:text-[var(--color-primary)] transition-colors">
-                            Ambulanter Intensivpflegedienst
+                            
                         </span>
                     </div>
                 </a>

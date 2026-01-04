@@ -169,7 +169,7 @@ export function Header() {
 
       {/* MOBILE MENU OVERLAY */}
       {isOpen && (
-          <div className="lg:hidden fixed inset-0 z-[40] bg-slate-50/95 backdrop-blur-xl pt-32 px-4 overflow-y-auto animate-in slide-in-from-top-4 duration-300">
+          <div className="lg:hidden fixed inset-0 z-[40] bg-slate-50/95 backdrop-blur-xl pt-50 px-4 overflow-y-auto animate-in slide-in-from-top-4 duration-300">
             <div className="space-y-6 pb-24">
                
                {/* KORREKTUR: HEADER ZENTRIERT (Mobile Center Rule) */}

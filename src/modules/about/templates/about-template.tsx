@@ -10,9 +10,9 @@ import {
 import Link from "next/link";
 import { cn } from "@/shared/utils/cn";
 import { DalasLogo } from "@/shared/ui/dalas-logo"; 
-import { FadeIn } from "@/shared/ui/fade-in"; // <--- NEU
+import { FadeIn } from "@/shared/ui/fade-in";
 
-// --- HELPER HOOK (Für Mobile Auto-Focus) ---
+// --- HELPER HOOK ---
 function useInCenter(options = { threshold: 0.1 }) {
     const ref = useRef<HTMLDivElement>(null);
     const [isInCenter, setIsInCenter] = useState(false);
@@ -24,7 +24,6 @@ function useInCenter(options = { threshold: 0.1 }) {
         const observer = new IntersectionObserver(([entry]) => {
             setIsInCenter(entry.isIntersecting);
         }, {
-            // Triggerbereich in der Mitte des Bildschirms
             rootMargin: "-30% 0px -30% 0px", 
             threshold: 0
         });
@@ -39,7 +38,6 @@ function useInCenter(options = { threshold: 0.1 }) {
 export function AboutTemplate() {
   const [isFlyerOpen, setIsFlyerOpen] = useState(false);
   
-  // Hook für die "Herz & Hand" Karte
   const { ref: cardRef, isInCenter: cardActive } = useInCenter();
 
   const handlePrint = () => {
@@ -51,9 +49,7 @@ export function AboutTemplate() {
     {/* HAUPTSEITE */}
     <div className="hide-on-print relative min-h-screen bg-white font-sans pb-20 selection:bg-[var(--color-primary)]/20 overflow-hidden">
       
-      {/* ========================================================= */}
-      {/* HINTERGRUND FX - GPU OPTIMIERT                            */}
-      {/* ========================================================= */}
+      {/* HINTERGRUND FX */}
       <div className="absolute inset-0 opacity-[0.4] pointer-events-none transform-gpu" 
            style={{ backgroundImage: 'radial-gradient(var(--color-border-soft) 1px, transparent 1px)', backgroundSize: '32px 32px' }}>
       </div>
@@ -63,14 +59,12 @@ export function AboutTemplate() {
       <div className="absolute bottom-0 left-[-10%] w-[500px] h-[500px] bg-[var(--color-accent)]/10 rounded-full blur-[60px] lg:blur-[80px] pointer-events-none transform-gpu" />
 
 
-      {/* ========================================================= */}
-      {/* INHALT                                                    */}
-      {/* ========================================================= */}
+      {/* INHALT */}
       <div className="relative z-10">
 
-        {/* 1. HEADER */}
-        <section className="pt-24 pb-16 lg:pt-32 lg:pb-24 text-center px-4">
-          <div className="container max-w-4xl mx-auto">
+        {/* 1. HEADER: Mobile Center / Desktop Left */}
+        <section className="pt-24 pb-16 lg:pt-32 lg:pb-24 px-4">
+          <div className="container max-w-4xl mx-auto flex flex-col items-center lg:items-start text-center lg:text-left">
             
             <FadeIn delay={0.1}>
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-sm border border-[var(--color-border-soft)] text-[var(--color-primary)] text-xs font-bold tracking-wide uppercase shadow-sm mb-8">
@@ -82,7 +76,7 @@ export function AboutTemplate() {
             <FadeIn delay={0.2}>
                 <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-slate-900 mb-8 tracking-tight leading-[1.1] text-balance">
                 Pflege bedeutet <br/>
-                <span className="relative inline-block ml-3">
+                <span className="relative inline-block ml-0 lg:ml-3"> {/* ml-0 auf mobile, damit es nicht komisch einrückt */}
                     <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)]">
                     Vertrauen.
                     </span>
@@ -94,7 +88,7 @@ export function AboutTemplate() {
             </FadeIn>
             
             <FadeIn delay={0.3}>
-                <p className="text-xl md:text-2xl text-slate-600 leading-relaxed max-w-3xl mx-auto font-medium">
+                <p className="text-xl md:text-2xl text-slate-600 leading-relaxed max-w-3xl font-medium">
                 Wir möchten Ihnen nicht nur helfen, sondern Ihnen die Sorge nehmen. 
                 Lernen Sie hier die Menschen kennen, denen Sie Ihre Liebsten anvertrauen.
                 </p>
@@ -106,7 +100,8 @@ export function AboutTemplate() {
       <section className="py-24 lg:py-32 bg-white relative">
         <div className="container px-4 md:px-6 relative z-10">
           
-          <div className="max-w-3xl mb-16">
+          {/* HEADER: Mobile Center / Desktop Left */}
+          <div className="max-w-3xl mb-16 flex flex-col items-center lg:items-start text-center lg:text-left mx-auto lg:mx-0">
            <FadeIn direction="right">
                 <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1]">
                         Das Prinzip <span className="text-[var(--color-primary)]">Bezugspflege.</span>
@@ -122,7 +117,7 @@ export function AboutTemplate() {
 
           <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
              
-             {/* Die "Andere" Seite - Etwas ausgeblendet wenn unsere Karte aktiv ist */}
+             {/* Die "Andere" Seite */}
              <FadeIn delay={0.1} direction="right" className="h-full">
                 <div className={cn(
                     "bg-slate-50 rounded-[2.5rem] p-8 md:p-10 border border-slate-100 transition-all duration-500 flex flex-col justify-center h-full",
@@ -155,19 +150,16 @@ export function AboutTemplate() {
                     onClick={() => setIsFlyerOpen(true)}
                     className={cn(
                         "group cursor-pointer bg-[var(--color-secondary)] rounded-[2.5rem] p-8 md:p-10 border relative overflow-hidden transition-all duration-500 transform-gpu h-full",
-                        // Auto-Hover Logik:
                         cardActive 
                             ? "scale-[1.03] shadow-2xl shadow-[var(--color-primary)]/20 border-[var(--color-primary)]/30" 
                             : "scale-100 shadow-xl shadow-[var(--color-primary)]/5 border-[var(--color-border-soft)] hover:scale-[1.02] hover:shadow-2xl hover:shadow-[var(--color-primary)]/10"
                     )}
                 >
-                    {/* Dynamischer Hintergrund-Blob */}
                     <div className={cn(
                         "absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-[var(--color-accent)]/50 to-[var(--color-accent)]/10 rounded-bl-[100px] transition-transform duration-700",
                         cardActive ? "scale-125" : "scale-100 group-hover:scale-110"
                     )} />
                     
-                    {/* Badge "Broschüre öffnen" - Blendet ein */}
                     <div className={cn(
                         "absolute top-6 right-6 transition-all duration-500 text-[var(--color-accent)] font-bold text-xs uppercase tracking-wide flex items-center gap-1",
                         cardActive ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0"
@@ -216,7 +208,9 @@ export function AboutTemplate() {
         {/* 3. TEAM GRID */}
         <section className="py-24 border-y border-slate-100 bg-white/50 backdrop-blur-sm">
           <div className="container px-4 md:px-6">
-            <div className="text-center max-w-3xl mx-auto mb-16">
+            
+            {/* HEADER: Mobile Center / Desktop Left */}
+            <div className="mb-16 flex flex-col items-center lg:items-start text-center lg:text-left max-w-3xl mx-auto lg:mx-0">
                 <FadeIn>
                     <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1]">
                         Gesichter des Vertrauens
@@ -226,7 +220,8 @@ export function AboutTemplate() {
                     <p className="text-slate-600 text-lg">Unser Team ist unser Stolz.</p>
                 </FadeIn>
             </div>
-            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+
+            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto lg:mx-0">
               {/* Anna */}
               <FadeIn delay={0.1} className="h-full">
                 <div className="group bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 text-center hover:-translate-y-1 h-full">
@@ -283,7 +278,8 @@ export function AboutTemplate() {
                 </div>
                </FadeIn>
 
-               <div className="space-y-8">
+               {/* RECHTS: TEXT - Mobile Center / Desktop Left */}
+               <div className="space-y-8 flex flex-col items-center lg:items-start text-center lg:text-left">
                   <FadeIn delay={0.2} direction="left">
                     <div>
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-[var(--color-accent)] text-xs font-bold tracking-wide uppercase mb-4 backdrop-blur-sm">
@@ -301,14 +297,15 @@ export function AboutTemplate() {
                     </div>
                   </FadeIn>
 
-                  <div className="grid gap-4">
+                  <div className="grid gap-4 w-full">
                      {[
                         { title: "Medizinische Genauigkeit", desc: "Korrekte Wundversorgung & Medikamentengabe.", icon: Stethoscope },
                         { title: "Verlässliche Organisation", desc: "Erreichbarkeit & transparente Abrechnung.", icon: Clock },
                         { title: "Menschliche Wärme", desc: "Wie wohl fühlen sich die Menschen bei uns?", icon: Heart },
                      ].map((fact, i) => (
                         <FadeIn key={i} delay={0.3 + (i * 0.1)} direction="left">
-                            <div className="flex gap-5 p-5 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors group">
+                            {/* Items bleiben linksbündig für Lesbarkeit (UX Standard) */}
+                            <div className="flex gap-5 p-5 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors group text-left">
                             <div className="shrink-0 w-12 h-12 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-white shadow-lg shadow-black/20 group-hover:scale-110 transition-transform"><fact.icon className="w-6 h-6" /></div>
                             <div>
                                 <div className="font-bold text-white text-lg mb-1 group-hover:text-[var(--color-accent)] transition-colors">{fact.title}</div>
@@ -333,7 +330,8 @@ export function AboutTemplate() {
           </div>
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-[var(--color-accent)]/5 rounded-full blur-[100px] pointer-events-none" />
 
-          <div className="container text-center px-4 md:px-6 relative z-10">
+          {/* CONTENT: Mobile Center / Desktop Left */}
+          <div className="container px-4 md:px-6 relative z-10 flex flex-col items-center lg:items-start text-center lg:text-left">
             
             <FadeIn>
                 <div className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-[2rem] text-[var(--color-primary)] mb-8 shadow-xl shadow-[var(--color-primary)]/10 border border-slate-100 rotate-3 hover:rotate-0 transition-transform duration-500">
@@ -348,12 +346,13 @@ export function AboutTemplate() {
             </FadeIn>
             
             <FadeIn delay={0.2}>
-                <p className="text-xl text-slate-600 max-w-2xl mx-auto mb-16 leading-relaxed">
+                <p className="text-xl text-slate-600 max-w-2xl mb-16 leading-relaxed">
                 Unser Team ist mobil und flexibel. Wir kommen dorthin, wo Sie uns brauchen – direkt zu Ihnen nach Hause.
                 </p>
             </FadeIn>
             
-            <div className="flex flex-wrap justify-center gap-4 max-w-5xl mx-auto mb-20">
+            {/* ORTE - ZENTRIERT BLEIBEN (da Wolke) */}
+            <div className="flex flex-wrap justify-center lg:justify-start gap-4 max-w-5xl mb-20 w-full">
               {["Frankfurt Zentrum", "Sachsenhausen", "Bornheim", "Nordend", "Westend", "Bockenheim", "Gallus", "Niederrad", "Höchst", "Griesheim", "Rödelheim", "Hausen"].map((ort, i) => (
                 <FadeIn key={i} delay={0.3 + (i * 0.05)} className="w-auto">
                     <div className="group relative">
@@ -374,14 +373,15 @@ export function AboutTemplate() {
               </FadeIn>
             </div>
 
-            <FadeIn delay={0.4} direction="up">
-                <div className="relative max-w-4xl mx-auto group">
+            {/* CHECKER BOX */}
+            <FadeIn delay={0.4} direction="up" className="w-full">
+                <div className="relative max-w-4xl group">
                 <div className="absolute -inset-1 bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-accent)] to-[var(--color-primary)] rounded-[2.5rem] opacity-20 blur-lg group-hover:opacity-40 transition duration-1000 group-hover:duration-200" />
                 
                 <div className="relative bg-white rounded-[2.5rem] p-8 md:p-12 border border-slate-100 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8 overflow-hidden">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--color-secondary)]/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
 
-                    <div className="text-left relative z-10 flex items-start gap-6">
+                    <div className="text-left relative z-10 flex items-start gap-6 w-full">
                         <div className="hidden md:flex w-16 h-16 bg-slate-50 rounded-2xl items-center justify-center text-[var(--color-primary)] shrink-0 border border-slate-100">
                             <Car className="w-8 h-8" />
                         </div>
@@ -391,8 +391,7 @@ export function AboutTemplate() {
                         </div>
                     </div>
                     
-                    <Link href="/kontakt" className="relative z-10 w-full md:w-auto">
-                        {/* BUTTON BEREINIGT: Nutzt jetzt die Standard Button Styles (Rund + Petrol) */}
+                    <Link href="/kontakt" className="relative z-10 w-full md:w-auto shrink-0">
                         <Button size="lg" className="w-full md:w-auto px-10 h-16 text-lg">
                         Jetzt prüfen <ArrowRight className="ml-2 w-5 h-5" />
                         </Button>
@@ -407,9 +406,7 @@ export function AboutTemplate() {
       </div>
     </div>
 
-    {/* ========================================================= */}
-    {/* BROSCHÜRE (Flyer Overlay)                                 */}
-    {/* ========================================================= */}
+    {/* FLYER OVERLAY (Bleibt zentriert, da Modal) */}
     {isFlyerOpen && (
       <div id="print-overlay">
          <div className="fixed inset-0 no-print cursor-pointer" onClick={() => setIsFlyerOpen(false)} />
@@ -427,13 +424,13 @@ export function AboutTemplate() {
             </div>
          </div>
          <div id="flyer-content-container">
+            {/* ... Flyer Content ... (Unverändert, da Druck-Layout) */}
             {/* Seite 1 */}
             <div className="flyer-page bg-[var(--color-secondary)]">
                <div className="relative w-full h-full flex flex-col items-center justify-center text-center p-16 md:p-24">
                    <div className="absolute top-0 right-0 w-[80mm] h-[80mm] bg-white/20 rounded-bl-[100%] pointer-events-none" />
                    <div className="absolute bottom-0 left-0 w-[80mm] h-[80mm] bg-[var(--color-primary)]/10 rounded-tr-[100%] pointer-events-none" />
                    
-                   {/* HIER WAR DER FEHLER: variant="full" durch variant="default" ersetzt */}
                    <DalasLogo className="w-64 h-auto mb-10 relative z-10" variant="default" />
                    
                    <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white text-[var(--color-primary)] text-sm font-bold tracking-wide uppercase shadow-sm mb-8 relative z-10">
@@ -587,7 +584,7 @@ export function AboutTemplate() {
                            <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--color-secondary)] rounded-bl-[100px] -z-0" />
                            
                            <div className="relative z-10">
-                             <DalasLogo className="w-40 h-auto mb-8 text-[var(--color-primary)]" />
+                             <DalasLogo className="w-40 h-auto mb-8 text-[var(--color-primary)]" variant="default" />
                              
                              <div className="space-y-6">
                                 <div className="flex gap-4">

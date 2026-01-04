@@ -90,10 +90,13 @@ export function FAQTemplate() {
       {/* ========================================================= */}
       <div className="hide-on-print relative z-10">
       
-        {/* --- 1. HEADER --- */}
-        <section className="pt-24 pb-16 lg:pt-32 lg:pb-24 text-center px-4">
-          <div className="container max-w-3xl mx-auto">
+        {/* --- 1. HEADER (Mobile: Center / Desktop: Left) --- */}
+        <section className="pt-24 pb-16 lg:pt-32 lg:pb-24 px-4">
+          {/* items-center (mobile) -> items-start (desktop) */}
+          <div className="container max-w-3xl lg:max-w-7xl mx-auto flex flex-col items-center lg:items-start">
+            
             <FadeIn delay={0.1}>
+                {/* Badge Container */}
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-sm border border-[var(--color-border-soft)] text-[var(--color-primary)] text-xs font-bold tracking-wide uppercase shadow-sm mb-8">
                 <Sparkles className="w-3 h-3 text-[var(--color-accent)]" />
                 <span>Wissenswertes</span>
@@ -101,10 +104,12 @@ export function FAQTemplate() {
             </FadeIn>
 
            <FadeIn delay={0.2}>
-               <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1]">
+               {/* H1: text-center (mobile) -> text-left (desktop) */}
+               <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1] text-center lg:text-left">
                 Häufige Fragen & <br/>
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)] relative inline-block">
                     Antworten.
+                    {/* SVG Deko */}
                     <svg className="absolute w-full h-3 -bottom-1 left-0 text-[var(--color-accent)] -z-10 opacity-40" viewBox="0 0 100 10" preserveAspectRatio="none">
                         <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
                     </svg>
@@ -113,7 +118,8 @@ export function FAQTemplate() {
            </FadeIn>
             
             <FadeIn delay={0.3}>
-                <p className="text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto">
+                {/* P: text-center (mobile) -> text-left (desktop) | mx-auto (mobile) -> mx-0 (desktop) */}
+                <p className="text-xl text-slate-600 leading-relaxed max-w-2xl text-center lg:text-left mx-auto lg:mx-0">
                 Hier finden Sie detaillierte Informationen zu unseren Leistungen, Kosten und dem Ablauf. 
                 Transparenz ist für uns der erste Schritt zur Vertrauensbasis.
                 </p>
@@ -131,21 +137,21 @@ export function FAQTemplate() {
                 <FadeIn key={i} delay={0.4 + (i * 0.05)} direction="up">
                     <div className="group bg-white rounded-[1.5rem] border border-[var(--color-border-soft)] hover:border-[var(--color-accent)]/30 hover:shadow-xl hover:shadow-[var(--color-accent)]/5 transition-all duration-300 overflow-hidden transform-gpu">
                     <details className="group/details">
-                        <summary className="flex items-start md:items-center gap-4 p-6 cursor-pointer list-none select-none">
-                        <div className="mt-1 md:mt-0 w-12 h-12 rounded-2xl bg-[var(--color-secondary)] flex items-center justify-center text-[var(--color-primary)] shrink-0 border border-transparent transition-colors duration-300 group-hover:text-[var(--color-accent)] group-open/details:bg-[var(--color-accent)] group-open/details:text-white group-open/details:group-hover:text-white">
-                            <item.icon className="w-5 h-5" />
-                        </div>
-                        <div className="flex-1 pr-4">
-                            <h3 className="text-lg font-bold text-slate-900 group-hover:text-[var(--color-accent)] transition-colors leading-tight">
-                            {item.question}
-                            </h3>
-                        </div>
-                        <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-open/details:bg-[var(--color-accent)] group-open/details:text-white group-open/details:group-hover:text-white group-open/details:rotate-180 transition-all duration-300 shrink-0">
-                            <ChevronDown className="w-5 h-5" />
-                        </div>
+                        <summary className="flex items-center gap-5 p-6 cursor-pointer list-none select-none">
+                            <div className="w-12 h-12 rounded-2xl bg-[var(--color-secondary)] flex items-center justify-center text-[var(--color-primary)] shrink-0 border border-transparent transition-colors duration-300 group-hover:text-[var(--color-accent)] group-open/details:bg-[var(--color-accent)] group-open/details:text-white group-open/details:group-hover:text-white">
+                                <item.icon className="w-5 h-5" />
+                            </div>
+                            <div className="flex-1">
+                                <h3 className="text-lg font-bold text-slate-900 group-hover:text-[var(--color-accent)] transition-colors leading-tight">
+                                {item.question}
+                                </h3>
+                            </div>
+                            <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-open/details:bg-[var(--color-accent)] group-open/details:text-white group-open/details:group-hover:text-white group-open/details:rotate-180 transition-all duration-300 shrink-0">
+                                <ChevronDown className="w-5 h-5" />
+                            </div>
                         </summary>
-                        <div className="px-6 pb-6 pt-0 pl-[5rem]">
-                        <div className="text-slate-600 leading-relaxed border-l-2 border-[var(--color-secondary)] group-open/details:border-[var(--color-accent)] pl-4 py-1 text-pretty font-medium transition-colors">
+                        <div className="px-6 pb-6 pt-0 pl-[5.25rem]">
+                        <div className="text-slate-600 leading-relaxed border-l-2 border-[var(--color-secondary)] group-open/details:border-[var(--color-accent)] pl-5 py-1 text-pretty font-medium transition-colors">
                             {item.answer}
                         </div>
                         </div>
@@ -158,39 +164,45 @@ export function FAQTemplate() {
             {/* RECHTS: Sidebar */}
             <div className="lg:col-span-4 space-y-8 sticky top-32">
               
-              {/* Kontakt Box */}
+              {/* Kontakt Box - Mobile: Center / Desktop: Left */}
               <FadeIn delay={0.6} direction="left">
                 <div className="bg-white border border-[var(--color-border-soft)] p-8 rounded-[2.5rem] shadow-2xl shadow-slate-200/50 relative overflow-hidden transform-gpu">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--color-secondary)] rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none opacity-50" />
-                    <div className="relative z-10">
-                    <div className="w-14 h-14 bg-[var(--color-secondary)] rounded-2xl flex items-center justify-center mb-6 border border-[var(--color-border-soft)] shadow-sm text-[var(--color-primary)]">
-                        <MessageCircle className="w-7 h-7" />
-                    </div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-2">Frage nicht gefunden?</h3>
-                    <p className="text-slate-600 text-sm mb-8 leading-relaxed">
-                        Jede Pflegesituation ist einzigartig. Lassen Sie uns persönlich darüber sprechen.
-                    </p>
-                    <div className="space-y-4">
-                        <a href={`tel:061097159916`} className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 hover:bg-[var(--color-secondary)] border border-transparent hover:border-[var(--color-border-soft)] transition-all group cursor-pointer">
-                        <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-slate-400 group-hover:text-[var(--color-primary)] transition-colors">
-                            <Phone className="w-5 h-5" />
+                    
+                    {/* Content Wrapper: text-center (mobile) -> text-left (desktop) */}
+                    <div className="relative z-10 text-center lg:text-left">
+                        
+                        {/* Icon: mx-auto (mobile) -> mx-0 (desktop) */}
+                        <div className="w-14 h-14 bg-[var(--color-secondary)] rounded-2xl flex items-center justify-center mb-6 border border-[var(--color-border-soft)] shadow-sm text-[var(--color-primary)] mx-auto lg:mx-0">
+                            <MessageCircle className="w-7 h-7" />
                         </div>
-                        <div>
-                            <div className="text-[10px] text-slate-500 uppercase tracking-wide font-bold">Rufen Sie uns an</div>
-                            <div className="font-bold text-slate-900 group-hover:text-[var(--color-primary)] transition-colors">06109 715 99 16</div>
+                        
+                        <h3 className="text-xl font-bold text-slate-900 mb-2">Frage nicht gefunden?</h3>
+                        <p className="text-slate-600 text-sm mb-8 leading-relaxed">
+                            Jede Pflegesituation ist einzigartig. Lassen Sie uns persönlich darüber sprechen.
+                        </p>
+                        
+                        <div className="space-y-4">
+                            <a href={`tel:061097159916`} className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 hover:bg-[var(--color-secondary)] border border-transparent hover:border-[var(--color-border-soft)] transition-all group cursor-pointer text-left">
+                            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-slate-400 group-hover:text-[var(--color-primary)] transition-colors shrink-0">
+                                <Phone className="w-5 h-5" />
+                            </div>
+                            <div>
+                                <div className="text-[10px] text-slate-500 uppercase tracking-wide font-bold">Rufen Sie uns an</div>
+                                <div className="font-bold text-slate-900 group-hover:text-[var(--color-primary)] transition-colors">06109 715 99 16</div>
+                            </div>
+                            </a>
+                            <Link href="/kontakt" className="block w-full">
+                            <Button className="w-full bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white h-12 text-base font-bold shadow-lg shadow-[var(--color-primary)]/20 rounded-2xl hover:-translate-y-0.5 transition-all">
+                                Nachricht schreiben
+                            </Button>
+                            </Link>
                         </div>
-                        </a>
-                        <Link href="/kontakt" className="block w-full">
-                        <Button className="w-full bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white h-12 text-base font-bold shadow-lg shadow-[var(--color-primary)]/20 rounded-2xl hover:-translate-y-0.5 transition-all">
-                            Nachricht schreiben
-                        </Button>
-                        </Link>
-                    </div>
                     </div>
                 </div>
               </FadeIn>
 
-              {/* DOWNLOAD BOX - CLICKABLE */}
+              {/* DOWNLOAD BOX */}
               <FadeIn delay={0.7} direction="left">
                 <div 
                     onClick={() => setIsChecklistOpen(true)}
