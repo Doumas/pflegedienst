@@ -4,12 +4,12 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/shared/ui/button"; 
-import { MapPin, CheckCircle2, Loader2, Star, X } from "lucide-react"; 
+import { MapPin, CheckCircle2, Loader2, Star, X, Search } from "lucide-react"; 
 import { cn } from "@/shared/utils/cn";
 import { WhatsappFloatingButton } from "@/shared/ui/whatsapp-floating-button"; 
-import { FadeIn } from "@/shared/ui/fade-in"; // Animation
+import { FadeIn } from "@/shared/ui/fade-in";
 
-// --- BILDER & DATEN ---
+// --- BILDER & DATEN (Bleiben EXAKT wie in deiner Vorlage) ---
 const AVATAR_IMAGES = [
   "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=faces&q=80",
   "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=faces&q=80",
@@ -24,6 +24,7 @@ const STORY_SLIDES = [
 ];
 
 const SLIDE_INTERVAL = 5000;
+const MAPS_LINK = "https://www.google.com/maps/search/?api=1&query=Ambulanter+Intensivpflegedienst+Dalas+UG+Borsigallee+37+Frankfurt";
 
 // --- HELPER HOOK ---
 function useInCenter(options = { threshold: 0.5 }) {
@@ -117,7 +118,7 @@ export function Hero() {
     <>
     <section id="hero-section" className="relative w-full overflow-hidden pt-6 pb-12 lg:pt-28 lg:pb-48 flex items-center lg:min-h-[85vh]">
       
-      {/* 1. HINTERGRUND FX - GPU OPTIMIERT */}
+      {/* 1. HINTERGRUND FX */}
       <div className="absolute inset-0 opacity-[0.4] pointer-events-none -z-30 transform-gpu" 
            style={{ backgroundImage: 'radial-gradient(var(--color-border-soft) 1px, transparent 1px)', backgroundSize: '32px 32px' }}>
       </div>
@@ -140,18 +141,28 @@ export function Hero() {
           {/* TEXT CONTENT - Links (Desktop) / Zentriert (Mobile) */}
           <div className="order-1 flex flex-col items-center lg:items-start text-center lg:text-left space-y-4 lg:space-y-8">
             
-            {/* Badge */}
+            {/* --- HIER IST DIE EINZIGE ÄNDERUNG: BADGE ZU MAP PIN --- */}
             <FadeIn delay={0.1}>
-                <div className="inline-flex items-center gap-2 px-3 py-1 lg:px-4 lg:py-1.5 rounded-full bg-white border border-[var(--color-border-soft)] shadow-sm hover:border-[var(--color-primary)]/30 transition-colors cursor-default">
-                    <span className="flex h-2 w-2 relative">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-accent)] opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--color-accent)]"></span>
-                    </span>
-                    <span className="text-[10px] lg:text-xs font-bold text-slate-500 uppercase tracking-wider">
-                    Ihr Pflegedienst in Frankfurt
-                    </span>
-                </div>
+                <a 
+                  href={MAPS_LINK} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="group inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white border border-[var(--color-border-soft)] shadow-sm hover:shadow-md hover:border-[var(--color-primary)]/30 transition-all cursor-pointer"
+                >
+                    <div className="relative flex items-center justify-center">
+                        <MapPin className="w-5 h-5 text-red-500 fill-red-500 drop-shadow-sm group-hover:scale-110 transition-transform" />
+                        <div className="absolute -bottom-1 w-3 h-1 bg-black/20 rounded-full blur-[1px]" />
+                    </div>
+                    
+                    <div className="flex flex-col items-start leading-none text-left">
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Standort Frankfurt</span>
+                        <span className="text-xs lg:text-sm font-bold text-slate-900 group-hover:text-[var(--color-primary)] transition-colors">
+                            Ambulanter Intensivpflegedienst
+                        </span>
+                    </div>
+                </a>
             </FadeIn>
+            {/* -------------------------------------------------------- */}
 
            {/* Headline */}
            <FadeIn delay={0.2}>
@@ -176,7 +187,7 @@ export function Hero() {
             </FadeIn>
           </div>
 
-          {/* VISUAL STACK - Animation Container */}
+          {/* VISUAL STACK - Animation Container (EXAKT DEINE VERSION MIT GRÖSSEREN KARTEN) */}
           <div className="order-2 lg:col-start-2 lg:row-span-2 relative flex justify-center lg:justify-end py-2 lg:py-0">
             
             <FadeIn delay={0.4} direction="left" className="relative flex justify-center lg:justify-end">
@@ -188,7 +199,7 @@ export function Hero() {
                     </>
                 )}
 
-                {/* KARTEN STACK - Jetzt GRÖSSER */}
+                {/* KARTEN STACK - DEINE GRÖSSEN */}
                 <div 
                     ref={cardStackRef} 
                     className="relative z-10 w-[280px] sm:w-[360px] lg:w-[420px] aspect-[4/5] group perspective-1000 animate-float"
@@ -252,7 +263,7 @@ export function Hero() {
             
           </div>
 
-          {/* 3. PLZ CHECK WIDGET */}
+          {/* 3. PLZ CHECK WIDGET (UNVERÄNDERT) */}
           <div className="order-3 lg:col-start-1 w-full max-w-lg mx-auto lg:mx-0 pt-2 lg:pt-0">
                 <FadeIn delay={0.4} className="w-full">
                     <div 
@@ -319,7 +330,7 @@ export function Hero() {
       </div>
     </section>
 
-    {/* Result Modal */}
+    {/* Result Modal (UNVERÄNDERT) */}
     {resultModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-in fade-in duration-300">
            <div className="absolute inset-0 bg-[var(--color-primary-deep)]/40 backdrop-blur-sm" onClick={closeResultModal} />
