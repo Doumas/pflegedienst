@@ -134,8 +134,8 @@ export function CareConfigurator({ minimal = false }: { minimal?: boolean }) {
     <>
       {/* 1. TEASER SECTION (Sichtbar auf der Startseite) */}
       {!minimal && (
-        <section id="pflege-wegweiser" className="relative z-30 mt-0 lg:-mt-24 px-4 md:px-6 pb-20 pointer-events-none">
-            <div className="container mx-auto max-w-5xl">
+        <section id="pflege-wegweiser" className="relative z-30 mt-0 lg:-mt-20 px-4 md:px-6 pb-20 pointer-events-none">
+            <div className="container mx-auto max-w-7xl">
                 {/* TEASER KARTE 
                     - Nutzt transform-gpu für Performance
                     - Reagiert auf isTeaserActive (Mobile Scroll) UND Hover (Desktop)
@@ -146,12 +146,12 @@ export function CareConfigurator({ minimal = false }: { minimal?: boolean }) {
                         "bg-white rounded-[2.5rem] border border-slate-100 pointer-events-auto overflow-hidden ring-1 ring-slate-100/50 transform-gpu transition-all duration-500",
                         // Auto-Hover Logik:
                         isTeaserActive 
-                            ? "scale-[1.02] shadow-2xl shadow-[var(--color-primary)]/10 border-[var(--color-primary)]/20" 
-                            : "scale-100 shadow-2xl shadow-slate-200/50 hover:scale-[1.01] hover:shadow-[var(--color-primary)]/10"
+                            ? "scale-[1.01] shadow-2xl shadow-[var(--color-primary)]/10 border-[var(--color-primary)]/20" 
+                            : "scale-100 shadow-2xl shadow-slate-200/50 hover:scale-[1.005] hover:shadow-[var(--color-primary)]/10"
                     )}
                 >
                     
-                    <div onClick={() => setIsOpen(true)} className="relative cursor-pointer group bg-gradient-to-br from-white via-[var(--color-secondary)]/30 to-[var(--color-secondary)] p-8 md:p-12 hover:bg-white transition-all duration-500">
+                    <div onClick={() => setIsOpen(true)} className="relative cursor-pointer group bg-gradient-to-br from-white via-[var(--color-secondary)]/30 to-[var(--color-secondary)] p-6 md:p-12 hover:bg-white transition-all duration-500">
                         
                         {/* Glow Effekt - Bewegt sich bei Aktivierung */}
                         <div className={cn(
@@ -160,17 +160,17 @@ export function CareConfigurator({ minimal = false }: { minimal?: boolean }) {
                         )} />
                         
                         <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 relative z-10">
-                            {/* Icon Box */}
+                            {/* Icon Box - FIXED: No rotate, subtle scale only */}
                             <div className={cn(
                                 "shrink-0 w-24 h-24 bg-white rounded-3xl flex items-center justify-center border border-slate-100 shadow-sm transition-all duration-500",
                                 isTeaserActive 
-                                    ? "scale-110 rotate-3 shadow-md border-[var(--color-primary)]/20" 
-                                    : "group-hover:scale-110 group-hover:rotate-3 group-hover:shadow-md group-hover:border-[var(--color-primary)]/20"
+                                    ? "scale-105 shadow-md border-[var(--color-primary)]/20" 
+                                    : "group-hover:scale-105 group-hover:shadow-md group-hover:border-[var(--color-primary)]/20"
                             )}>
                                 <ClipboardCheck className="w-10 h-10 text-[var(--color-primary)]" />
                             </div>
                             
-                            {/* Text */}
+                            {/* Text Area */}
                             <div className="flex-1 text-center md:text-left space-y-3">
                                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 shadow-sm">
                                     <Sparkles className="w-3.5 h-3.5 text-[var(--color-accent)] animate-pulse" />
@@ -179,13 +179,13 @@ export function CareConfigurator({ minimal = false }: { minimal?: boolean }) {
                                 
                                 <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-slate-900 mb-2 tracking-tight text-balance leading-[1.1]">
                                     Was steht Ihnen zu? <br className="hidden lg:block" />
-                                    <span className="text-[var(--color-primary)]">Prüfen Sie Ihren Anspruch.</span>
+                                    <span className="text-[var(--color-primary)]">Anspruch jetzt prüfen.</span>
                                 </h2>
                                 
                                 <p className="text-lg font-medium text-slate-500">Kostenlos, anonym und in wenigen Klicks zum Ergebnis.</p>
                             </div>
                             
-                            {/* Button - Reagiert ebenfalls auf Aktivierung */}
+                            {/* Button */}
                             <div className="shrink-0 w-full md:w-auto">
                                 <div className={cn(
                                     "h-14 px-8 rounded-full bg-[var(--color-primary)] text-white font-bold text-lg flex items-center justify-center gap-3 shadow-xl shadow-[var(--color-primary)]/20 transition-all duration-300 w-full md:w-auto",

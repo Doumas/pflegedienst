@@ -116,7 +116,7 @@ export function Hero() {
 
   return (
     <>
-    <section id="hero-section" className="relative w-full overflow-hidden pt-24 pb-16 lg:pt-32 lg:pb-24 text-center px-4 flex items-center lg:min-h-[85vh]">
+    <section id="hero-section" className="relative w-full overflow-hidden pt-20 pb-16 lg:pt-32 lg:pb-24 text-center px-4 flex items-center lg:min-h-[85vh]">
       
       {/* 1. HINTERGRUND FX */}
       <div className="absolute inset-0 opacity-[0.4] pointer-events-none -z-30 transform-gpu" 

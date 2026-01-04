@@ -142,8 +142,11 @@ export function AboutSection() {
                     isImageActive ? "rotate-0 scale-102" : "-rotate-1 group-hover/image:rotate-0"
                 )} />
 
-                {/* Badge: Oben Rechts */}
-                <div className="absolute -top-6 -right-6 z-30 bg-white p-4 rounded-2xl shadow-xl shadow-[var(--color-primary)]/10 border border-slate-100 flex items-center gap-4 transition-transform duration-300 hover:scale-105">
+                {/* Badge Positionierung:
+                   - Mobile: left-1/2 -translate-x-1/2 (Zentriert)
+                   - Desktop (lg): -left-6 translate-x-0 (Links überhängend)
+                */}
+                <div className="absolute -top-6 left-1/2 -translate-x-1/2 lg:-left-6 lg:translate-x-0 z-30 bg-white p-4 rounded-2xl shadow-xl shadow-[var(--color-primary)]/10 border border-slate-100 flex items-center gap-4 transition-transform duration-300 hover:scale-105 min-w-[200px] lg:min-w-0">
                     <div className="w-12 h-12 bg-[var(--color-primary)] text-white rounded-xl flex items-center justify-center shadow-md shrink-0">
                         <Award className="w-6 h-6" />
                     </div>
@@ -151,7 +154,7 @@ export function AboutSection() {
                         <div className="text-3xl font-black text-slate-900 leading-none flex items-baseline">
                             <Counter end={10} /><span className="text-[var(--color-accent)] ml-0.5">+</span>
                         </div>
-                        <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mt-1">Jahre Erfahrung</div>
+                        <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mt-1 whitespace-nowrap">Jahre Erfahrung</div>
                     </div>
                 </div>
 
@@ -198,8 +201,7 @@ export function AboutSection() {
            </FadeIn>
 
 
-          {/* --- RECHTS: TEXT CONTENT (Responsive Alignment) --- */}
-          {/* HIER GEÄNDERT: text-center (Mobile) lg:text-left (Desktop) */}
+          {/* --- RECHTS: TEXT CONTENT --- */}
           <div className="space-y-10 text-center lg:text-left flex flex-col items-center lg:items-start">
             
             <div className="space-y-6 flex flex-col items-center lg:items-start">
@@ -235,7 +237,7 @@ export function AboutSection() {
                 </FadeIn>
             </div>
 
-            {/* Feature Grid - Auch hier responsive Ausrichtung */}
+            {/* Feature Grid */}
             <div className="flex flex-col gap-4 w-full">
                {[
                   { title: "Vertrauen", text: "Feste Bezugspersonen, keine ständigen Wechsel.", icon: HeartHandshake },
