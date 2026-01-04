@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { siteConfig } from "@/config/site";
 import { 
@@ -10,8 +10,9 @@ import {
 } from "lucide-react";
 import { useForm, ValidationError } from "@formspree/react";
 import { Button } from "@/shared/ui/button";
-import { FadeIn } from "@/shared/ui/fade-in"; // <--- NEU
-import { CareConfigurator } from "@/modules/home/templates/care-configurator"; // <--- NEU: Der Wegweiser
+import { FadeIn } from "@/shared/ui/fade-in";
+import { CareConfigurator } from "@/modules/home/templates/care-configurator";
+import { cn } from "@/shared/utils/cn";
 
 type ModalType = "none" | "appointment" | "invoice";
 
@@ -21,9 +22,12 @@ export function ContactTemplate() {
   const router = useRouter();
   const pathname = usePathname();
   
-  // DEFAULT: Sonstiges
+  // DEFAULT: Sonstiges (Allgemeine Frage)
   const [subject, setSubject] = useState("Sonstiges");
-  const [messageText, setMessageText] = useState("");
+  
+  // ANPASSUNG: Standard-Text direkt setzen (wird bei Konfigurator-Aufruf überschrieben)
+  const [messageText, setMessageText] = useState("Guten Tag,\n\nich habe eine allgemeine Frage zu...");
+  
   const [activeModal, setActiveModal] = useState<ModalType>("none");
   const [invoiceNr, setInvoiceNr] = useState("");
 
@@ -31,13 +35,14 @@ export function ContactTemplate() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
-  // --- AUTOMATIK: TEXT ERSTELLEN DURCH URL PARAMETER ---
+  // --- AUTOMATIK: TEXT ERSTELLEN DURCH URL PARAMETER (Pflege-Konfigurator) ---
   useEffect(() => {
     const who = searchParams.get("who");
     const level = searchParams.get("level");
     const type = searchParams.get("type");
     const freq = searchParams.get("freq");
 
+    // Nur wenn Parameter da sind, überschreiben wir den Standard-Text
     if (who || level || type) {
       let text = "Guten Tag,\n\nich habe Ihren Pflege-Check genutzt und interessiere mich für eine Beratung.\n\n";
       
@@ -63,7 +68,6 @@ export function ContactTemplate() {
     setSubject(id);
     
     if (id === "Pflegeberatung") {
-      // Öffne den Configurator (via URL Parameter Trick)
       const params = new URLSearchParams(searchParams.toString());
       params.set("openConfigurator", "true");
       router.push(`${pathname}?${params.toString()}`, { scroll: false });
@@ -73,56 +77,47 @@ export function ContactTemplate() {
       setActiveModal("invoice");
       setInvoiceNr(""); 
     } else {
+      // Wenn man zurück zu "Sonstiges" klickt
       setMessageText("Guten Tag,\n\nich habe eine allgemeine Frage zu...");
     }
   };
 
-  // --- INTELLIGENTE KALENDER LOGIK ---
-  
-  // 1. Feiertags-Checker
+  // --- KALENDER LOGIK ---
   const isHoliday = (date: Date) => {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const dateString = `${day}.${month}`;
     const year = date.getFullYear();
-
     const fixedHolidays = ["01.01", "01.05", "03.10", "24.12", "25.12", "26.12", "31.12"];
     const moving2025 = ["18.04", "21.04", "29.05", "09.06", "19.06"];
     const moving2026 = ["03.04", "06.04", "14.05", "25.05", "04.06"];
-
     if (fixedHolidays.includes(dateString)) return true;
     if (year === 2025 && moving2025.includes(dateString)) return true;
     if (year === 2026 && moving2026.includes(dateString)) return true;
-
     return false;
   };
 
-  // 2. Startdatum berechnen (Heute + 3 Werktage)
   const getMinSelectableDate = () => {
     let count = 0;
     let d = new Date();
     while (count < 3) {
       d.setDate(d.getDate() + 1);
-      if (d.getDay() !== 0 && d.getDay() !== 6 && !isHoliday(d)) {
-        count++;
-      }
+      if (d.getDay() !== 0 && d.getDay() !== 6 && !isHoliday(d)) count++;
     }
     d.setHours(0,0,0,0);
     return d;
   };
 
   const minDate = getMinSelectableDate();
-
   const getDaysInMonth = (year: number, month: number) => new Date(year, month + 1, 0).getDate();
   const getFirstDayOfMonth = (year: number, month: number) => {
     const day = new Date(year, month, 1).getDay();
-    return day === 0 ? 6 : day - 1; // Mo=0, So=6
+    return day === 0 ? 6 : day - 1; 
   };
 
   const handleDateClick = (day: number) => {
     const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
     const dayOfWeek = date.getDay();
-    
     if (date >= minDate && dayOfWeek !== 0 && dayOfWeek !== 6 && !isHoliday(date)) {
       setSelectedDate(date);
       applyAppointmentText("planned", date);
@@ -133,9 +128,7 @@ export function ContactTemplate() {
   const prevMonth = () => {
     const prev = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1);
     const today = new Date();
-    if (prev.getMonth() >= today.getMonth() || prev.getFullYear() > today.getFullYear()) {
-         setCurrentMonth(prev);
-    }
+    if (prev.getMonth() >= today.getMonth() || prev.getFullYear() > today.getFullYear()) setCurrentMonth(prev);
   };
 
   // --- TEXT GENERATOREN ---
@@ -149,9 +142,7 @@ export function ContactTemplate() {
     }
     setMessageText(text);
     setActiveModal("none");
-    setTimeout(() => {
-        document.getElementById("anfrage-formular")?.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 100);
+    setTimeout(() => { document.getElementById("anfrage-formular")?.scrollIntoView({ behavior: "smooth", block: "center" }); }, 100);
   };
 
   const applyInvoiceText = (type: "invoice" | "supplies") => {
@@ -160,9 +151,7 @@ export function ContactTemplate() {
       : "Guten Tag,\n\nich habe eine Frage zur Abrechnung von Pflegehilfsmitteln (z.B. Pauschale).\n\nDetails:";
     setMessageText(text);
     setActiveModal("none");
-    setTimeout(() => {
-        document.getElementById("anfrage-formular")?.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 100);
+    setTimeout(() => { document.getElementById("anfrage-formular")?.scrollIntoView({ behavior: "smooth", block: "center" }); }, 100);
   };
 
   const topics = [
@@ -175,38 +164,39 @@ export function ContactTemplate() {
   return (
     <div className="relative min-h-screen bg-white font-sans pb-20 selection:bg-[var(--color-primary)]/20 overflow-hidden">
       
-      {/* Background FX - GPU */}
+      {/* Background FX */}
       <div className="absolute inset-0 opacity-[0.4] pointer-events-none transform-gpu" style={{ backgroundImage: 'radial-gradient(var(--color-border-soft) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
       <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[1000px] h-[700px] bg-[var(--color-secondary)]/60 rounded-full blur-[120px] opacity-70 pointer-events-none transform-gpu" />
       <div className="absolute top-[20%] right-[-10%] w-[600px] h-[600px] bg-[var(--color-primary)]/5 rounded-full blur-[100px] md:animate-pulse pointer-events-none transform-gpu" style={{ animationDuration: '6s' }} />
-      <div className="absolute bottom-0 left-[-10%] w-[500px] h-[500px] bg-[var(--color-accent)]/10 rounded-full blur-[80px] pointer-events-none transform-gpu" />
 
       <div className="relative z-10">
       
-        {/* HEADER */}
-        <section className="pt-24 pb-16 lg:pt-32 lg:pb-24 text-center px-4">
-          <div className="container max-w-3xl mx-auto">
-            <FadeIn delay={0.1}>
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-sm border border-[var(--color-border-soft)] text-[var(--color-primary)] text-xs font-bold tracking-wide uppercase shadow-sm mb-8">
-                <MessageSquare className="w-3 h-3 text-[var(--color-accent)]" />
-                <span>Kontakt & Hilfe</span>
-                </div>
-            </FadeIn>
-           <FadeIn delay={0.2}>
-               <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1]">
-                Wir sind <br/>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)] relative inline-block">
-                    für Sie da.
-                    <svg className="absolute w-full h-3 -bottom-1 left-0 text-[var(--color-accent)] -z-10 opacity-40" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" /></svg>
-                </span>
-                </h1>
-           </FadeIn>
-            <FadeIn delay={0.3}>
-                <p className="text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto">
-                Ob Pflegegrad, Erstgespräch oder einfach nur eine Frage: <br className="hidden md:block"/>
-                Wir nehmen uns Zeit für Ihr Anliegen.
-                </p>
-            </FadeIn>
+        {/* HEADER: MOBILE CENTER / DESKTOP LEFT */}
+        <section className="pt-24 pb-16 lg:pt-32 lg:pb-24 px-4">
+          <div className="container mx-auto">
+             <div className="flex flex-col items-center lg:items-start text-center lg:text-left max-w-3xl mx-auto lg:mx-0">
+                <FadeIn delay={0.1}>
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-sm border border-[var(--color-border-soft)] text-[var(--color-primary)] text-xs font-bold tracking-wide uppercase shadow-sm mb-8">
+                    <MessageSquare className="w-3 h-3 text-[var(--color-accent)]" />
+                    <span>Kontakt & Hilfe</span>
+                    </div>
+                </FadeIn>
+               <FadeIn delay={0.2}>
+                   <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1]">
+                    Wir sind <br/>
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)] relative inline-block">
+                        für Sie da.
+                        <svg className="absolute w-full h-3 -bottom-1 left-0 text-[var(--color-accent)] -z-10 opacity-40" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" /></svg>
+                    </span>
+                    </h1>
+               </FadeIn>
+                <FadeIn delay={0.3}>
+                    <p className="text-xl text-slate-600 leading-relaxed max-w-2xl font-medium">
+                    Ob Pflegegrad, Erstgespräch oder einfach nur eine Frage: <br className="hidden md:block"/>
+                    Wir nehmen uns Zeit für Ihr Anliegen.
+                    </p>
+                </FadeIn>
+             </div>
           </div>
         </section>
 
@@ -310,7 +300,8 @@ export function ContactTemplate() {
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-8">
                   <FadeIn delay={0.4}>
-                    <div>
+                    {/* FORM HEADER: MOBILE CENTER / DESKTOP LEFT */}
+                    <div className="text-center lg:text-left">
                         <h3 className="text-3xl font-bold text-slate-900 mb-2">Schreiben Sie uns</h3>
                         <p className="text-slate-500">Worum geht es bei Ihrer Anfrage?</p>
                     </div>
@@ -391,24 +382,20 @@ export function ContactTemplate() {
         </div>
       </div>
 
-      {/* ========================================================= */}
-      {/* MODALS (POPUPS)                                           */}
-      {/* ========================================================= */}
-      
+      {/* MODALS */}
       {activeModal !== "none" && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl p-8 md:p-10 relative animate-in zoom-in-95 slide-in-from-bottom-4 duration-300">
             <button onClick={() => setActiveModal("none")} className="absolute top-6 right-6 p-2 bg-slate-100 rounded-full hover:bg-red-50 hover:text-red-500 transition-colors cursor-pointer"><X className="w-5 h-5" /></button>
 
-            {/* --- MODAL: APPOINTMENT (DATE PICKER) --- */}
+            {/* APPOINTMENT */}
             {activeModal === "appointment" && (
               <div className="space-y-6">
-                <div className="w-16 h-16 bg-[var(--color-secondary)] rounded-full flex items-center justify-center text-[var(--color-primary)] mb-2">
+                <div className="w-16 h-16 bg-[var(--color-secondary)] rounded-full flex items-center justify-center text-[var(--color-primary)] mb-2 mx-auto md:mx-0"> {/* Icon zentriert mobile, links desktop wäre optional, aber für Modal ist zentriert oft besser. Ich lasse es hier mal safe. */}
                   <Calendar className="w-8 h-8" />
                 </div>
-                <h3 className="text-2xl font-black text-slate-900">Wann passt es Ihnen?</h3>
+                <h3 className="text-2xl font-black text-slate-900 text-center md:text-left">Wann passt es Ihnen?</h3>
                 
-                {/* 1. NOTFALL OPTION */}
                 <button onClick={() => applyAppointmentText("urgent")} className="w-full p-4 rounded-xl border border-red-100 bg-red-50/50 hover:bg-red-50 text-left flex items-center gap-3 group transition-colors cursor-pointer">
                   <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-red-500"><AlertTriangle className="w-5 h-5" /></div>
                   <div>
@@ -424,7 +411,6 @@ export function ContactTemplate() {
                    <div className="flex-grow border-t border-slate-100"></div>
                 </div>
 
-                {/* 2. MINI KALENDER */}
                 <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
                    <div className="flex items-center justify-between mb-4">
                       <button onClick={prevMonth} className="p-1 hover:bg-white rounded-full cursor-pointer"><ChevronLeft className="w-5 h-5 text-slate-400" /></button>
@@ -435,33 +421,21 @@ export function ContactTemplate() {
                       {['Mo','Di','Mi','Do','Fr','Sa','So'].map(d => <span key={d} className="text-xs font-bold text-slate-300 uppercase">{d}</span>)}
                    </div>
                    <div className="grid grid-cols-7 gap-1">
-                      {/* Leere Zellen */}
                       {Array.from({ length: getFirstDayOfMonth(currentMonth.getFullYear(), currentMonth.getMonth()) }).map((_, i) => <div key={`empty-${i}`} />)}
-                      
-                      {/* Tage */}
                       {Array.from({ length: getDaysInMonth(currentMonth.getFullYear(), currentMonth.getMonth()) }).map((_, i) => {
                          const day = i + 1;
                          const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
                          date.setHours(0,0,0,0);
-
                          const isWeekend = date.getDay() === 0 || date.getDay() === 6;
                          const isTooEarly = date < minDate;
                          const isHolidayDate = isHoliday(date);
-                         
                          const disabled = isWeekend || isTooEarly || isHolidayDate;
-
                          return (
                             <button 
                                key={day} 
                                disabled={disabled}
                                onClick={() => handleDateClick(day)}
-                               className={`
-                                  h-9 w-9 rounded-full flex items-center justify-center text-sm font-medium transition-all
-                                  ${disabled 
-                                     ? 'text-slate-300 cursor-not-allowed bg-transparent' 
-                                     : 'text-slate-700 hover:bg-[var(--color-primary)] hover:text-white cursor-pointer bg-white border border-slate-100 shadow-sm'}
-                                  ${selectedDate?.getTime() === date.getTime() ? 'bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary)]' : ''}
-                               `}
+                               className={`h-9 w-9 rounded-full flex items-center justify-center text-sm font-medium transition-all ${disabled ? 'text-slate-300 cursor-not-allowed bg-transparent' : 'text-slate-700 hover:bg-[var(--color-primary)] hover:text-white cursor-pointer bg-white border border-slate-100 shadow-sm'} ${selectedDate?.getTime() === date.getTime() ? 'bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary)]' : ''}`}
                                title={isHolidayDate ? "Feiertag / Betriebsruhe" : ""}
                             >
                                {day}
@@ -473,13 +447,13 @@ export function ContactTemplate() {
               </div>
             )}
 
-            {/* --- MODAL: INVOICE --- */}
+            {/* INVOICE */}
             {activeModal === "invoice" && (
               <div className="space-y-6">
-                <div className="w-16 h-16 bg-[var(--color-secondary)] rounded-full flex items-center justify-center text-[var(--color-primary)] mb-2">
+                <div className="w-16 h-16 bg-[var(--color-secondary)] rounded-full flex items-center justify-center text-[var(--color-primary)] mb-2 mx-auto md:mx-0">
                   <FileText className="w-8 h-8" />
                 </div>
-                <h3 className="text-2xl font-black text-slate-900">Verwaltung & Rechnung</h3>
+                <h3 className="text-2xl font-black text-slate-900 text-center md:text-left">Verwaltung & Rechnung</h3>
                 
                 <div className="space-y-4">
                   <div className="space-y-2">
@@ -514,7 +488,6 @@ export function ContactTemplate() {
         </div>
       )}
 
-      {/* DER UNSICHTBARE HELFER (Configurator) */}
       <CareConfigurator minimal={true} />
     </div>
   );
