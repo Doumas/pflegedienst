@@ -7,7 +7,7 @@ import { Button } from "@/shared/ui/button";
 import { MapPin, CheckCircle2, Loader2, Star, X } from "lucide-react"; 
 import { cn } from "@/shared/utils/cn";
 import { WhatsappFloatingButton } from "@/shared/ui/whatsapp-floating-button"; 
-import { FadeIn } from "@/shared/ui/fade-in"; // <--- WICHTIG: Import der Animation
+import { FadeIn } from "@/shared/ui/fade-in"; // Animation
 
 // --- BILDER & DATEN ---
 const AVATAR_IMAGES = [
@@ -117,7 +117,7 @@ export function Hero() {
     <>
     <section id="hero-section" className="relative w-full overflow-hidden pt-6 pb-12 lg:pt-28 lg:pb-48 flex items-center lg:min-h-[85vh]">
       
-      {/* 1. HINTERGRUND FX */}
+      {/* 1. HINTERGRUND FX - GPU OPTIMIERT */}
       <div className="absolute inset-0 opacity-[0.4] pointer-events-none -z-30 transform-gpu" 
            style={{ backgroundImage: 'radial-gradient(var(--color-border-soft) 1px, transparent 1px)', backgroundSize: '32px 32px' }}>
       </div>
@@ -137,7 +137,7 @@ export function Hero() {
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-20 items-center lg:items-start">
           
-          {/* TEXT CONTENT - Jetzt mit FadeIn Animationen */}
+          {/* TEXT CONTENT - Links (Desktop) / Zentriert (Mobile) */}
           <div className="order-1 flex flex-col items-center lg:items-start text-center lg:text-left space-y-4 lg:space-y-8">
             
             {/* Badge */}
@@ -188,10 +188,10 @@ export function Hero() {
                     </>
                 )}
 
-                {/* KARTEN STACK */}
+                {/* KARTEN STACK - Jetzt GRÖSSER */}
                 <div 
                     ref={cardStackRef} 
-                    className="relative z-10 w-[260px] sm:w-[340px] lg:w-[380px] aspect-[4/5] group perspective-1000 animate-float"
+                    className="relative z-10 w-[280px] sm:w-[360px] lg:w-[420px] aspect-[4/5] group perspective-1000 animate-float"
                 >
                 
                     {/* Hintere Karte */}
@@ -252,7 +252,7 @@ export function Hero() {
             
           </div>
 
-          {/* 3. PLZ CHECK WIDGET - Reagiert auch auf Scrollen */}
+          {/* 3. PLZ CHECK WIDGET */}
           <div className="order-3 lg:col-start-1 w-full max-w-lg mx-auto lg:mx-0 pt-2 lg:pt-0">
                 <FadeIn delay={0.4} className="w-full">
                     <div 
