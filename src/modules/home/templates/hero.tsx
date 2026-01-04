@@ -141,7 +141,7 @@ export function Hero() {
           {/* TEXT CONTENT - Links (Desktop) / Zentriert (Mobile) */}
           <div className="order-1 flex flex-col items-center lg:items-start text-center lg:text-left space-y-4 lg:space-y-8">
             
-            {/* --- HIER IST DIE EINZIGE ÄNDERUNG: BADGE ZU MAP PIN --- */}
+            {/* --- HIER IST DIE EINZIGE ÄNDERUNG: BADGE ZU MAP PIN 
             <FadeIn delay={0.1}>
                 <a 
                   href={MAPS_LINK} 

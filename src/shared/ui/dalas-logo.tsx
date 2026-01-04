@@ -60,7 +60,7 @@ export const DalasLogo: React.FC<DalasLogoProps> = ({
             <path 
               d="M 16 8 A 18 18 0 0 0 16 44" 
               stroke={tealColor} 
-              strokeWidth="5" 
+              strokeWidth="2.5" 
               strokeLinecap="round" 
               className={cn("arch-path", scrolled && "is-rotated")}
             />
@@ -76,19 +76,19 @@ export const DalasLogo: React.FC<DalasLogoProps> = ({
       </div>
 
       {/* 2. DER TEXT */}
-      <div className="flex flex-col justify-center leading-none">
+      <div className="flex flex-col justify-center leading-none ml-[10px]">
         
         {/* HAUPTZEILE: DALAS UG */}
         {/* font-bold (statt extrabold) für Eleganz */}
         {/* tracking-tight entfernt, damit die Buchstaben atmen */}
-        <span className={cn("font-bold text-[1.8em] leading-[0.95]", textColor)}>
+        <span className={cn("font-bold text-[1.8em] leading-[.95]", textColor)}>
           DALAS UG
         </span>
         
         {/* UNTERZEILE: Pflegedienst */}
         {/* tracking-[0.2em] (sehr breit) für den modernen Look */}
         <span className={cn("font-semibold uppercase tracking-[0.2em] text-[0.58em] mt-1.5 ml-0.5", subTextColor)}>
-          Pflegedienst
+          Pflegedienst Frankfurt
         </span>
         
       </div>
