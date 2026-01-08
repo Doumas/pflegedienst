@@ -20,9 +20,9 @@ const AVATAR_IMAGES = [
 ];
 
 const STORY_SLIDES = [
-  { id: 1, src: "/images/home/hero-bg.jpg", title: "Fürsorge", sub: "Jeden Tag aufs Neue." },
-  { id: 2, src: "/images/home/hero-bg2.jpg", title: "Sicherheit", sub: "Rund um die Uhr da." },
-  { id: 3, src: "/images/home/hero-bg3.jpg", title: "Vertrauen", sub: "Ein Team mit Herz." }
+  { id: 1, src: "/images/home/hero-bg.jpg", title: "", sub: "Jeden Tag aufs Neue." },
+  { id: 2, src: "/images/home/hero-bg2.jpg", title: "", sub: "Rund um die Uhr da." },
+  { id: 3, src: "/images/home/hero-bg3.jpg", title: "", sub: "Ein Team mit Herz." }
 ];
 
 const SLIDE_INTERVAL = 5000;

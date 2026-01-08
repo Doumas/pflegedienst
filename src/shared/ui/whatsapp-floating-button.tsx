@@ -12,10 +12,15 @@ const DEFAULT_TIME_STATUS = {
 };
 
 export function WhatsappFloatingButton() {
+    // Initial false, damit es nicht beim Server-Rendering flackert (Hydration), 
+    // oder true, wenn es sofort da sein soll. 
+    // Für Fixed-Elemente ist ein kurzes Einblenden oft schöner.
+    const [isVisible, setIsVisible] = useState(false); 
     const [showCard, setShowCard] = useState(true); 
     const [timeStatus, setTimeStatus] = useState(DEFAULT_TIME_STATUS); 
 
     useEffect(() => {
+        setIsVisible(true); // Aktiviert die Anzeige nach dem Mounten
         const updateStatus = () => setTimeStatus(getTimeStatus(new Date()));
         updateStatus(); 
         const timer = setInterval(updateStatus, 60000); 
@@ -31,55 +36,69 @@ export function WhatsappFloatingButton() {
             <style jsx>{`
                 @keyframes float-y {
                     0%, 100% { transform: translateY(0px); }
-                    50% { transform: translateY(-8px); }
+                    50% { transform: translateY(-6px); }
                 }
                 .animate-float-y {
-                    animation: float-y 4s ease-in-out infinite;
+                    animation: float-y 5s ease-in-out infinite;
                 }
             `}</style>
 
-            <a href="https://wa.me/491234567890" target="_blank" rel="noopener noreferrer"
-            className={cn(
-                "absolute bottom-10 -left-4 md:-left-12 bg-white/70 backdrop-blur-xl p-5 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-white/60 z-30 group cursor-pointer active:scale-95 transition-all animate-float-y",
-                // FIX: w-max sorgt dafür, dass sich die Box an den Inhalt anpasst und nicht schrumpft
-                "w-max"
-            )}>
-            
-                <button 
-                onClick={(e) => { 
-                    e.preventDefault(); 
-                    e.stopPropagation(); 
-                    setShowCard(false); 
-                }}
-                className="absolute top-2 right-2 p-1 bg-white/50 hover:bg-white rounded-full text-slate-500 hover:text-slate-900 transition-colors z-40"
-                aria-label="Chat schließen"
+            <div
+                className={cn(
+                    // POSITIONIERUNG: Fixed für Sticky-Effekt unten links
+                    "fixed bottom-5 left-5 md:bottom-8 md:left-8 z-[999]",
+                    "transition-all duration-500 ease-out",
+                    isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+                )}
+            >
+                <a 
+                    href="https://wa.me/491234567890" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className={cn(
+                        "block bg-white/80 backdrop-blur-xl p-4 pr-6 rounded-full md:rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-white/60 group cursor-pointer active:scale-95 transition-all hover:bg-white animate-float-y",
+                        "w-max"
+                    )}
                 >
-                    <X className="w-4 h-4" />
-                </button>
                 
-                <div className="flex items-center gap-4">
-                    <div className="relative shrink-0"> {/* shrink-0 verhindert Verformung des Icons */}
-                        <div className="w-12 h-12 rounded-full bg-green-600 flex items-center justify-center text-white font-bold text-sm shadow-md transition-transform group-hover:scale-105">
-                            <Phone className="w-6 h-6 fill-current" />
-                        </div>
-                        <div className={cn(
-                            "absolute -top-1 -right-1 w-4 h-4 rounded-full border-2 border-white animate-pulse",
-                            timeStatus.dot 
-                        )} />
-                    </div>
+                    {/* Schließen Button - dezent oben rechts positioniert, aber innerhalb der 'Fixed' Logik */}
+                    <button 
+                        onClick={(e) => { 
+                            e.preventDefault(); 
+                            e.stopPropagation(); 
+                            setShowCard(false); 
+                        }}
+                        className="absolute -top-2 -right-2 p-1 bg-slate-100 hover:bg-slate-200 rounded-full text-slate-400 hover:text-slate-900 transition-colors z-50 shadow-sm border border-white"
+                        aria-label="Chat schließen"
+                    >
+                        <X className="w-3 h-3" />
+                    </button>
                     
-                    {/* FIX: whitespace-nowrap verhindert Zeilenumbrüche im Text */}
-                    <div className="whitespace-nowrap">
-                        <p className="text-sm font-bold text-slate-900">WhatsApp Chat</p>
-                        <p className={cn(
-                            "text-xs font-medium mt-0.5", 
-                            timeStatus.color
-                        )}>
-                            {timeStatus.text}
-                        </p>
+                    <div className="flex items-center gap-4">
+                        {/* Icon Container */}
+                        <div className="relative shrink-0"> 
+                            <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#25D366] flex items-center justify-center text-white shadow-md transition-transform group-hover:scale-110">
+                                <Phone className="w-5 h-5 md:w-6 md:h-6 fill-current" />
+                            </div>
+                            <div className={cn(
+                                "absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-white animate-pulse",
+                                timeStatus.dot 
+                            )} />
+                        </div>
+                        
+                        {/* Text Container */}
+                        <div className="whitespace-nowrap">
+                            <p className="text-sm font-bold text-slate-900 leading-tight">WhatsApp Chat</p>
+                            <p className={cn(
+                                "text-[11px] font-medium mt-0.5 leading-tight", 
+                                timeStatus.color
+                            )}>
+                                {timeStatus.text}
+                            </p>
+                        </div>
                     </div>
-                </div>
-            </a>
+                </a>
+            </div>
         </>
     );
 }
