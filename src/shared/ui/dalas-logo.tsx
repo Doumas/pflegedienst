@@ -12,17 +12,17 @@ export const DalasLogo: React.FC<DalasLogoProps> = ({
   variant = "default",
   ...props 
 }) => {
-  // Farben
+  // Farben definieren
   const tealColor = variant === "default" ? "#009B77" : "#ffffff"; 
   const orangeColor = "#F27405";
   
-  // Textfarben Logik:
-  // Dalas = Teal (im Default)
+  // Textfarben
   const dalasColor = variant === "default" ? "text-[#009B77]" : "text-white"; 
-  // UG = Schwarz (im Default), Weiß (im Light Mode)
   const ugColor = variant === "default" ? "text-slate-900" : "text-white/90";
-  // Slogan = Grau
   const subTextColor = variant === "default" ? "text-slate-500" : "text-slate-300";
+
+  // Ein sauberer Herz-Pfad
+  const heartPath = "M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z";
 
   return (
     <div 
@@ -32,46 +32,56 @@ export const DalasLogo: React.FC<DalasLogoProps> = ({
       {/* OBERE ZEILE: Icon + Dalas + UG */}
       <div className="flex items-center gap-3 mb-1"> 
         
-        {/* 1. DAS ICON */}
-        <div className="shrink-0 h-10 w-10 flex items-center justify-center pb-1">
+        {/* DAS ICON: Zwei saubere Herzen ohne "Cut-Out" Artefakte */}
+        <div className="shrink-0 h-11 w-11 flex items-center justify-center relative">
           <svg
             viewBox="0 0 24 24"
             width="100%"
             height="100%"
             fill="none"
-            strokeWidth="2.5"
+            strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
             className="overflow-visible"
           >
-              <path
-                d="M3 12a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7z"
-                stroke={tealColor}
-                className={cn("transition-all duration-700", scrolled ? "opacity-100" : "opacity-90")}
-              />
-              <path
-                d="M12 8C12 8 13.5 6 15 6C16.5 6 17.5 7 17.5 8.5C17.5 11 12 15 12 15C12 15 6.5 11 6.5 8.5C6.5 7 7.5 6 9 6C10.5 6 12 8 12 8Z"
-                stroke={orangeColor}
-                fill={scrolled ? orangeColor : "none"}
-                className="transition-all duration-500 delay-100"
-                transform="translate(0, 1.5)"
-              />
+              {/* Herz 1: Türkis (Hintergrund) */}
+              <g transform="translate(-2, -1) scale(0.95) rotate(-10 12 12)">
+                <path
+                  d={heartPath}
+                  stroke={tealColor}
+                  fill="none"
+                  className={cn("transition-all duration-700", scrolled ? "opacity-80" : "opacity-100")}
+                />
+              </g>
+
+              {/* Herz 2: Orange (Vordergrund) */}
+              {/* Wir verzichten hier auf den weißen 'Stroke', damit es nicht verhackt aussieht. 
+                  Stattdessen einfach sauberes Layering. */}
+              <g transform="translate(4, 4) scale(0.85) rotate(10 12 12)">
+                 <path
+                  d={heartPath}
+                  stroke={orangeColor}
+                  // Füllt sich beim Scrollen
+                  fill={scrolled ? orangeColor : "none"} 
+                  className="transition-all duration-500 delay-100"
+                />
+              </g>
           </svg>
         </div>
 
-        {/* 2. TEXT-GRUPPE */}
-        <div className="flex items-baseline gap-2">
+        {/* TEXT-GRUPPE (Wiederhergestellt) */}
+        <div className="flex items-baseline gap-2 translate-y-1">
             
-            {/* A. Dalas (Teal, Schreibschrift) */}
+            {/* Dalas in Script-Schrift */}
             <span 
-              className={cn("text-[2.8rem] leading-none", dalasColor)}
+              className={cn("text-[2.6rem] leading-none", dalasColor)}
               style={{ fontFamily: "'Dancing Script', cursive", fontWeight: 700 }}
             >
               Dalas
             </span>
 
-            {/* B. UG (Schwarz, Sans Serif) */}
-            <span className={cn("text-lg font-sans font-bold opacity-90 uppercase tracking-widest translate-y-[-2px]", ugColor)}>
+            {/* UG in Sans-Serif */}
+            <span className={cn("text-lg font-sans font-bold opacity-90 uppercase tracking-widest", ugColor)}>
               UG
             </span>
 
@@ -80,7 +90,7 @@ export const DalasLogo: React.FC<DalasLogoProps> = ({
       </div>
 
       {/* UNTERE ZEILE: SLOGAN */}
-      <span className={cn("font-sans font-semibold uppercase tracking-[0.2em] text-[.6rem] text-center w-full mt-0", subTextColor)}>
+      <span className={cn("font-sans font-semibold uppercase tracking-[0.05em] text-[.6rem] text-center w-full pl-10", subTextColor)}>
         Ambulanter Pflegedienst
       </span>
 

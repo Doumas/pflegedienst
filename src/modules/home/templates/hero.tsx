@@ -123,8 +123,8 @@ export function Hero() {
             variant="section" 
             color="text-[var(--color-primary)]" 
             // HIER GEÄNDERT: Anzahl auf 22 geändert, um die Positionen neu zu mischen
-            count={22} 
-            className="opacity-60" 
+            count={6} 
+            className="opacity-80" 
          />
       </div>
 
