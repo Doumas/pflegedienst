@@ -9,8 +9,7 @@ import { cn } from "@/shared/utils/cn";
 import { WhatsappFloatingButton } from "@/shared/ui/whatsapp-floating-button"; 
 import { FadeIn } from "@/shared/ui/fade-in";
 import { AnimatedBackground } from "@/shared/ui/animated-background"; 
-import { motion } from "framer-motion"; 
-
+import { motion } from "framer-motion";
 // --- CUSTOM ICON: DAS MARKEN-LOGO (HAUS + HERZ) ---
 const BrandIcon = (props: any) => (
     <svg 
@@ -34,9 +33,9 @@ const AVATAR_IMAGES = [
 ];
 
 const STORY_SLIDES = [
-  { id: 1, src: "/images/home/hero-bg.jpg", title: "Fürsorge", sub: "Jeden Tag aufs Neue." },
-  { id: 2, src: "/images/home/hero-bg2.jpg", title: "Sicherheit", sub: "Rund um die Uhr da." },
-  { id: 3, src: "/images/home/hero-bg3.jpg", title: "Vertrauen", sub: "Ein Team mit Herz." }
+  { id: 1, src: "/images/home/hero-bg.jpg", title: "", sub: "Jeden Tag aufs Neue." },
+  { id: 2, src: "/images/home/hero-bg2.jpg", title: "", sub: "Rund um die Uhr da." },
+  { id: 3, src: "/images/home/hero-bg3.jpg", title: "", sub: "Ein Team mit Herz." }
 ];
 
 const SLIDE_INTERVAL = 5000;
@@ -115,24 +114,16 @@ export function Hero() {
 
   const closeResultModal = () => setResultModalOpen(false);
 
-  return (
+ return (
     <>
     <section id="hero-section" className="relative w-full overflow-hidden pt-28 pb-20 lg:pt-40 lg:pb-32 text-center px-4 flex items-center lg:min-h-[90vh]">
       
       {/* --- HINTERGRUND SCHEMA --- */}
       <div className="absolute inset-0 z-0 bg-[#fffbf7] overflow-hidden">
-          
-          {/* KORREKTUR: Hier Ambulance statt BrandIcon übergeben */}
           <AnimatedBackground icon={Ambulance} variant="section" color="text-[var(--color-primary)]" />
-
-          {/* 2. Dot Pattern */}
           <div className="absolute inset-0 opacity-[0.4] pointer-events-none z-10" 
                style={{ backgroundImage: 'radial-gradient(var(--color-border-soft) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
-
-          {/* 3. Emotionales Bild */}
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1581579186913-45ac3e6e3dd2?q=80&w=2048&auto=format&fit=crop')] bg-cover bg-center opacity-[0.12] mix-blend-multiply pointer-events-none grayscale-[20%] z-0" />
-          
-          {/* 4. Weiche Verläufe */}
           <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-[#ffedd5]/10 to-white/95 pointer-events-none z-0" />
           <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/60 to-transparent pointer-events-none lg:block hidden z-0" />
       </div>
