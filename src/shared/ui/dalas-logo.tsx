@@ -80,7 +80,7 @@ export const DalasLogo: React.FC<DalasLogoProps> = ({
       </div>
 
       {/* UNTERE ZEILE: SLOGAN */}
-      <span className={cn("font-sans font-semibold uppercase tracking-[0.25em] text-[0.6rem] text-center w-full mt-0", subTextColor)}>
+      <span className={cn("font-sans font-semibold uppercase tracking-[0.01em] text-[.6rem] text-center w-full mt-0", subTextColor)}>
         Ambulanter Pflegedienst
       </span>
 
