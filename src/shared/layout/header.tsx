@@ -25,15 +25,22 @@ const LogoIcon = (props: any) => (
 function HeaderBackgroundAnimation({ show }: { show: boolean }) {
     let context = null;
     try { context = useActiveSection(); } catch (e) { /* Ignore */ }
+    
     const ActiveIcon = context?.activeIcon || LogoIcon;
 
     if (!show) return null;
+
+    // FIX: Wir casten ActiveIcon zu 'any', um den Zugriff auf displayName/name 
+    // für TypeScript zu erlauben, ohne dass der Build fehlschlägt.
+    const iconKey = typeof ActiveIcon === 'function' 
+        ? ((ActiveIcon as any).displayName || (ActiveIcon as any).name || "custom-icon") 
+        : "header-bg";
 
     return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
             <AnimatePresence mode="wait">
                 <motion.div
-                    key={ActiveIcon.displayName || ActiveIcon.name || "header-bg"}
+                    key={iconKey}
                     className="absolute inset-0 flex items-center justify-center text-[var(--color-primary)]"
                     initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
                     animate={{ 

@@ -7,7 +7,6 @@ import { FadeIn } from "@/shared/ui/fade-in";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/shared/utils/cn";
 
-// Bilder aus deinem existierenden public/images/home Ordner
 const IMAGES = [
   "/images/home/hero-bg.jpg",
   "/images/home/hero-bg2.jpg",
@@ -22,15 +21,12 @@ export function AboutHero() {
   // Auto-Play Slider
   useEffect(() => {
     if (isFullscreen) return; 
-
     const interval = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % IMAGES.length);
     }, 5000); 
-
     return () => clearInterval(interval);
   }, [isFullscreen]);
 
-  // Navigation Helper
   const nextImage = (e?: React.MouseEvent) => {
     e?.stopPropagation();
     setCurrentImageIndex((prev) => (prev + 1) % IMAGES.length);
@@ -43,105 +39,102 @@ export function AboutHero() {
 
   return (
     <>
-      <section className="pt-32 pb-16 lg:pt-44 lg:pb-32 px-4 relative z-10">
-        <div className="container mx-auto flex flex-col items-center">
+      <section className="pt-32 pb-16 lg:pt-40 lg:pb-24 px-4 relative z-10">
+        <div className="container mx-auto">
           
-          {/* --- TEIL 1: TEXT & HEADLINE (ZENTRIERT OBEN DRÜBER) --- */}
-          <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-16 lg:mb-20">
-              
-              {/* 1. ICON BADGE */}
-              <FadeIn delay={0.1}>
-                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-sm border border-[var(--color-border-soft)] text-[var(--color-primary)] text-xs font-bold tracking-wide uppercase shadow-sm mb-8">
-                    <Heart className="w-3 h-3 text-[var(--color-accent)] fill-current" />
-                    <span>Über uns</span>
-                  </div>
-              </FadeIn>
-              
-              {/* 2. HEADLINE */}
-              <FadeIn delay={0.2}>
-                  <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-slate-900 mb-8 tracking-tight leading-[1.1] text-balance">
-                  Pflege bedeutet <br/>
-                  <span className="relative inline-block ml-3"> 
-                      <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)]">
-                      Vertrauen.
-                      </span>
-                      {/* Dekorative Welle */}
-                      <svg className="absolute w-full h-3 -bottom-1 left-0 text-[var(--color-accent)] -z-10 opacity-40" viewBox="0 0 100 10" preserveAspectRatio="none">
-                        <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
-                      </svg>
-                  </span>
-                  </h1>
-              </FadeIn>
-              
-              {/* 3. FLIESSTEXT */}
-              <FadeIn delay={0.3}>
-                  <p className="text-xl md:text-2xl text-slate-600 leading-relaxed font-medium max-w-2xl mx-auto">
-                  Wir möchten Ihnen nicht nur helfen, sondern Ihnen die Sorge nehmen. 
-                  Lernen Sie hier die Menschen kennen, denen Sie Ihre Liebsten anvertrauen.
-                  </p>
-              </FadeIn>
-          </div>
+          <FadeIn>
+             <div className="relative w-full max-w-6xl mx-auto h-[500px] lg:h-[650px] rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white transform-gpu bg-slate-900 group">
+                
+                {/* 1. IMAGE SLIDER LAYER */}
+                <div 
+                    className="absolute inset-0 cursor-zoom-in"
+                    onClick={() => setIsFullscreen(true)}
+                >
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={`hero-image-${currentImageIndex}`} // Stable key for TS and Framer
+                            initial={{ opacity: 0, scale: 1.1 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 1.5 }}
+                            className="absolute inset-0"
+                        >
+                            <Image
+                                src={IMAGES[currentImageIndex]} 
+                                alt="Dalas Pflege Atmosphäre"
+                                fill
+                                className="object-cover object-center"
+                                priority
+                            />
+                        </motion.div>
+                    </AnimatePresence>
 
-          {/* --- TEIL 2: BILD SLIDER (ZENTRIERT DARUNTER) --- */}
-          <FadeIn delay={0.4} className="relative w-full max-w-[800px] mx-auto"> {/* Max-Width erhöht für bessere Präsenz */}
-             <div 
-                className="relative group perspective-1000 cursor-zoom-in"
-                onClick={() => setIsFullscreen(true)}
-             >
-                {/* Hintergrund Blob */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-[var(--color-secondary)] to-[var(--color-primary)]/30 rounded-[3rem] -rotate-3 scale-105 group-hover:rotate-0 group-hover:scale-100 transition-all duration-700 ease-out will-change-transform" />
+                    {/* VIGNETTE OVERLAY for text readability */}
+                    <div className="absolute inset-0 bg-black/30 transition-opacity duration-500 group-hover:bg-black/20" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/40" />
+                </div>
 
-                {/* Bild Rahmen */}
-                <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl shadow-[var(--color-primary)]/20 border-4 border-white aspect-video transform-gpu group-hover:scale-[1.01] transition-transform duration-700 bg-slate-100">
-                  
-                  {/* Slider Transition */}
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                        key={currentImageIndex}
-                        initial={{ opacity: 0, scale: 1.1 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.8 }}
-                        className="absolute inset-0"
+                {/* 2. TEXT CONTENT LAYER (Centered Overlay) */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 lg:p-12 pointer-events-none">
+                    
+                    <FadeIn delay={0.2}>
+                        <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-bold tracking-wide uppercase shadow-lg mb-6">
+                            <Heart className="w-4 h-4 text-[var(--color-accent)] fill-current" />
+                            <span>Über uns</span>
+                        </div>
+                    </FadeIn>
+
+                    <FadeIn delay={0.3}>
+                        <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white mb-6 tracking-tight leading-[1.1] drop-shadow-xl">
+                          Pflege bedeutet <br/>
+                          <span className="relative inline-block">
+                              <span className="relative z-10 text-[var(--color-accent)]">Vertrauen.</span>
+                              <svg className="absolute w-full h-4 -bottom-2 left-0 text-white opacity-60" viewBox="0 0 100 10" preserveAspectRatio="none">
+                                  <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
+                              </svg>
+                          </span>
+                        </h1>
+                    </FadeIn>
+
+                    <FadeIn delay={0.4}>
+                        <p className="text-lg md:text-xl text-white/90 leading-relaxed font-medium max-w-2xl mx-auto drop-shadow-md">
+                          Wir möchten Ihnen nicht nur helfen, sondern Ihnen die Sorge nehmen. 
+                          Lernen Sie hier die Menschen kennen, denen Sie Ihre Liebsten anvertrauen.
+                        </p>
+                    </FadeIn>
+                </div>
+
+                {/* 3. UI CONTROLS LAYER */}
+                <div className="absolute bottom-8 right-8 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <button 
+                        onClick={() => setIsFullscreen(true)}
+                        className="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white p-3 rounded-full shadow-lg transition-transform active:scale-95"
                     >
-                        <Image
-                            src={IMAGES[currentImageIndex]} 
-                            alt={`Dalas Pflege Impression ${currentImageIndex + 1}`}
-                            fill
-                            className="object-cover object-center"
-                            priority
-                        />
-                    </motion.div>
-                  </AnimatePresence>
+                        <Maximize2 className="w-6 h-6" />
+                    </button>
+                </div>
 
-                   {/* Hover Overlay & Icon */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-primary)]/40 via-transparent to-transparent pointer-events-none transition-opacity duration-300 opacity-0 group-hover:opacity-100" />
-                  
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md text-white p-4 rounded-full opacity-0 scale-50 group-hover:opacity-100 group-hover:scale-100 transition-all duration-500 shadow-lg">
-                      <Maximize2 className="w-8 h-8" />
-                  </div>
-
-                  {/* Indikatoren */}
-                  <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-                      {IMAGES.map((_, idx) => (
-                          <div 
-                            key={idx} 
+                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20">
+                    {IMAGES.map((_, idx) => (
+                        <button 
+                            key={`nav-dot-${idx}`}
                             className={cn(
-                                "h-1.5 rounded-full transition-all duration-300 shadow-sm backdrop-blur-sm",
-                                idx === currentImageIndex ? "bg-white w-8" : "bg-white/40 w-2"
+                                "h-1.5 rounded-full transition-all duration-500 shadow-sm backdrop-blur-sm pointer-events-auto",
+                                idx === currentImageIndex ? "bg-[var(--color-accent)] w-8" : "bg-white/50 w-2 hover:bg-white"
                             )} 
-                          />
-                      ))}
-                  </div>
-
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setCurrentImageIndex(idx);
+                            }}
+                        />
+                    ))}
                 </div>
              </div>
           </FadeIn>
-
         </div>
       </section>
 
-      {/* --- FULLSCREEN LIGHTBOX --- */}
+      {/* LIGHTBOX MODAL */}
       <AnimatePresence>
         {isFullscreen && (
             <motion.div 
@@ -171,16 +164,16 @@ export function AboutHero() {
                 >
                     <AnimatePresence mode="wait">
                         <motion.div
-                            key={currentImageIndex}
-                            initial={{ opacity: 0, x: 50 }}
+                            key={`fullscreen-${currentImageIndex}`}
+                            initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -50 }}
+                            exit={{ opacity: 0, x: -20 }}
                             transition={{ duration: 0.3 }}
                             className="relative w-full h-full"
                         >
                              <Image
                                 src={IMAGES[currentImageIndex]} 
-                                alt="Fullscreen Ansicht"
+                                alt="Fullscreen View"
                                 fill
                                 className="object-contain"
                                 quality={100}
@@ -197,4 +190,4 @@ export function AboutHero() {
       </AnimatePresence>
     </>
   );
-} 
+}
