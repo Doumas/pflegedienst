@@ -146,8 +146,14 @@ export function AboutSection() {
           
           {/* 1. ANIMIERTE HINTERGRUND ICONS (STIFT) */}
           {/* Nutzung der Shared Component für Konsistenz */}
-          <AnimatedBackground icon={Pen} variant="section" color="text-[var(--color-primary)]" />
-
+  <AnimatedBackground 
+            icon={Pen} 
+            variant="section" 
+            color="text-[var(--color-primary)]" 
+            // HIER GEÄNDERT: Anzahl auf 22 geändert, um die Positionen neu zu mischen
+            count={5} 
+            className="opacity-80" 
+         />
           {/* 2. Dot Pattern */}
           <div className="absolute inset-0 opacity-[0.4] z-0" 
                style={{ backgroundImage: 'radial-gradient(var(--color-border-soft) 1px, transparent 1px)', backgroundSize: '32px 32px' }} 

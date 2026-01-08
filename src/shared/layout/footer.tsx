@@ -61,8 +61,14 @@ export function Footer() {
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
           
           {/* 1. SEKTIONS-HINTERGRUND (Icons) */}
-          <AnimatedBackground icon={BrandIcon} variant="section" color="text-white" />
-
+  <AnimatedBackground 
+            icon={BrandIcon} 
+            variant="section" 
+            color="text-[var(--color-primary)]" 
+            // HIER GEÄNDERT: Anzahl auf 22 geändert, um die Positionen neu zu mischen
+            count={12} 
+            className="opacity-80" 
+         />
           {/* 2. Hintergrund-Raster */}
           <div className="absolute inset-0 opacity-[0.03]" 
                style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />

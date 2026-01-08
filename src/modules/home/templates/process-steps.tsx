@@ -109,8 +109,14 @@ export function ProcessSteps() {
     <section className="relative py-24 lg:py-32 bg-white overflow-hidden font-sans border-t border-slate-100">
       
       {/* 1. SEKTIONS-HINTERGRUND (Kompass Icon) */}
-      <AnimatedBackground icon={Compass} variant="section" color="text-[var(--color-primary)]" />
-
+ <AnimatedBackground 
+            icon={Compass} 
+            variant="section" 
+            color="text-[var(--color-primary)]" 
+            // HIER GEÄNDERT: Anzahl auf 22 geändert, um die Positionen neu zu mischen
+            count={1} 
+            className="opacity-80" 
+         />
       {/* 2. Gradient Overlay für Tiefe */}
       <div className="absolute inset-0 opacity-[0.4] pointer-events-none z-0" style={{ backgroundImage: 'radial-gradient(var(--color-border-soft) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
 

@@ -75,15 +75,13 @@ export const DalasLogo: React.FC<DalasLogoProps> = ({
             {/* Dalas in Script-Schrift */}
             <span 
               className={cn("text-[2.6rem] leading-none", dalasColor)}
-              style={{ fontFamily: "'Dancing Script', cursive", fontWeight: 700 }}
+              style={{ fontFamily: "'Dancing Script', cursive", fontWeight: 500 }}
             >
               Dalas
             </span>
 
             {/* UG in Sans-Serif */}
-            <span className={cn("text-lg font-sans font-bold opacity-90 uppercase tracking-widest", ugColor)}>
-              UG
-            </span>
+         
 
         </div>
 

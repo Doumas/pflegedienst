@@ -38,8 +38,14 @@ export function FeaturesAndServices() {
       
       {/* 1. SEKTIONS-HINTERGRUND (Best Practice Component) */}
       {/* Wir nutzen hier 'Home' als Icon für das Haus-Thema im Hintergrund */}
-      <AnimatedBackground icon={Home} variant="section" color="text-white" />
-
+  <AnimatedBackground 
+            icon={Home} 
+            variant="section" 
+            color="text-[var(--color-primary)]" 
+            // HIER GEÄNDERT: Anzahl auf 22 geändert, um die Positionen neu zu mischen
+            count={2} 
+            className="opacity-80" 
+         />
       {/* 2. FX Layer (Blobs & Pattern) */}
       <div className="absolute inset-0 opacity-[0.05] pointer-events-none transform-gpu z-0" style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.5) 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
       <div className="absolute top-[-10%] right-[-10%] w-[800px] h-[800px] bg-[var(--color-primary)]/20 rounded-full blur-[120px] pointer-events-none transform-gpu z-0" />

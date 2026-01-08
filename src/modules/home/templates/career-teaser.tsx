@@ -112,8 +112,14 @@ export function CareerTeaser() {
     <section className="py-24 lg:py-32 bg-gradient-to-b from-[var(--color-secondary)] to-white font-sans overflow-hidden relative border-t border-white">
       
       {/* 1. SEKTIONS-HINTERGRUND (Briefcase Icon) */}
-      <AnimatedBackground icon={Briefcase} variant="section" color="text-[var(--color-primary)]" />
-
+  <AnimatedBackground 
+            icon={Briefcase} 
+            variant="section" 
+            color="text-[var(--color-primary)]" 
+            // HIER GEÄNDERT: Anzahl auf 22 geändert, um die Positionen neu zu mischen
+            count={6} 
+            className="opacity-80" 
+         />
       {/* 2. BACKGROUND TYPO (Zusätzliche Ebene) */}
       <FadeIn delay={0.1} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0 pointer-events-none w-full flex justify-center">
         <div className="text-[18vw] font-black text-[var(--color-primary)] opacity-[0.03] select-none tracking-tighter leading-none whitespace-nowrap transform-gpu">

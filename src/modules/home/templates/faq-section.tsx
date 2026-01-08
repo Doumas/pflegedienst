@@ -97,8 +97,14 @@ export function FaqSection() {
     <section className="py-24 lg:py-32 bg-white font-sans relative overflow-hidden">
       
       {/* 1. SEKTIONS-HINTERGRUND (Fragezeichen Icon) */}
-      <AnimatedBackground icon={HelpCircle} variant="section" color="text-[var(--color-primary)]" />
-
+  <AnimatedBackground 
+            icon={HelpCircle} 
+            variant="section" 
+            color="text-[var(--color-primary)]" 
+            // HIER GEÄNDERT: Anzahl auf 22 geändert, um die Positionen neu zu mischen
+            count={1} 
+            className="opacity-80" 
+         />
       {/* 2. Background Pattern */}
       <div className="absolute inset-0 opacity-[0.3] pointer-events-none z-0" 
            style={{ backgroundImage: 'radial-gradient(var(--color-border-soft) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />

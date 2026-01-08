@@ -170,7 +170,6 @@ export function CareConfigurator({ minimal = false }: { minimal?: boolean }) {
                     <div onClick={() => setIsOpen(true)} className="relative cursor-pointer group bg-gradient-to-br from-white via-[var(--color-secondary)]/30 to-[var(--color-secondary)] p-6 md:p-12 hover:bg-white transition-all duration-500 overflow-hidden">
                         
                         {/* 1. HINTERGRUND ICONS (Config Check) */}
-                        <AnimatedBackground icon={ConfigBackgroundIcon} variant="section" color="text-[var(--color-primary)]" className="opacity-50" />
 
                         {/* Glow Effekt */}
                         <div className={cn(

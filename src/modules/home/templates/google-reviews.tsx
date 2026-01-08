@@ -131,8 +131,14 @@ export function GoogleReviews() {
     <section className="py-24 lg:py-32 bg-[var(--color-secondary)] text-slate-900 overflow-hidden relative font-sans border-t border-white">
       
       {/* 1. SEKTIONS-HINTERGRUND (Quote Icons) */}
-            <AnimatedBackground icon={Star} variant="section" count={4} color="text-[var(--color-primary)]" />
-
+  <AnimatedBackground 
+            icon={Star} 
+            variant="section" 
+            color="text-[var(--color-primary)]" 
+            // HIER GEÄNDERT: Anzahl auf 22 geändert, um die Positionen neu zu mischen
+            count={3} 
+            className="opacity-80" 
+         />
       {/* 2. Background Pattern */}
       <div className="absolute inset-0 opacity-[0.4] transform-gpu pointer-events-none z-0" style={{ backgroundImage: 'radial-gradient(white 1.5px, transparent 1.5px)', backgroundSize: '32px 32px' }} />
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white/80 to-transparent pointer-events-none transform-gpu z-0" />
