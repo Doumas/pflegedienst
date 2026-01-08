@@ -1,16 +1,18 @@
 // src/app/page.tsx
 
-import { Suspense } from 'react'; // <-- NEU: Importiere Suspense
+import { Suspense } from 'react';
 import { HomeTemplate } from "@/modules/home/templates/home-template";
+import { ActiveSectionProvider } from "@/shared/context/active-section-context"; // <-- IMPORT
 
-// Hier würden deine Metadata-Exporte stehen (für SEO)
 // export const metadata = { title: "..." };
 
 export default function Page() {
   return (
-    // <-- NEU: Wickle die HomeTemplate in ein Suspense Boundary
-    <Suspense fallback={<div>Lade Inhalte...</div>}>
-      <HomeTemplate />
-    </Suspense>
+    // 1. Der Provider umschließt alles
+    <ActiveSectionProvider>
+      <Suspense fallback={<div>Lade Inhalte...</div>}>
+        <HomeTemplate />
+      </Suspense>
+    </ActiveSectionProvider>
   );
 }

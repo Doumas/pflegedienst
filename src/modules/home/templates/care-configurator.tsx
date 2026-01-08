@@ -3,14 +3,15 @@
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation"; 
 import { 
-  ArrowRight, User, Heart, CheckCircle2, HelpCircle, ArrowLeft, Loader2, X, Sparkles, 
+  ArrowRight, User, Heart, CheckCircle2, HelpCircle, ArrowLeft, Loader2, X, 
   ClipboardCheck, ShieldCheck, Stethoscope, Coffee, Activity, CalendarDays, Clock
 } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import { cn } from "@/shared/utils/cn";
 import { motion, AnimatePresence } from "framer-motion";
+import { AnimatedBackground } from "@/shared/ui/animated-background"; // <--- IMPORT
 
-// --- 1. HELPER HOOK: Erkennt, ob Element in der Mitte des Screens ist (für Mobile Auto-Hover) ---
+// --- HELPER HOOK ---
 function useInCenter(options = { threshold: 0.1 }) {
     const ref = useRef<HTMLDivElement>(null);
     const [isInCenter, setIsInCenter] = useState(false);
@@ -22,7 +23,6 @@ function useInCenter(options = { threshold: 0.1 }) {
         const observer = new IntersectionObserver(([entry]) => {
             setIsInCenter(entry.isIntersecting);
         }, {
-            // Der "aktive" Bereich ist ein Streifen in der Bildschirmmitte
             rootMargin: "-35% 0px -35% 0px", 
             threshold: 0
         });
@@ -34,10 +34,32 @@ function useInCenter(options = { threshold: 0.1 }) {
     return { ref, isInCenter };
 }
 
+// --- CUSTOM ICON FÜR BADGE (CLIPBOARD CHECK) ---
+const CheckIcon = (props: any) => (
+    <motion.svg 
+        viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" {...props}
+        initial="hidden" whileInView="visible" viewport={{ once: true }}
+    >
+        <motion.path d="M9 11l3 3L22 4" variants={{ hidden: { pathLength: 0 }, visible: { pathLength: 1, transition: { duration: 0.5, delay: 0.2 } } }} />
+        <motion.path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" variants={{ hidden: { pathLength: 0 }, visible: { pathLength: 1, transition: { duration: 0.8 } } }} />
+    </motion.svg>
+);
+
+// --- CUSTOM ICON FÜR HINTERGRUND (DOCUMENT/CHECK) ---
+const ConfigBackgroundIcon = (props: any) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+        <line x1="16" y1="2" x2="16" y2="6" />
+        <line x1="8" y1="2" x2="8" y2="6" />
+        <line x1="3" y1="10" x2="21" y2="10" />
+    </svg>
+);
+
+
 export function CareConfigurator({ minimal = false }: { minimal?: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState(1);
-  const [direction, setDirection] = useState(0); // 1 = vorwärts, -1 = rückwärts
+  const [direction, setDirection] = useState(0); 
   
   const [selection, setSelection] = useState<{ 
     forWhom?: string; 
@@ -47,7 +69,6 @@ export function CareConfigurator({ minimal = false }: { minimal?: boolean }) {
   }>({});
   const [isCalculating, setIsCalculating] = useState(false);
   
-  // Hook für die Teaser-Karte (Mobile Auto-Hover)
   const { ref: teaserRef, isInCenter: isTeaserActive } = useInCenter();
 
   const searchParams = useSearchParams();
@@ -67,7 +88,7 @@ export function CareConfigurator({ minimal = false }: { minimal?: boolean }) {
   const handleNext = (key: string, value: string) => {
     const newSelection = { ...selection, [key]: value };
     setSelection(newSelection);
-    setDirection(1); // Slide nach links (neuer Inhalt kommt von rechts)
+    setDirection(1); 
     
     setTimeout(() => {
       if (step < 4) {
@@ -82,7 +103,7 @@ export function CareConfigurator({ minimal = false }: { minimal?: boolean }) {
 
   const handleBack = () => {
     if (step > 1) {
-        setDirection(-1); // Slide nach rechts (alter Inhalt kommt von links)
+        setDirection(-1); 
         setStep(step - 1);
     }
   };
@@ -109,7 +130,6 @@ export function CareConfigurator({ minimal = false }: { minimal?: boolean }) {
     setTimeout(() => { setStep(1); setSelection({}); setDirection(0); }, 300);
   };
 
-  // Animationen für die Fragen-Slides
   const slideVariants = {
     enter: (direction: number) => ({
       x: direction > 0 ? 50 : -50,
@@ -132,54 +152,64 @@ export function CareConfigurator({ minimal = false }: { minimal?: boolean }) {
 
   return (
     <>
-      {/* 1. TEASER SECTION (Sichtbar auf der Startseite) */}
+      {/* 1. TEASER SECTION */}
       {!minimal && (
         <section id="pflege-wegweiser" className="relative z-30 mt-0 lg:-mt-20 px-4 md:px-6 pb-20 pointer-events-none">
             <div className="container mx-auto max-w-7xl">
-                {/* TEASER KARTE 
-                    - Nutzt transform-gpu für Performance
-                    - Reagiert auf isTeaserActive (Mobile Scroll) UND Hover (Desktop)
-                */}
+                {/* TEASER KARTE */}
                 <div 
                     ref={teaserRef}
                     className={cn(
-                        "bg-white rounded-[2.5rem] border border-slate-100 pointer-events-auto overflow-hidden ring-1 ring-slate-100/50 transform-gpu transition-all duration-500",
-                        // Auto-Hover Logik:
+                        "bg-white rounded-[2.5rem] border border-slate-100 pointer-events-auto overflow-hidden ring-1 ring-slate-100/50 transform-gpu transition-all duration-500 relative", // relative wichtig für Background
                         isTeaserActive 
                             ? "scale-[1.01] shadow-2xl shadow-[var(--color-primary)]/10 border-[var(--color-primary)]/20" 
                             : "scale-100 shadow-2xl shadow-slate-200/50 hover:scale-[1.005] hover:shadow-[var(--color-primary)]/10"
                     )}
                 >
                     
-                    <div onClick={() => setIsOpen(true)} className="relative cursor-pointer group bg-gradient-to-br from-white via-[var(--color-secondary)]/30 to-[var(--color-secondary)] p-6 md:p-12 hover:bg-white transition-all duration-500">
+                    <div onClick={() => setIsOpen(true)} className="relative cursor-pointer group bg-gradient-to-br from-white via-[var(--color-secondary)]/30 to-[var(--color-secondary)] p-6 md:p-12 hover:bg-white transition-all duration-500 overflow-hidden">
                         
-                        {/* Glow Effekt - Bewegt sich bei Aktivierung */}
+                        {/* 1. HINTERGRUND ICONS (Config Check) */}
+                        <AnimatedBackground icon={ConfigBackgroundIcon} variant="section" color="text-[var(--color-primary)]" className="opacity-50" />
+
+                        {/* Glow Effekt */}
                         <div className={cn(
-                            "absolute top-0 right-0 w-[300px] h-[300px] bg-[var(--color-primary)]/5 rounded-full blur-[80px] pointer-events-none translate-x-1/2 -translate-y-1/2 transition-all duration-700",
+                            "absolute top-0 right-0 w-[300px] h-[300px] bg-[var(--color-primary)]/5 rounded-full blur-[80px] pointer-events-none translate-x-1/2 -translate-y-1/2 transition-all duration-700 z-0",
                             isTeaserActive ? "bg-[var(--color-primary)]/15 scale-125" : "group-hover:bg-[var(--color-primary)]/10"
                         )} />
                         
                         <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 relative z-10">
-                            {/* Icon Box - FIXED: No rotate, subtle scale only */}
+                            
+                            {/* Icon Box */}
                             <div className={cn(
                                 "shrink-0 w-24 h-24 bg-white rounded-3xl flex items-center justify-center border border-slate-100 shadow-sm transition-all duration-500",
                                 isTeaserActive 
                                     ? "scale-105 shadow-md border-[var(--color-primary)]/20" 
                                     : "group-hover:scale-105 group-hover:shadow-md group-hover:border-[var(--color-primary)]/20"
                             )}>
+                                {/* Primary Icon in Teal */}
                                 <ClipboardCheck className="w-10 h-10 text-[var(--color-primary)]" />
                             </div>
                             
                             {/* Text Area */}
                             <div className="flex-1 text-center md:text-left space-y-3">
-                                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 shadow-sm">
-                                    <Sparkles className="w-3.5 h-3.5 text-[var(--color-accent)] animate-pulse" />
+                                
+                                {/* BADGE mit ANIMIERTEM ICON (Check) */}
+                                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[var(--color-primary)]/20 text-[var(--color-primary-deep)] shadow-sm">
+                                    <CheckIcon className="w-3.5 h-3.5 text-[var(--color-accent)]" />
                                     <span className="text-[11px] font-bold uppercase tracking-wider">Profi-Check</span>
                                 </div>
                                 
+                                {/* HEADLINE - MIXED TYPOGRAPHY */}
                                 <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-slate-900 mb-2 tracking-tight text-balance leading-[1.1]">
                                     Was steht Ihnen zu? <br className="hidden lg:block" />
-                                    <span className="text-[var(--color-primary)]">Anspruch jetzt prüfen.</span>
+                                    <span className="font-script text-[var(--color-primary)] text-[1.1em] relative inline-block px-1 mt-1">
+                                        Anspruch prüfen.
+                                        {/* Orange Smile Swoosh */}
+                                        <svg className="absolute w-full h-3 -bottom-1 left-0 text-[var(--color-accent)] opacity-80" viewBox="0 0 100 10" preserveAspectRatio="none">
+                                            <path d="M0 5 Q 50 12 100 5" stroke="currentColor" strokeWidth="8" fill="none" strokeLinecap="round" />
+                                        </svg>
+                                    </span>
                                 </h2>
                                 
                                 <p className="text-lg font-medium text-slate-500">Kostenlos, anonym und in wenigen Klicks zum Ergebnis.</p>
@@ -200,7 +230,7 @@ export function CareConfigurator({ minimal = false }: { minimal?: boolean }) {
                     </div>
 
                     {/* Trust Bar */}
-                    <div className="bg-slate-50/80 border-t border-slate-100 p-6 md:px-12 md:py-8 backdrop-blur-sm">
+                    <div className="bg-slate-50/80 border-t border-slate-100 p-6 md:px-12 md:py-8 backdrop-blur-sm relative z-10">
                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 items-start justify-center">
                             <div className="flex items-center gap-3 group/item">
                                 <div className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-[var(--color-primary)] shadow-sm font-black text-xs group-hover/item:border-[var(--color-primary)] transition-colors">1.0</div>
@@ -211,7 +241,8 @@ export function CareConfigurator({ minimal = false }: { minimal?: boolean }) {
                                 <div className="flex flex-col"><span className="text-[10px] font-bold text-[var(--color-primary)] uppercase tracking-wider">Abrechnung</span><span className="text-sm font-bold text-slate-700">Alle Pflegekassen</span></div>
                             </div>
                             <div className="flex items-center gap-3 group/item">
-                                <div className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-[var(--color-primary)] shadow-sm group-hover/item:border-[var(--color-primary)] transition-colors"><Heart className="w-5 h-5" /></div>
+                                {/* Herz Icon in Orange (Accent) */}
+                                <div className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-[var(--color-accent)] shadow-sm group-hover/item:border-[var(--color-accent)] transition-colors"><Heart className="w-5 h-5 fill-current" /></div>
                                 <div className="flex flex-col"><span className="text-[10px] font-bold text-[var(--color-primary)] uppercase tracking-wider">Fokus</span><span className="text-sm font-bold text-slate-700">Bezugspflege</span></div>
                             </div>
                             <div className="flex items-center gap-3 group/item">
@@ -225,7 +256,7 @@ export function CareConfigurator({ minimal = false }: { minimal?: boolean }) {
         </section>
       )}
 
-      {/* 2. MODAL LOGIK MIT FRAMER MOTION */}
+      {/* 2. MODAL LOGIK */}
       <AnimatePresence>
       {isOpen && (
         <motion.div 
@@ -270,7 +301,7 @@ export function CareConfigurator({ minimal = false }: { minimal?: boolean }) {
                  </button>
               </div>
 
-              {/* Content Area - AnimatePresence für sanfte Step-Übergänge */}
+              {/* Content Area */}
               <div className="p-6 md:p-10 overflow-y-auto custom-scrollbar relative min-h-[400px] overflow-x-hidden">
                 <AnimatePresence mode="wait" custom={direction}>
                     
@@ -293,6 +324,7 @@ export function CareConfigurator({ minimal = false }: { minimal?: boolean }) {
                                     <span className="font-bold text-slate-900 text-lg">Für mich selbst</span>
                                 </button>
                                 <button onClick={() => handleNext("forWhom", "angehoerige")} className="group p-8 rounded-[2rem] border border-slate-100 bg-[var(--color-secondary)]/30 hover:border-[var(--color-primary)] hover:bg-[var(--color-secondary)] hover:shadow-lg transition-all text-center flex flex-col items-center gap-4 cursor-pointer">
+                                    {/* Herz Icon in Orange (Accent) */}
                                     <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center text-slate-400 group-hover:text-[var(--color-accent)] shadow-sm group-hover:scale-110 transition-all"><Heart className="w-8 h-8" /></div>
                                     <span className="font-bold text-slate-900 text-lg">Für Angehörige</span>
                                 </button>
@@ -394,6 +426,7 @@ export function CareConfigurator({ minimal = false }: { minimal?: boolean }) {
                         >
                             <div className="relative mb-6">
                                 <div className="w-24 h-24 rounded-full border-4 border-slate-100 border-t-[var(--color-primary)] animate-spin" />
+                                {/* Herz in Orange (Accent) */}
                                 <Heart className="absolute inset-0 m-auto w-8 h-8 text-[var(--color-accent)] animate-pulse fill-current" />
                             </div>
                             <h3 className="text-2xl font-bold text-slate-900 mb-2">Auswertung läuft...</h3>
@@ -413,9 +446,13 @@ export function CareConfigurator({ minimal = false }: { minimal?: boolean }) {
                             <div className="w-20 h-20 bg-[var(--color-secondary)] text-[var(--color-primary)] rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm ring-8 ring-slate-50">
                                 <CheckCircle2 className="w-10 h-10" />
                             </div>
-                            <h3 className="text-3xl font-extrabold text-slate-900 mb-4">Analyse abgeschlossen!</h3>
+                            
+                            {/* Ergebnis Headline mit Script Font für Emotion */}
+                            <h3 className="text-4xl font-script text-[var(--color-primary)] mb-2 font-bold">Analyse abgeschlossen!</h3>
+                            <h4 className="text-xl font-bold text-slate-900 mb-4">Wir haben eine Lösung für Sie.</h4>
+                            
                             <p className="text-lg text-slate-600 mb-8 max-w-md mx-auto leading-relaxed font-medium">
-                                Vielen Dank. Basierend auf Ihren Angaben haben wir erste Möglichkeiten für Sie ermittelt. <br/>
+                                Basierend auf Ihren Angaben haben wir erste Möglichkeiten ermittelt. <br/>
                                 <strong className="text-slate-900">Fordern Sie jetzt Ihr unverbindliches Ergebnis an.</strong>
                             </p>
                             
@@ -424,7 +461,7 @@ export function CareConfigurator({ minimal = false }: { minimal?: boolean }) {
                                 size="lg" 
                                 className="w-full max-w-sm h-14 px-10 text-lg text-white font-bold rounded-full shadow-xl shadow-[var(--color-primary)]/20 hover:-translate-y-1 transition-all cursor-pointer bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)]"
                             >
-                                Ergebnis & Beratung anfordern
+                                Ergebnis anfordern
                             </Button>
                             <p className="text-xs text-slate-400 mt-4 font-medium">100% Kostenlos & Unverbindlich.</p>
                         </motion.div>

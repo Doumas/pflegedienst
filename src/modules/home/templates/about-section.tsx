@@ -2,11 +2,41 @@
 
 import Image from "next/image";
 import { buttonVariants } from "@/shared/ui/button"; 
-import { ArrowRight, HeartHandshake, Sparkles, Award, History, Lock, Quote } from "lucide-react"; 
+import { ArrowRight, HeartHandshake, Award, History, Lock, Quote, Pen } from "lucide-react"; // Pen importiert
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 import { cn } from "@/shared/utils/cn";
 import { FadeIn } from "@/shared/ui/fade-in";
+import { AnimatedBackground } from "@/shared/ui/animated-background"; // <--- BEST PRACTICE IMPORT
+import { motion } from "framer-motion"; 
+
+// --- CUSTOM ICON FÜR BADGE (Stift - Draw Animation) ---
+const BadgePenIcon = (props: any) => (
+    <motion.svg 
+        viewBox="0 0 24 24" 
+        fill="none" 
+        stroke="currentColor" 
+        strokeWidth="2.5" 
+        strokeLinecap="round" 
+        strokeLinejoin="round"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        {...props}
+    >
+        <motion.path 
+            d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"
+            variants={{
+                hidden: { pathLength: 0, opacity: 0 },
+                visible: { 
+                    pathLength: 1, 
+                    opacity: 1, 
+                    transition: { duration: 1.5, ease: "easeInOut" } 
+                }
+            }}
+        />
+    </motion.svg>
+);
 
 // --- DATEN ---
 const STORY_SLIDES = [
@@ -111,18 +141,27 @@ export function AboutSection() {
   return (
     <section id="ueber-uns" ref={sectionRef} className="relative py-24 lg:py-32 bg-[var(--color-secondary)] font-sans overflow-hidden">
       
-      {/* Background FX */}
-      <div className="absolute inset-0 opacity-[0.4] pointer-events-none transform-gpu" 
-           style={{ backgroundImage: 'radial-gradient(var(--color-border-soft) 1px, transparent 1px)', backgroundSize: '32px 32px' }} 
-      />
+      {/* --- HINTERGRUND SCHEMA --- */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+          
+          {/* 1. ANIMIERTE HINTERGRUND ICONS (STIFT) */}
+          {/* Nutzung der Shared Component für Konsistenz */}
+          <AnimatedBackground icon={Pen} variant="section" color="text-[var(--color-primary)]" />
+
+          {/* 2. Dot Pattern */}
+          <div className="absolute inset-0 opacity-[0.4] z-0" 
+               style={{ backgroundImage: 'radial-gradient(var(--color-border-soft) 1px, transparent 1px)', backgroundSize: '32px 32px' }} 
+          />
+      </div>
+
+      {/* 3. Blobs */}
       {isVisible && (
-          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-white rounded-full blur-[120px] opacity-60 pointer-events-none translate-x-1/2 -translate-y-1/2 transform-gpu will-change-transform" />
+          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-white rounded-full blur-[120px] opacity-60 pointer-events-none translate-x-1/2 -translate-y-1/2 transform-gpu will-change-transform z-0" />
       )}
-      <div className="absolute bottom-0 left-[-10%] w-[600px] h-[600px] bg-[var(--color-primary)]/5 rounded-full blur-[100px] pointer-events-none transform-gpu" />
+      <div className="absolute bottom-0 left-[-10%] w-[600px] h-[600px] bg-[var(--color-primary)]/5 rounded-full blur-[100px] pointer-events-none transform-gpu z-0" />
 
 
       <div className="container relative z-10 px-4 md:px-6">
-        {/* LAYOUT: Mobile = Center / Desktop = Start (Links) */}
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center lg:items-start"> 
           
            {/* --- LINKS: BILD SLIDER --- */}
@@ -132,7 +171,7 @@ export function AboutSection() {
                     className="relative group/image"
                >
                 
-                {/* Dekorative Rahmen */}
+                {/* Dekorative Rahmen (Accent = Orange) */}
                 <div className={cn(
                     "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[104%] h-[104%] border-2 border-[var(--color-accent)]/20 rounded-[2.5rem] -z-10 transition-transform duration-700 ease-out transform-gpu",
                     isImageActive ? "rotate-0 scale-102" : "rotate-1 group-hover/image:rotate-0"
@@ -142,10 +181,7 @@ export function AboutSection() {
                     isImageActive ? "rotate-0 scale-102" : "-rotate-1 group-hover/image:rotate-0"
                 )} />
 
-                {/* Badge Positionierung:
-                   - Mobile: left-1/2 -translate-x-1/2 (Zentriert)
-                   - Desktop (lg): -left-6 translate-x-0 (Links überhängend)
-                */}
+                {/* Badge (Erfahrung) */}
                 <div className="absolute -top-6 left-1/2 -translate-x-1/2 lg:-left-6 lg:translate-x-0 z-30 bg-white p-4 rounded-2xl shadow-xl shadow-[var(--color-primary)]/10 border border-slate-100 flex items-center gap-4 transition-transform duration-300 hover:scale-105 min-w-[200px] lg:min-w-0">
                     <div className="w-12 h-12 bg-[var(--color-primary)] text-white rounded-xl flex items-center justify-center shadow-md shrink-0">
                         <Award className="w-6 h-6" />
@@ -176,9 +212,11 @@ export function AboutSection() {
                               priority={index === 0}
                               sizes="(max-width: 768px) 100vw, 50vw" 
                           />
+                          {/* Gradient Overlay in Deep Teal */}
                           <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-primary-deep)]/90 via-transparent to-transparent opacity-80" />
 
                           <div className="absolute bottom-0 left-0 right-0 p-8 text-white translate-y-1 text-left">
+                              {/* Quote Icon in Orange Accent */}
                               <Quote className="w-8 h-8 text-[var(--color-accent)] mb-3 opacity-90" />
                               <div className="text-2xl font-bold mb-2 leading-tight">{slide.title}</div>
                               <div className="text-white/90 text-base font-medium leading-relaxed">{slide.sub}</div>
@@ -205,24 +243,25 @@ export function AboutSection() {
           <div className="space-y-10 text-center lg:text-left flex flex-col items-center lg:items-start">
             
             <div className="space-y-6 flex flex-col items-center lg:items-start">
-                {/* Badge */}
+                
+                {/* Badge mit ANIMIERTEM ICON (STIFT) */}
                 <FadeIn delay={0.1}>
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[var(--color-border-soft)] text-slate-500 text-xs font-bold shadow-sm tracking-wide uppercase">
-                        <Sparkles className="w-3 h-3 text-[var(--color-accent)]" />
+                        <BadgePenIcon className="w-4 h-4 text-[var(--color-accent)]" />
                         Unsere Philosophie
                     </div>
                 </FadeIn>
 
-                {/* Headline */}
+                {/* Headline mit Script Font */}
                 <FadeIn delay={0.2}>
                     <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.1]">
                         Pflege ist für uns <br/>
-                        <span className="relative inline-block">
-                            <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)]">
+                        {/* Familiensache in Script Font & Orange */}
+                        <span className="font-script text-[var(--color-accent)] text-[1.1em] relative inline-block mt-2 px-1 font-normal">
                             Familiensache.
-                            </span>
-                            <svg className="absolute w-full h-2 lg:h-3 -bottom-1 left-0 text-[var(--color-accent)] -z-10 opacity-60" viewBox="0 0 100 10" preserveAspectRatio="none">
-                            <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
+                            {/* Teal Underline für Kontrast */}
+                            <svg className="absolute w-full h-2 lg:h-3 -bottom-1 left-0 text-[var(--color-primary)] -z-10 opacity-30" viewBox="0 0 100 10" preserveAspectRatio="none">
+                                <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
                             </svg>
                         </span>
                     </h2>
@@ -232,7 +271,7 @@ export function AboutSection() {
                 <FadeIn delay={0.3}>
                     <p className="text-lg lg:text-xl text-slate-600 leading-relaxed font-medium max-w-xl mx-auto lg:mx-0">
                         Wir pflegen so, wie wir selbst gepflegt werden möchten: Mit Zeit, Respekt und einem offenen Ohr. 
-                        Bei uns sind Sie keine Nummer in einer Akte, sondern ein Mensch mit Geschichte.
+                        Bei uns sind Sie keine Nummer in einer Akte, sondern ein <span className="text-[var(--color-primary)] font-bold">Mensch mit Geschichte.</span>
                     </p>
                 </FadeIn>
             </div>
@@ -246,6 +285,7 @@ export function AboutSection() {
               ].map((item, i) => (
                 <FadeIn key={i} delay={0.4 + (i * 0.1)} direction="left">
                     <div className="group flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-4 md:gap-6 p-6 rounded-[1.5rem] bg-white border border-[var(--color-border-soft)] shadow-sm hover:shadow-lg hover:shadow-[var(--color-primary)]/5 hover:border-[var(--color-primary)]/20 transition-all duration-300 w-full">
+                        {/* Icon Box */}
                         <div className="shrink-0 w-14 h-14 rounded-2xl bg-[var(--color-secondary)] flex items-center justify-center text-[var(--color-primary)] group-hover:bg-[var(--color-primary)] group-hover:text-white transition-colors duration-300 shadow-sm mt-1">
                             <item.icon className="w-7 h-7" />
                         </div>
@@ -263,7 +303,7 @@ export function AboutSection() {
                 <Link href="/ueber-uns" className="inline-block">
                     <div className={cn(
                         buttonVariants({ variant: "default", size: "lg" }),
-                        "h-14 px-10 text-base rounded-full shadow-xl shadow-[var(--color-primary)]/20 hover:shadow-[var(--color-primary)]/30 hover:-translate-y-1 transition-all cursor-pointer font-bold"
+                        "h-14 px-10 text-base rounded-full bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] shadow-xl shadow-[var(--color-primary)]/20 hover:shadow-[var(--color-primary)]/30 hover:-translate-y-1 transition-all cursor-pointer font-bold text-white"
                     )}>
                     Mehr über uns erfahren
                     <ArrowRight className="ml-2 w-5 h-5" />

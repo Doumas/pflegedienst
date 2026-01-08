@@ -10,7 +10,6 @@ import {
   Calendar, 
   MessageCircle, 
   FileHeart, 
-  Sparkles, 
   CalendarCheck 
 } from "lucide-react";
 import Link from "next/link";
@@ -65,7 +64,7 @@ function StepCard({ step, index }: { step: any, index: number }) {
             </div>
             <div className={cn(
                 "text-xs font-bold uppercase tracking-wider mb-2 transition-colors",
-                isInCenter ? "text-white" : "text-white/50"
+                isInCenter ? "text-[var(--color-accent)]" : "text-white/50"
             )}>Schritt {index + 1}</div>
             <div className="font-bold text-xl mb-2 text-white">{step.title}</div>
             <p className="text-sm text-white/70 leading-relaxed max-w-[280px] lg:max-w-none">{step.desc}</p>
@@ -100,7 +99,11 @@ function CtaBox() {
                 </div>
                 
                 <div className="flex-1">
-                    <h3 className="font-black text-white text-2xl md:text-3xl mb-2">Persönliche Beratung?</h3>
+                    {/* Script Font für persönliche Ansprache */}
+                    <h3 className="font-black text-white text-2xl md:text-3xl mb-2">
+                        <span className="font-script text-[1.2em] mr-2 text-[var(--color-accent)] font-normal">Persönliche</span>
+                        Beratung?
+                    </h3>
                     <p className="text-white/90 text-lg">Rufen Sie uns an oder schreiben Sie uns.</p>
                 </div>
 
@@ -134,7 +137,7 @@ export function ServiceDetailTemplate({ slug }: { slug: string }) {
   return (
     <div className="relative min-h-screen bg-white font-sans pb-20 selection:bg-[var(--color-primary)]/20 overflow-hidden">
       
-      {/* Background FX */}
+      {/* Background FX (Warm Tone) */}
       <div className="absolute inset-0 opacity-[0.4] pointer-events-none transform-gpu" 
            style={{ backgroundImage: 'radial-gradient(var(--color-border-soft) 1px, transparent 1px)', backgroundSize: '32px 32px' }}>
       </div>
@@ -148,24 +151,23 @@ export function ServiceDetailTemplate({ slug }: { slug: string }) {
         <section className="pt-24 pb-16 lg:pt-32 lg:pb-24 px-4 md:px-6">
           <div className="container mx-auto">
             
-            {/* KORREKTUR: Container wird mobil zentriert (mx-auto), am Desktop links (lg:mx-0) */}
             <div className="flex flex-col items-center lg:items-start text-center lg:text-left max-w-4xl mx-auto lg:mx-0">
                 
                 {/* Breadcrumb */}
                 <FadeIn delay={0.1}>
                     <div className="flex items-center justify-center lg:justify-start gap-2 text-xs font-bold uppercase tracking-wider text-slate-400 mb-8">
-                    <Link href="/" className="hover:text-[var(--color-accent)] transition-colors flex items-center gap-1"><Home className="w-3 h-3" /> Home</Link>
-                    <ChevronRight className="w-3 h-3 opacity-50" />
-                    <Link href="/leistungen" className="hover:text-[var(--color-accent)] transition-colors">Leistungen</Link>
-                    <ChevronRight className="w-3 h-3 opacity-50" />
-                    <span className="text-[var(--color-primary)]">{service.title}</span>
+                        <Link href="/" className="hover:text-[var(--color-accent)] transition-colors flex items-center gap-1"><Home className="w-3 h-3" /> Home</Link>
+                        <ChevronRight className="w-3 h-3 opacity-50" />
+                        <Link href="/leistungen" className="hover:text-[var(--color-accent)] transition-colors">Leistungen</Link>
+                        <ChevronRight className="w-3 h-3 opacity-50" />
+                        <span className="text-[var(--color-primary)]">{service.title}</span>
                     </div>
                 </FadeIn>
                 
-                {/* Icon Box */}
+                {/* Icon Box mit Teal Background */}
                 <FadeIn delay={0.2}>
-                    <div className="inline-flex items-center justify-center w-24 h-24 bg-white rounded-[2rem] shadow-2xl shadow-slate-200/50 text-[var(--color-primary)] mb-8 border border-white ring-1 ring-[var(--color-border-soft)]">
-                    <service.icon className="w-10 h-10" />
+                    <div className="inline-flex items-center justify-center w-24 h-24 bg-[var(--color-primary)]/5 rounded-[2rem] shadow-2xl shadow-[var(--color-primary)]/10 text-[var(--color-primary)] mb-8 border border-[var(--color-primary)]/10 ring-1 ring-white">
+                        <service.icon className="w-10 h-10" />
                     </div>
                 </FadeIn>
                 
@@ -193,29 +195,30 @@ export function ServiceDetailTemplate({ slug }: { slug: string }) {
             {/* LINKS: Hauptinhalt */}
             <div className="lg:col-span-8 space-y-16">
               
-              {/* Haupttext - Links ausgerichtet */}
+              {/* Haupttext */}
               <FadeIn delay={0.5}>
                 <div className="prose prose-lg prose-slate max-w-none text-left">
                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1]">
-                    Worum geht es bei dieser Leistung?
+                        Worum geht es bei dieser <span className="text-[var(--color-primary)]">Leistung?</span>
                     </h2>
                     <p className="text-lg text-slate-600 leading-relaxed">
-                    {service.details || "Wir bieten Ihnen eine umfassende und professionelle Versorgung in diesem Bereich. Unser Ziel ist es, Ihre Selbstständigkeit zu fördern und Ihnen Sicherheit im Alltag zu geben."}
+                        {service.details || "Wir bieten Ihnen eine umfassende und professionelle Versorgung in diesem Bereich. Unser Ziel ist es, Ihre Selbstständigkeit zu fördern und Ihnen Sicherheit im Alltag zu geben."}
                     </p>
                 </div>
               </FadeIn>
               
-              {/* Feature Grid - Links ausgerichtet */}
+              {/* Feature Grid */}
               <FadeIn delay={0.6}>
                 <div>
                     <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-8 text-left">Das ist konkret enthalten:</h3>
                     <div className="grid sm:grid-cols-2 gap-4 text-left">
                     {service.features.map((feature, i) => (
                         <div key={i} className="flex items-start gap-4 p-5 rounded-2xl bg-[var(--color-secondary)]/30 border border-transparent hover:border-[var(--color-primary)]/20 hover:bg-[var(--color-secondary)]/60 transition-colors duration-300 group transform-gpu">
-                        <div className="mt-0.5 w-6 h-6 rounded-full bg-white border border-[var(--color-border-soft)] flex items-center justify-center shrink-0 shadow-sm text-[var(--color-primary)] group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300">
-                            <CheckCircle className="w-4 h-4" />
-                        </div>
-                        <span className="text-slate-700 font-medium leading-snug">{feature}</span>
+                            {/* Checkmark in Teal */}
+                            <div className="mt-0.5 w-6 h-6 rounded-full bg-white border border-[var(--color-border-soft)] flex items-center justify-center shrink-0 shadow-sm text-[var(--color-primary)] group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300">
+                                <CheckCircle className="w-4 h-4" />
+                            </div>
+                            <span className="text-slate-700 font-medium leading-snug">{feature}</span>
                         </div>
                     ))}
                     </div>
@@ -229,13 +232,26 @@ export function ServiceDetailTemplate({ slug }: { slug: string }) {
                     <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[var(--color-accent)]/10 rounded-full blur-[80px] pointer-events-none" />
                     <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[var(--color-primary)]/20 rounded-full blur-[80px] pointer-events-none" />
                     
-                    {/* KORREKTUR: Mobile Center / Desktop Left */}
                     <div className="relative z-10 flex flex-col items-center lg:items-start text-center lg:text-left">
+                        {/* Custom Badge Icon */}
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-[var(--color-accent)] text-xs font-bold uppercase tracking-wide mb-8">
-                        <Sparkles className="w-3 h-3" />
-                        Der Ablauf
+                            <svg className="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M3 12a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7z" />
+                                <path d="M12 8C12 8 13.5 6 15 6C16.5 6 17.5 7 17.5 8.5C17.5 11 12 15 12 15C12 15 6.5 11 6.5 8.5C6.5 7 7.5 6 9 6C10.5 6 12 8 12 8Z" className="text-[var(--color-accent)] stroke-[var(--color-accent)]" />
+                            </svg>
+                            Der Ablauf
                         </div>
-                        <h3 className="text-3xl font-black mb-12 text-white">Ihr Weg zur Versorgung</h3>
+                        
+                        <h3 className="text-3xl md:text-4xl font-black mb-12 text-white">
+                            Ihr Weg zur <br/>
+                            {/* Script Font für Emotion */}
+                            <span className="font-script text-[var(--color-accent)] text-[1.1em] font-normal relative inline-block px-1 mt-1">
+                                Versorgung.
+                                <svg className="absolute w-full h-2 -bottom-0 left-0 text-white opacity-40" viewBox="0 0 100 10" preserveAspectRatio="none">
+                                    <path d="M0 5 Q 50 12 100 5" stroke="currentColor" strokeWidth="8" fill="none" strokeLinecap="round" />
+                                </svg>
+                            </span>
+                        </h3>
                         
                         <div className="grid sm:grid-cols-3 gap-10 sm:gap-6 relative w-full">
                             {steps.map((step, i) => (
@@ -288,7 +304,8 @@ export function ServiceDetailTemplate({ slug }: { slug: string }) {
 
               {/* Widget 2: Quick Contact */}
               <FadeIn delay={0.7} direction="left">
-                <div className="bg-gradient-to-br from-[var(--color-secondary)] to-white p-8 rounded-[2.5rem] border border-[var(--color-border-soft)] text-center transform-gpu">
+                {/* Weicher Farbverlauf für Freundlichkeit */}
+                <div className="bg-gradient-to-br from-[var(--color-secondary)] via-white to-white p-8 rounded-[2.5rem] border border-[var(--color-border-soft)] text-center transform-gpu">
                     <h4 className="font-bold text-slate-900 text-xl mb-4">Haben Sie Fragen?</h4>
                     <p className="text-slate-600 mb-8 leading-relaxed">Wir helfen Ihnen gerne weiter bei der Beantragung und Planung.</p>
                     <Link href="/kontakt">

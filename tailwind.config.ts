@@ -4,7 +4,7 @@ const config: Config = {
   content: [ "./src/**/*.{js,ts,jsx,tsx,mdx}" ],
   theme: {
     extend: {
-      // 1. FARBEN (Deine Struktur + Ergänzung für Accent Standard)
+      // 1. FARBEN
       colors: {
         primary: { 
           DEFAULT: "var(--color-primary)",           
@@ -17,7 +17,6 @@ const config: Config = {
           DEFAULT: "var(--color-secondary)",         
           foreground: "var(--color-secondary-foreground)" 
         },
-        // Ergänzt: Default Accent für die orangenen Highlights
         accent: {
           DEFAULT: "var(--color-accent)",            
           soft: "var(--color-accent-soft)",          
@@ -33,31 +32,27 @@ const config: Config = {
         }
       },
 
-      // 2. TYPOGRAFIE (Das neue Design-System)
+      // 2. TYPOGRAFIE
       fontSize: {
-        // Hero Headlines (Riesig)
         'display': ['4.5rem', { lineHeight: '1.05', letterSpacing: '-0.03em', fontWeight: '900' }],
         'display-mobile': ['3rem', { lineHeight: '1.1', letterSpacing: '-0.02em', fontWeight: '900' }],
-        
-        // Sektions-Überschriften (H2)
-        'h2': ['3.75rem', { lineHeight: '1.1', letterSpacing: '-0.02em', fontWeight: '900' }],      // Desktop (60px)
-        'h2-mobile': ['2.25rem', { lineHeight: '1.2', letterSpacing: '-0.01em', fontWeight: '800' }], // Mobile (36px)
-        
-        // Karten-Titel (H3)
+        'h2': ['3.75rem', { lineHeight: '1.1', letterSpacing: '-0.02em', fontWeight: '900' }],
+        'h2-mobile': ['2.25rem', { lineHeight: '1.2', letterSpacing: '-0.01em', fontWeight: '800' }],
         'h3': ['1.5rem', { lineHeight: '1.3', fontWeight: '700' }], 
-        
-        // Fließtext
-        'body-lg': ['1.125rem', { lineHeight: '1.6', fontWeight: '500' }], // Intro-Texte (18px)
-        'body': ['1rem', { lineHeight: '1.6', fontWeight: '400' }],       // Standard (16px)
-        'label': ['0.75rem', { letterSpacing: '0.05em', fontWeight: '700', textTransform: 'uppercase' }], // Badges
+        'body-lg': ['1.125rem', { lineHeight: '1.6', fontWeight: '500' }], 
+        'body': ['1rem', { lineHeight: '1.6', fontWeight: '400' }],
+        'label': ['0.75rem', { letterSpacing: '0.05em', fontWeight: '700', textTransform: 'uppercase' }],
       },
       
-      // 3. SCHRIFTART (Verbindung zur next/font Variable)
+      // 3. SCHRIFTART (Hier ist das Update!)
       fontFamily: {
-        sans: ["var(--font-sans)", "sans-serif"],
+        // Inter (Standard) - muss zur Variable in layout.tsx passen (--font-inter)
+        sans: ["var(--font-inter)", "sans-serif"],
+        // Dancing Script (Neu) - für das Logo
+        script: ["var(--font-dancing)", "cursive"],
       },
 
-      // 4. CONTAINER (Deine Einstellungen)
+      // 4. CONTAINER
       container: { 
         center: true, 
         padding: "1.5rem", 
@@ -65,7 +60,7 @@ const config: Config = {
       },
     },
   },
-  // 5. PLUGINS (Wichtig für die Animationen!)
+  // 5. PLUGINS
   plugins: [require("tailwindcss-animate")],
 };
 

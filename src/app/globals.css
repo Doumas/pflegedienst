@@ -7,119 +7,42 @@
 |--------------------------------------------------------------------------
 | Custom Property Farbdefinitionen
 |--------------------------------------------------------------------------
-|
-| PRIMARY COLORS (Hauptfarben):
-|
-| --color-primary:               Main Brand Color (Buttons, Headlines)
-| --color-primary-foreground:    Text on Primary Background
-| --color-primary-hover:         Hover State for Interactive Elements
-|
-| UTILITY COLORS (Zusatzfarben):
-|
-| --color-primary-deep:          Darker Accents & Strong Borders
-| --color-footer-bg:             Footer Background (Very Dark)
-|
-| SECONDARY COLORS (Sekundärfarben):
-|
-| --color-secondary:             Light Background Surface (Sections)
-| --color-secondary-foreground:  Dark Text on Light Background
-|
-| ACCENTS & TEXT (Akzente und Text):
-|
-| --color-border-soft:           Subtle Borders & Dividers
-| --color-accent-soft:           Decorative Accents & Gradients
-| --color-text-light:            Light Text on Dark Backgrounds
-|
-| SELECTION COLORS (Auswahl):
-|
-| --color-selection-bg:          Text Selection Background
-| --color-selection-text:        Text Selection Color
-|
 */
 
   /* ========================================================================
      🎨 DESIGN SYSTEM & THEME CONFIGURATION
-     ========================================================================
-     Wechsle das Farbschema durch Ein-/Auskommentieren der Blöcke.
-     Standard: GRÜN (Option 1)
      ======================================================================== */
 
-
   /* ------------------------------------------------------------------------
-     OPTION 1: NATUR & VITALITÄT (GRÜN) - [INAKTIV]
+     OPTION 2: TÜRKIS & ORANGE (MODERN & VITAL) - [AKTIV]
      ------------------------------------------------------------------------
-     Wirkung: Frisch, gesund, beruhigend, lebendig.
-     Ideal für: Ganzheitliche Pflege, Gärtner, Bio-Marken.
-     ------------------------------------------------------------------------ */
-  /*
-  --color-primary: #15803d;
-  --color-primary-foreground: #ffffff;
-  --color-primary-hover: #166534;
-
-  --color-primary-deep: #14532d;
-  --color-footer-bg: #052e16;
-
-  --color-secondary: #f0fdf4;
-  --color-secondary-foreground: #14532d;
-
-  --color-border-soft: #bbf7d0;
-  --color-accent-soft: #86efac;
-  --color-text-light: #dcfce7;
-
-  --color-selection-bg: #dcfce7;
-  --color-selection-text: #14532d;
-  */
-
-  /* ------------------------------------------------------------------------
-   OPTION 2: DALAS PETROL & ORANGE (Optimiert)
+     Wirkung: Professionell (Türkis) trifft auf Lebensfreude (Orange).
+     Sehr beliebte, kontrastreiche Kombination.
      ======================================================================== */
   
-  --color-primary: #0e7490;          /* Dein Petrol (Cyan-700) */
+  /* HAUPTFARBE (TÜRKIS) - Bleibt bestehen */
+  --color-primary: #0d9488;          /* Teal-600 */
   --color-primary-foreground: #ffffff;
-  --color-primary-hover: #155e75;    /* Etwas dunkler für Hover */
+  --color-primary-hover: #0f766e;    /* Teal-700 */
 
-  --color-primary-deep: #164e63;     /* Sehr dunkel für Ränder/Footer */
-  --color-footer-bg: #083344;        
+  --color-primary-deep: #115e59;     /* Teal-800 */
+  --color-footer-bg: #134e4a;        /* Teal-900 */
 
-  --color-secondary: #ecfeff;        /* Sehr helles Cyan für Hintergründe */
-  --color-secondary-foreground: #164e63;
+  --color-secondary: #f0fdfa;        /* Teal-50 (Hintergrund) */
+  --color-secondary-foreground: #134e4a;
 
-  /* WICHTIG: Das ist dein Orange aus der "Herz & Verstand" Unterstreichung */
-  --color-accent: #f97316;           /* Orange-500 */
-  --color-accent-hover: #ea580c;     /* Orange-600 für Hover Effekte */
+  /* AKZENTFARBE (ORANGE) - Geändert von Rot zu Orange */
+  --color-accent: #f97316;           /* Orange-500: Warm, freundlich, aktiv */
+  --color-accent-hover: #ea580c;     /* Orange-600: Kräftiger für Hover */
   
-  --color-border-soft: #cffafe;      
-  --color-accent-soft: #ffedd5;      /* Helles Orange für Hintergründe */
+  --color-border-soft: #ccfbf1;      /* Teal-100 */
+  --color-accent-soft: #ffedd5;      /* Orange-100: Zartes Orange für Hintergründe */
   
-  --color-text-light: #e0f2fe;       
-  --color-selection-bg: #ffedd5;     
-  --color-selection-text: #0e7490;   
-
-
-  /* ------------------------------------------------------------------------
-     OPTION 3: HERZLICHKEIT & WÄRME (ROT) - [INAKTIV]
-     ------------------------------------------------------------------------
-     Wirkung: Emotional, aktivierend, menschlich, warm.
-     Ideal für: Familiäre Pflegedienste, Betreuung, Soziales.
-     ------------------------------------------------------------------------ */
-  /*
-  --color-primary: #be123c;          
-  --color-primary-foreground: #ffffff;
-  --color-primary-hover: #9f1239;    
-
-  --color-primary-deep: #881337;     
-  --color-footer-bg: #4c0519;        
-
-  --color-secondary: #fff1f2;        
-  --color-secondary-foreground: #881337;
-
-  --color-border-soft: #fecdd3;      
-  --color-accent-soft: #fda4af;      
-  --color-text-light: #ffe4e6;       
-
-  --color-selection-bg: #ffe4e6;     
-  --color-selection-text: #881337;   
-  */
+  --color-text-light: #f0fdfa;       
+  
+  /* Selection: Orange Markierung */
+  --color-selection-bg: #ffedd5;     /* Zartes Orange */
+  --color-selection-text: #0d9488;   /* Türkiser Text */
 }
 
 /* ========================================================================
@@ -129,12 +52,12 @@
 /* --- Container --- */
 /* Zentriert Inhalte mit sicherem Abstand zum Rand */
 .shadow-glow {
-  box-shadow: 0 10px 25px -5px rgba(14, 116, 144, 0.4), 0 8px 10px -6px rgba(14, 116, 144, 0.1);
+  box-shadow: 0 10px 25px -5px rgba(13, 148, 136, 0.4), 0 8px 10px -6px rgba(13, 148, 136, 0.1);
 }
 .container {
   margin-inline: auto;
   padding-inline: 1.5rem;
-  max-width: 1300px; /* Optimal für moderne Breitbildschirme */
+  max-width: 1300px; 
   width: 100%;
 }
 
@@ -142,7 +65,6 @@
 body {
   font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   background-color: #ffffff;
-  /* HIER: Das Original Schwarz für besten Kontrast, wie von dir gewünscht */
   color: #0f172a; 
   
   /* Senior Friendly Font Boost */
@@ -151,16 +73,11 @@ body {
 }
 
 /* --- Headlines --- */
-/* Engeres Kerning für modernen Look bei großen Schriften */
 h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.02em;
-  /* Optionale Ergänzung: Falls Headlines farbig sein sollen, 
-     kannst du hier color: var(--color-primary); nutzen. 
-     Aktuell erben sie Schwarz vom Body. */
 }
 
 /* --- Selection --- */
-/* Passt die Farbe beim Markieren von Text an das Theme an */
 ::selection {
   background-color: var(--color-selection-bg);
   color: var(--color-selection-text);
@@ -176,7 +93,6 @@ h1, h2, h3, h4, h5, h6 {
   to { transform: scale(1.1); }
 }
 
-/* In globals.css */
 @keyframes bounce-slow {
   0%, 100% { transform: translateY(-5%); }
   50% { transform: translateY(5%); }
@@ -187,15 +103,13 @@ h1, h2, h3, h4, h5, h6 {
 
 .animate-ken-burns {
   animation: ken-burns 20s ease-in-out infinite alternate;
-  will-change: transform; /* Performance Optimierung */
+  will-change: transform; 
 }
+
 /* =========================================
    GOOGLE TRANSLATE STYLING (Sanft)
    ========================================= */
 
-/* Wir lassen Google den Body verschieben (kein top: 0 !important mehr!) */
-
-/* Styling für das Dropdown im Popup */
 .goog-te-gadget {
   font-family: inherit !important;
   color: transparent !important;
@@ -215,11 +129,10 @@ h1, h2, h3, h4, h5, h6 {
   width: 100% !important;
 }
 
-/* Versteckt Google Logos */
 .goog-te-gadget img, .goog-te-gadget-icon { display: none !important; }
 #goog-gt-tt { display: none !important; visibility: hidden !important; }
 .goog-text-highlight { background-color: transparent !important; box-shadow: none !important; }
-/* Zwingt die Google-Leiste, nicht zu floaten, sondern Platz einzunehmen */
+
 .goog-te-banner-frame {
   position: static !important;
   box-shadow: none !important;
@@ -228,9 +141,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* --- GLOBALE PRINT & FLYER STYLES --- */
 
-/* A) BILDSCHIRM-VORSCHAU (Der "Word"-Look) */
+/* A) BILDSCHIRM-VORSCHAU */
 @media screen {
-  /* Das Overlay: Dunkel & Scrollbar */
   #print-overlay {
     position: fixed;
     inset: 0;
@@ -243,23 +155,21 @@ h1, h2, h3, h4, h5, h6 {
     align-items: center;
   }
 
-  /* Abstand zwischen den Blättern */
   #flyer-content-container {
     display: flex;
     flex-direction: column;
     gap: 40px;
     width: auto;
-    margin-top: 60px; /* Platz für Header */
+    margin-top: 60px; 
     margin-bottom: 60px;
   }
 
-  /* Das einzelne Blatt am Bildschirm */
   .flyer-page {
     width: 210mm;
     height: 297mm;
     background: white;
     padding: 0; 
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5); /* Schatten NUR hier */
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5); 
     position: relative;
     overflow: hidden;
     max-width: 90vw;
@@ -267,19 +177,17 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* B) DRUCK-ANSICHT (Das PDF) */
+/* B) DRUCK-ANSICHT */
 @media print {
   @page {
     size: A4 portrait;
     margin: 0;
   }
 
-  /* 1. Die normale Webseite hart ausblenden */
   .hide-on-print {
     display: none !important;
   }
 
-  /* 2. Basis-Reset für den Body */
   html, body {
     width: 100%;
     height: auto !important;
@@ -289,7 +197,6 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0 !important;
   }
 
-  /* 3. Den Flyer sichtbar machen und positionieren */
   #print-overlay {
     position: absolute !important;
     top: 0 !important;
@@ -312,7 +219,6 @@ h1, h2, h3, h4, h5, h6 {
     gap: 0 !important;
   }
 
-  /* 4. Die Seite im Druck */
   .flyer-page {
     width: 100% !important;
     height: 297mm !important;
@@ -321,25 +227,21 @@ h1, h2, h3, h4, h5, h6 {
     border: none !important;
     background: white !important;
     
-    /* WICHTIG: Seitenumbrüche */
     page-break-after: always !important;
     break-after: page !important;
     
-    /* WICHTIG: Farben an, Schatten AUS */
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
-    box-shadow: none !important; /* Killer-Feature gegen graue Kästen */
+    box-shadow: none !important; 
     filter: none !important;
   }
 
-  /* Keine leere Seite nach der letzten */
   .flyer-page:last-child {
     page-break-after: auto !important;
     break-after: auto !important;
     height: auto !important;
   }
 
-  /* Alle Schatten global killen im Druck */
   * {
     box-shadow: none !important;
     text-shadow: none !important;

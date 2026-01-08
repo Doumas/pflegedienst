@@ -12,86 +12,77 @@ export const DalasLogo: React.FC<DalasLogoProps> = ({
   variant = "default",
   ...props 
 }) => {
-  const tealColor = variant === "default" ? "var(--color-primary, #005852)" : "#ffffff"; 
-  const orangeColor = "var(--color-accent, #E8833A)";
-  const textColor = variant === "default" ? "text-[var(--color-primary-deep)]" : "text-white";
+  // Farben
+  const tealColor = variant === "default" ? "#009B77" : "#ffffff"; 
+  const orangeColor = "#F27405";
+  
+  // Textfarben Logik:
+  // Dalas = Teal (im Default)
+  const dalasColor = variant === "default" ? "text-[#009B77]" : "text-white"; 
+  // UG = Schwarz (im Default), Weiß (im Light Mode)
+  const ugColor = variant === "default" ? "text-slate-900" : "text-white/90";
+  // Slogan = Grau
   const subTextColor = variant === "default" ? "text-slate-500" : "text-slate-300";
 
   return (
     <div 
-      // whitespace-nowrap verhindert, dass der Text jemals umbricht
-      className={cn("flex items-center gap-3 select-none whitespace-nowrap", className)} 
+      className={cn("flex flex-col items-center select-none leading-none", className)} 
       {...props}
     >
-      <style jsx>{`
-        @keyframes house-entry {
-          0% { opacity: 0; transform: translateX(10px) scale(0.6); }
-          100% { opacity: 1; transform: translateX(0) scale(1); }
-        }
-        .animate-house-entry {
-          animation: house-entry 1.0s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-          transform-origin: center;
-          transform-box: fill-box;
-        }
-        .icon-group {
-          transition: transform 0.5s ease;
-          transform-origin: 16px 26px; 
-        }
-        .icon-group.is-scrolled {
-          transform: scale(0.9);
-        }
-        .arch-path {
-          transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-          transform-origin: 16px 26px; 
-        }
-        .arch-path.is-rotated {
-          transform: rotate(-90deg); 
-        }
-      `}</style>
+      {/* OBERE ZEILE: Icon + Dalas + UG */}
+      <div className="flex items-center gap-3 mb-1"> 
+        
+        {/* 1. DAS ICON */}
+        <div className="shrink-0 h-10 w-10 flex items-center justify-center pb-1">
+          <svg
+            viewBox="0 0 24 24"
+            width="100%"
+            height="100%"
+            fill="none"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="overflow-visible"
+          >
+              <path
+                d="M3 12a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7z"
+                stroke={tealColor}
+                className={cn("transition-all duration-700", scrolled ? "opacity-100" : "opacity-90")}
+              />
+              <path
+                d="M12 8C12 8 13.5 6 15 6C16.5 6 17.5 7 17.5 8.5C17.5 11 12 15 12 15C12 15 6.5 11 6.5 8.5C6.5 7 7.5 6 9 6C10.5 6 12 8 12 8Z"
+                stroke={orangeColor}
+                fill={scrolled ? orangeColor : "none"}
+                className="transition-all duration-500 delay-100"
+                transform="translate(0, 1.5)"
+              />
+          </svg>
+        </div>
 
-      {/* 1. DAS ICON */}
-      <div className="shrink-0 w-[22%] max-w-[60px] min-w-[40px]">
-        <svg
-          viewBox="0 0 32 52" 
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-full h-auto overflow-visible"
-        >
-            <path 
-              d="M 16 8 A 18 18 0 0 0 16 44" 
-              stroke={tealColor} 
-              strokeWidth="2.5" 
-              strokeLinecap="round" 
-              className={cn("arch-path", scrolled && "is-rotated")}
-            />
-            <path 
-              d="M16 19 L23 25 V33 H9 V25 L16 19 Z" 
-              fill={orangeColor} 
-              stroke="white" 
-              strokeWidth="1.5" 
-              strokeLinejoin="round"
-              className={cn("animate-house-entry icon-group", scrolled && "is-scrolled")}
-            />
-        </svg>
+        {/* 2. TEXT-GRUPPE */}
+        <div className="flex items-baseline gap-2">
+            
+            {/* A. Dalas (Teal, Schreibschrift) */}
+            <span 
+              className={cn("text-[2.8rem] leading-none", dalasColor)}
+              style={{ fontFamily: "'Dancing Script', cursive", fontWeight: 700 }}
+            >
+              Dalas
+            </span>
+
+            {/* B. UG (Schwarz, Sans Serif) */}
+            <span className={cn("text-lg font-sans font-bold opacity-90 uppercase tracking-widest translate-y-[-2px]", ugColor)}>
+              UG
+            </span>
+
+        </div>
+
       </div>
 
-      {/* 2. DER TEXT */}
-      <div className="flex flex-col justify-center leading-none ml-[10px]">
-        
-        {/* HAUPTZEILE: DALAS UG */}
-        {/* font-bold (statt extrabold) für Eleganz */}
-        {/* tracking-tight entfernt, damit die Buchstaben atmen */}
-        <span className={cn("font-bold text-[1.8em] leading-[.95]", textColor)}>
-          DALAS UG
-        </span>
-        
-        {/* UNTERZEILE: Pflegedienst */}
-        {/* tracking-[0.2em] (sehr breit) für den modernen Look */}
-        <span className={cn("font-semibold uppercase tracking-[0.2em] text-[0.58em] mt-1.5 ml-0.5", subTextColor)}>
-          Pflegedienst Frankfurt
-        </span>
-        
-      </div>
+      {/* UNTERE ZEILE: SLOGAN */}
+      <span className={cn("font-sans font-semibold uppercase tracking-[0.25em] text-[0.6rem] text-center w-full mt-0", subTextColor)}>
+        Ambulanter Pflegedienst
+      </span>
 
     </div>
   );

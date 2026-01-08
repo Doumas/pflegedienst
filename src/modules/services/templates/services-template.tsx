@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { servicesData } from "@/modules/services/data/services"; 
-import { ArrowRight, Check, Sparkles, Activity } from "lucide-react";
+import { ArrowRight, Check, Activity } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import { FadeIn } from "@/shared/ui/fade-in"; 
 import { useState, useEffect, useRef } from "react";
@@ -31,7 +31,7 @@ function useInCenter(options = { threshold: 0.5 }) {
     return { ref, isInCenter };
 }
 
-// --- SUB-KOMPONENTE: SERVICE CARD (Optimierter Hover) ---
+// --- SUB-KOMPONENTE: SERVICE CARD ---
 function ServiceCard({ service }: { service: any }) {
     const { ref, isInCenter } = useInCenter();
 
@@ -43,23 +43,20 @@ function ServiceCard({ service }: { service: any }) {
         >
             <div className={cn(
                 "h-full flex flex-col bg-white rounded-[2.5rem] border p-8 shadow-lg shadow-slate-200/50 transition-all duration-500 relative overflow-hidden transform-gpu",
-                // DEZENTERER HOVER:
-                // - Weniger Lift (-translate-y-1)
-                // - Kein farbiger Glow-Shadow, sondern klassischer Schatten
-                // - Sanftere Border-Transition
+                // Hover: Teal Border & Shadow für Kompetenz
                 isInCenter 
                     ? "border-[var(--color-primary)]/30 shadow-xl -translate-y-1" 
                     : "border-[var(--color-border-soft)] hover:shadow-xl hover:border-[var(--color-primary)]/30 hover:-translate-y-1"
             )}>
                 
-                {/* Gradient: Viel subtiler (fast unsichtbar, nur für Tiefe) */}
+                {/* Gradient: Subtil Teal im Hintergrund */}
                 <div className={cn(
-                    "absolute inset-0 bg-gradient-to-br from-[var(--color-secondary)]/30 to-transparent transition-opacity duration-700 pointer-events-none",
+                    "absolute inset-0 bg-gradient-to-br from-[var(--color-primary)]/5 to-transparent transition-opacity duration-700 pointer-events-none",
                     isInCenter ? "opacity-100" : "opacity-0 group-hover:opacity-100"
                 )} />
 
                 <div className="relative z-10 mb-6">
-                    {/* ICON: Keine Rotation mehr, nur sanfter Farbwechsel */}
+                    {/* ICON: Teal Background, White Icon */}
                     <div className={cn(
                         "mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl border shadow-sm transition-all duration-500",
                         isInCenter 
@@ -76,7 +73,7 @@ function ServiceCard({ service }: { service: any }) {
                         {service.title}
                     </h3>
                     
-                    {/* Ladebalken: Bleibt, aber sanfter */}
+                    {/* Ladebalken: Orange Accent als "Lebenslinie" */}
                     <div className={cn(
                         "h-1 rounded-full transition-all duration-700 ease-out",
                         isInCenter ? "w-16 bg-[var(--color-accent)]" : "w-8 bg-[var(--color-secondary)] group-hover:w-16 group-hover:bg-[var(--color-accent)]"
@@ -94,6 +91,7 @@ function ServiceCard({ service }: { service: any }) {
                     {service.features.slice(0, 3).map((f: string, j: number) => (
                         <div key={j} className="flex items-start gap-3 text-sm text-slate-600 font-medium">
                             <div className="mt-0.5 min-w-[16px] flex justify-center">
+                                {/* Checkmark auch in Orange für Konsistenz */}
                                 <Check className="w-4 h-4 text-[var(--color-accent)] stroke-[3]" />
                             </div>
                             <span className="leading-tight">{f}</span>
@@ -101,7 +99,7 @@ function ServiceCard({ service }: { service: any }) {
                     ))}
                 </div>
 
-                {/* CTA ARROW: Blendet sanft ein statt zu springen */}
+                {/* CTA ARROW: Teal */}
                 <div className={cn(
                     "absolute bottom-8 right-8 w-10 h-10 rounded-full bg-white border border-slate-100 flex items-center justify-center transition-all duration-500 shadow-sm",
                     isInCenter 
@@ -120,7 +118,7 @@ export function ServicesTemplate() {
   return (
     <div className="relative min-h-screen bg-white font-sans overflow-hidden">
 
-      {/* HINTERGRUND FX */}
+      {/* HINTERGRUND FX (Warm Tone) */}
       <div className="absolute inset-0 opacity-[0.4] pointer-events-none transform-gpu" 
            style={{ backgroundImage: 'radial-gradient(var(--color-border-soft) 1px, transparent 1px)', backgroundSize: '32px 32px' }}>
       </div>
@@ -137,23 +135,29 @@ export function ServicesTemplate() {
         <section className="pt-24 pb-16 lg:pt-32 lg:pb-24 px-4">
           <div className="container mx-auto">
             
-            {/* CONTAINER: Mobile Center / Desktop Left */}
             <div className="flex flex-col items-center lg:items-start text-center lg:text-left max-w-4xl mx-auto lg:mx-0">
                 
+                {/* Badge mit Custom Icon */}
                 <FadeIn delay={0.1}>
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-sm border border-[var(--color-border-soft)] text-[var(--color-primary)] text-xs font-bold tracking-wide uppercase shadow-sm mb-8">
-                    <Sparkles className="w-3 h-3 text-[var(--color-accent)]" />
-                    <span>Unser Versprechen</span>
+                        {/* Haus/Herz Icon */}
+                        <svg className="w-3.5 h-3.5 text-[var(--color-primary)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M3 12a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7z" />
+                            <path d="M12 8C12 8 13.5 6 15 6C16.5 6 17.5 7 17.5 8.5C17.5 11 12 15 12 15C12 15 6.5 11 6.5 8.5C6.5 7 7.5 6 9 6C10.5 6 12 8 12 8Z" className="text-[var(--color-accent)] stroke-[var(--color-accent)]" />
+                        </svg>
+                        <span>Unser Versprechen</span>
                     </div>
                 </FadeIn>
                 
+               {/* Headline mit Script Font & Orange Underline */}
                <FadeIn delay={0.2}>
                    <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1]">
                     Gut versorgt <br/>
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)] relative inline-block">
+                    <span className="font-script text-[var(--color-primary)] text-[1.1em] relative inline-block px-1 mt-1 font-normal">
                         in jedem Alter.
-                        <svg className="absolute w-full h-3 -bottom-2 left-0 text-[var(--color-accent)] -z-10 opacity-60" viewBox="0 0 100 10" preserveAspectRatio="none">
-                        <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
+                        {/* Orange Smile Swoosh */}
+                        <svg className="absolute w-[110%] h-3 -bottom-2 -left-1 text-[var(--color-accent)] -z-10 opacity-80" viewBox="0 0 100 10" preserveAspectRatio="none">
+                            <path d="M0 5 Q 50 15 100 5" stroke="currentColor" strokeWidth="8" fill="none" strokeLinecap="round" />
                         </svg>
                     </span>
                     </h1>
@@ -162,7 +166,7 @@ export function ServicesTemplate() {
                 <FadeIn delay={0.3}>
                     <p className="text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-medium">
                     Von der medizinischen Behandlungspflege bis zur liebevollen Alltagshilfe. 
-                    Wir sind da, wo Sie sich am wohlsten fühlen: Zuhause.
+                    Wir sind da, wo Sie sich am wohlsten fühlen: <span className="text-[var(--color-accent)] font-script text-2xl px-1">Zuhause.</span>
                     </p>
                 </FadeIn>
             </div>
@@ -179,21 +183,21 @@ export function ServicesTemplate() {
               </FadeIn>
             ))}
 
-            {/* CTA CARD (Bleibt zentriert, Sonderstatus) */}
+            {/* CTA CARD (Sonderstatus) */}
             <FadeIn delay={0.8} className="h-full">
                 <div className="h-full flex flex-col justify-center items-center text-center p-8 rounded-[2.5rem] border-2 border-dashed border-slate-200 bg-slate-50/50 hover:bg-[var(--color-secondary)]/30 hover:border-[var(--color-primary)]/20 transition-all duration-300 group cursor-pointer transform-gpu">
-                <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center mb-4 shadow-sm text-slate-400 group-hover:text-[var(--color-primary)] transition-colors">
-                    <Activity className="w-8 h-8" />
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">Individuelle Beratung?</h3>
-                <p className="text-slate-500 text-sm mb-6 max-w-xs font-medium">
-                    Nicht sicher, welche Leistung passt? Wir beraten Sie kostenlos vor Ort.
-                </p>
-                <Link href="/kontakt">
-                    <Button variant="outline" className="border-[var(--color-primary)] text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white rounded-2xl h-12 px-8 font-bold transition-all">
-                    Kontakt aufnehmen
-                    </Button>
-                </Link>
+                    <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center mb-4 shadow-sm text-slate-400 group-hover:text-[var(--color-primary)] transition-colors">
+                        <Activity className="w-8 h-8" />
+                    </div>
+                    <h3 className="text-xl font-bold text-slate-900 mb-2">Individuelle Beratung?</h3>
+                    <p className="text-slate-500 text-sm mb-6 max-w-xs font-medium">
+                        Nicht sicher, welche Leistung passt? Wir beraten Sie kostenlos vor Ort.
+                    </p>
+                    <Link href="/kontakt">
+                        <Button variant="outline" className="border-[var(--color-primary)] text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white rounded-2xl h-12 px-8 font-bold transition-all">
+                        Kontakt aufnehmen
+                        </Button>
+                    </Link>
                 </div>
             </FadeIn>
 

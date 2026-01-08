@@ -6,6 +6,8 @@ import { cn } from "@/shared/utils/cn";
 import { buttonVariants } from "@/shared/ui/button"; 
 import { FadeIn } from "@/shared/ui/fade-in";
 import { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion"; 
+import { AnimatedBackground } from "@/shared/ui/animated-background"; // <--- BEST PRACTICE IMPORT
 
 const faqData = [
     { question: "Was zahlt die Pflegekasse?", answer: "Ab Pflegegrad 2 haben Sie Anspruch auf Pflegesachleistungen. Wir rechnen direkt mit der Kasse ab.", icon: Scale },
@@ -39,7 +41,7 @@ function FaqItem({ faq }: { faq: typeof faqData[0] }) {
         <div 
             ref={ref}
             className={cn(
-                "group bg-white rounded-[2rem] border overflow-hidden transition-all duration-300 transform-gpu",
+                "group bg-white rounded-[2rem] border overflow-hidden transition-all duration-300 transform-gpu relative z-10", 
                 isInCenter 
                     ? "border-[var(--color-primary)]/30 shadow-lg shadow-[var(--color-primary)]/5 scale-[1.01]" 
                     : "border-slate-100 hover:border-[var(--color-primary)]/20 hover:shadow-lg hover:scale-[1.01]"
@@ -94,17 +96,63 @@ export function FaqSection() {
   return (
     <section className="py-24 lg:py-32 bg-white font-sans relative overflow-hidden">
       
-      <div className="absolute inset-0 opacity-[0.3] pointer-events-none" 
+      {/* 1. SEKTIONS-HINTERGRUND (Fragezeichen Icon) */}
+      <AnimatedBackground icon={HelpCircle} variant="section" color="text-[var(--color-primary)]" />
+
+      {/* 2. Background Pattern */}
+      <div className="absolute inset-0 opacity-[0.3] pointer-events-none z-0" 
            style={{ backgroundImage: 'radial-gradient(var(--color-border-soft) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
 
       <div className="container max-w-4xl px-4 md:px-6 relative z-10">
         
-        {/* HEADER: KORRIGIERT -> Mobile Center / Desktop Left */}
+        {/* HEADER */}
         <div className="flex flex-col items-center lg:items-start text-center lg:text-left mb-16 lg:mb-20">
           
+          {/* BADGE MIT ANIMIERTEM ICON (Manuelles SVG für Detail-Animation) */}
           <FadeIn delay={0.1}>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--color-secondary)] border border-[var(--color-border-soft)] text-[var(--color-primary)] text-xs font-bold tracking-wide uppercase shadow-sm mb-6">
-                <Sparkles className="w-3 h-3 text-[var(--color-accent)]" />
+            <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-[var(--color-secondary)] border border-[var(--color-border-soft)] text-[var(--color-primary)] text-xs font-bold tracking-wide uppercase shadow-sm mb-6">
+                
+                <motion.svg 
+                    viewBox="5 5 14 14" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2.5" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                    className="w-5 h-5 md:w-6 md:h-6 overflow-visible"
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-100px" }}
+                >
+                    {/* Bogen (Teal) */}
+                    <motion.path 
+                        d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" 
+                        className="text-[var(--color-primary)]"
+                        variants={{
+                            hidden: { pathLength: 0, opacity: 0 },
+                            visible: { 
+                                pathLength: 1, 
+                                opacity: 1, 
+                                transition: { duration: 0.8, ease: "easeInOut" } 
+                            }
+                        }}
+                    />
+                    {/* Punkt (Orange) */}
+                    <motion.path 
+                        d="M12 17h.01" 
+                        strokeWidth="3.5"
+                        className="text-[var(--color-accent)]"
+                        variants={{
+                            hidden: { scale: 0, opacity: 0 },
+                            visible: { 
+                                scale: 1, 
+                                opacity: 1, 
+                                transition: { delay: 0.8, type: "spring", stiffness: 300 } 
+                            }
+                        }}
+                    />
+                </motion.svg>
+
                 <span>Wissenswertes</span>
             </div>
           </FadeIn>
@@ -112,13 +160,11 @@ export function FaqSection() {
           <FadeIn delay={0.2}>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1]">
                 Häufige Fragen & <br className="hidden md:block" />
-                <span className="relative inline-block px-1">
-                <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)]">
+                <span className="font-script text-[var(--color-accent)] text-[1.1em] relative inline-block px-1 mt-1 font-normal">
                     Antworten.
-                </span>
-                <svg className="absolute w-full h-3 -bottom-1 left-0 text-[var(--color-accent)] -z-0 opacity-60" viewBox="0 0 100 10" preserveAspectRatio="none">
-                    <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
-                </svg>
+                    <svg className="absolute w-full h-3 -bottom-1 left-0 text-[var(--color-primary)] -z-0 opacity-20" viewBox="0 0 100 10" preserveAspectRatio="none">
+                        <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
+                    </svg>
                 </span>
             </h2>
           </FadeIn>
@@ -139,12 +185,12 @@ export function FaqSection() {
           ))}
         </div>
 
-        {/* BUTTON: KORRIGIERT -> Mobile Center / Desktop Left */}
+        {/* BUTTON */}
         <FadeIn delay={0.8} className="flex justify-center lg:justify-start mt-12">
           <Link href="/faq">
             <div className={cn(
                 buttonVariants({ variant: "default", size: "lg" }),
-                "h-14 px-10 text-base rounded-full shadow-xl shadow-[var(--color-primary)]/20 hover:-translate-y-1 active:scale-95 active:shadow-sm transition-all duration-200 cursor-pointer font-bold"
+                "h-14 px-10 text-base rounded-full shadow-xl shadow-[var(--color-primary)]/20 hover:-translate-y-1 active:scale-95 active:shadow-sm transition-all duration-200 cursor-pointer font-bold bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)]"
             )}>
               Alle Fragen ansehen <ArrowRight className="ml-2 w-5 h-5" />
             </div>

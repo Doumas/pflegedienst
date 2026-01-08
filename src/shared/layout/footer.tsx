@@ -6,8 +6,10 @@ import { cn } from "@/shared/utils/cn";
 import { buttonVariants } from "@/shared/ui/button";
 import { siteConfig } from "@/config/site";
 import { DalasLogo } from "@/shared/ui/dalas-logo";
-import { FadeIn } from "@/shared/ui/fade-in"; // <--- NEU
+import { FadeIn } from "@/shared/ui/fade-in"; 
 import { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+import { AnimatedBackground } from "@/shared/ui/animated-background"; 
 
 // --- HELPER HOOK ---
 function useInCenter(options = { threshold: 0.5 }) {
@@ -21,7 +23,6 @@ function useInCenter(options = { threshold: 0.5 }) {
         const observer = new IntersectionObserver(([entry]) => {
             setIsInCenter(entry.isIntersecting);
         }, {
-            // Fokusbereich: Ein Streifen in der Bildschirmmitte
             rootMargin: "-35% 0px -35% 0px", 
             threshold: 0
         });
@@ -33,21 +34,36 @@ function useInCenter(options = { threshold: 0.5 }) {
     return { ref, isInCenter };
 }
 
+// --- CUSTOM ICON ---
+const BrandIcon = (props: any) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M3 12a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7z" />
+        <path d="M12 8C12 8 13.5 6 15 6C16.5 6 17.5 7 17.5 8.5C17.5 11 12 15 12 15C12 15 6.5 11 6.5 8.5C6.5 7 7.5 6 9 6C10.5 6 12 8 12 8Z" />
+    </svg>
+);
+
 export function Footer() {
-  
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Hook für den CTA Kasten (Mobile Focus)
   const { ref: ctaRef, isInCenter: isCtaActive } = useInCenter();
 
   return (
-    // 'overflow-hidden' entfernt, damit die blaue Box oben rausraken kann
-    <footer className="relative bg-[var(--color-footer-bg)] text-white font-sans border-t border-white/10 mt-32">
+    // WICHTIG: Kein 'overflow-hidden' hier, sonst wird der CTA-Kasten oben abgeschnitten!
+    // Der Footer bekommt 'relative', damit die absoluten Hintergründe sich an ihm orientieren.
+    <footer className="relative bg-[var(--color-footer-bg)] text-white font-sans mt-32 border-t border-white/10">
       
-      {/* Hintergrund-Raster - GPU Optimiert */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none transform-gpu">
+      {/* HINTERGRUND-CONTAINER: 
+          Dieser Container braucht 'overflow-hidden', damit die animierten Icons nicht aus dem Footer rausfliegen (unten/seitlich).
+          Er ist absolut positioniert und füllt den gesamten Footer aus.
+      */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+          
+          {/* 1. SEKTIONS-HINTERGRUND (Icons) */}
+          <AnimatedBackground icon={BrandIcon} variant="section" color="text-white" />
+
+          {/* 2. Hintergrund-Raster */}
           <div className="absolute inset-0 opacity-[0.03]" 
                style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
       </div>
@@ -55,22 +71,21 @@ export function Footer() {
       {/* ========================================================= */}
       {/* PRE-FOOTER CTA (Der schwebende Kasten)                    */}
       {/* ========================================================= */}
+      {/* z-50 stellt sicher, dass der Kasten über allem liegt, auch über dem Content der vorherigen Section */}
       <div className="relative z-50 container px-4 md:px-6">
         <FadeIn delay={0.1} direction="up" className="w-full">
-            {/* Negative Margin (-mt-24) zieht die Box nach oben */}
+            {/* Negative Margin (-mt-24) zieht die Box nach oben aus dem Footer heraus */}
             <div 
                 ref={ctaRef}
                 className={cn(
                     "-mt-24 bg-[var(--color-primary)] rounded-[2.5rem] p-8 md:p-12 flex flex-col lg:flex-row items-center justify-between gap-8 md:gap-12 relative overflow-hidden group border border-white/10 transition-all duration-500 transform-gpu",
-                    // Mobile Auto-Focus Logik
                     isCtaActive 
                         ? "shadow-2xl shadow-[var(--color-primary)]/40 scale-[1.02] border-white/30" 
                         : "shadow-2xl shadow-black/20 hover:scale-[1.01] hover:shadow-[var(--color-primary)]/30"
                 )}
             >
-                
-                {/* Background Animation */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:animate-[shimmer_2s_infinite]" />
+                {/* Background Animation im CTA */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:animate-[shimmer_2s_infinite] pointer-events-none" />
                 <div className="absolute -right-10 -top-10 w-64 h-64 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-colors duration-500 pointer-events-none" />
 
                 <div className="relative z-10 text-center lg:text-left">
@@ -87,7 +102,6 @@ export function Footer() {
                 </div>
 
                 <div className="relative z-10 flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
-                    {/* ANRUF BUTTON */}
                     <a href={`tel:${siteConfig.contact.phone}`} className={cn(
                         buttonVariants({ variant: "secondary", size: "lg" }),
                         "h-14 px-8 bg-white text-cyan-950 hover:bg-slate-100 font-bold text-lg rounded-full shadow-lg hover:-translate-y-1 transition-transform w-full sm:w-auto justify-center border-none"
@@ -96,7 +110,6 @@ export function Footer() {
                         {siteConfig.contact.phone}
                     </a>
                     
-                    {/* NACHRICHT BUTTON */}
                     <Link href="/kontakt" className="w-full sm:w-auto">
                         <div className={cn(
                             buttonVariants({ variant: "outline", size: "lg" }),
