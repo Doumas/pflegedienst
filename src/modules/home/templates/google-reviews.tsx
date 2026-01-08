@@ -131,7 +131,7 @@ export function GoogleReviews() {
     <section className="py-24 lg:py-32 bg-[var(--color-secondary)] text-slate-900 overflow-hidden relative font-sans border-t border-white">
       
       {/* 1. SEKTIONS-HINTERGRUND (Quote Icons) */}
-      <AnimatedBackground icon={QuoteIcon} variant="section" color="text-[var(--color-primary)]" />
+            <AnimatedBackground icon={Star} variant="section" count={4} color="text-[var(--color-primary)]" />
 
       {/* 2. Background Pattern */}
       <div className="absolute inset-0 opacity-[0.4] transform-gpu pointer-events-none z-0" style={{ backgroundImage: 'radial-gradient(white 1.5px, transparent 1.5px)', backgroundSize: '32px 32px' }} />

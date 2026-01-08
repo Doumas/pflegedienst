@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { siteConfig } from "@/config/site";
-import { ChevronDown, X, Phone, Mail, MapPin, ArrowRight, ArrowUpRight, Sun, Moon, Sparkles, Menu, Briefcase, Compass, Home } from "lucide-react";
+import { ChevronDown, X, Phone, Mail, MapPin, ArrowRight, ArrowUpRight, Sun, Moon, Sparkles, Menu, Briefcase, Compass } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
 import { Button } from "@/shared/ui/button";
 import { GoogleTranslator } from "@/shared/utils/google-translator";
@@ -13,11 +13,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { AnimatedBackground } from "@/shared/ui/animated-background";
 import { useActiveSection } from "@/shared/context/active-section-context";
 
-// --- LOGO ICON (Herz/Haus) ---
+// --- LOGO ICON FÜR DEN HINTERGRUND-EFFEKT (Herz) ---
 const LogoIcon = (props: any) => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" {...props}>
-        <path d="M3 12a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7z" />
-        <path d="M12 8C12 8 13.5 6 15 6C16.5 6 17.5 7 17.5 8.5C17.5 11 12 15 12 15C12 15 6.5 11 6.5 8.5C6.5 7 7.5 6 9 6C10.5 6 12 8 12 8Z" />
+    <svg viewBox="0 0 150 130" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" {...props}>
+         <path d="M50 90 C 10 65 -10 35 5 18 C 15 5 35 5 48 20 C 50 22 50 22 52 20 C 65 5 85 5 95 18 C 110 35 90 65 50 90 Z" />
+         <g transform="translate(55, 42) scale(0.85)">
+            <path d="M50 90 C 10 65 -10 35 5 18 C 15 5 35 5 48 20 C 50 22 50 22 52 20 C 65 5 85 5 95 18 C 110 35 90 65 50 90 Z" />
+         </g>
     </svg>
 );
 
@@ -49,10 +51,10 @@ function HeaderBackgroundAnimation({ show }: { show: boolean }) {
                     }}
                     exit={{ opacity: 0, transition: { duration: 0.3 } }}
                 >
-                    <ActiveIcon strokeWidth={1} className="w-[600px] h-[600px]" />
+                    <ActiveIcon strokeWidth={2} className="w-[600px] h-[600px]" />
                 </motion.div>
             </AnimatePresence>
-            <div className="absolute inset-0 bg-white/95 backdrop-blur-sm" />
+            <div className="absolute inset-0 bg-white/95 backdrop-blur-md" />
         </div>
     );
 }
@@ -103,8 +105,8 @@ export function Header() {
     <>
       <header 
         className={cn(
-          "fixed top-0 left-0 right-0 z-[999] transition-all duration-300 font-sans",
-          (scrolled || isOpen) ? "shadow-sm bg-white" : "bg-white" 
+          "fixed top-0 left-0 right-0 z-[999] transition-all duration-300 font-sans border-b",
+          (scrolled || isOpen) ? "shadow-sm border-slate-100" : "bg-white border-transparent" 
         )}
       >
         
@@ -115,37 +117,37 @@ export function Header() {
         {/* ========================================================= */}
         <div className={cn(
             "bg-[var(--color-primary)] text-white transition-all duration-500 ease-in-out overflow-hidden relative z-20",
-            (scrolled && !isOpen) ? "max-h-0 py-0 opacity-0" : "max-h-16 py-2.5 opacity-100"
+            (scrolled && !isOpen) ? "max-h-0 py-0 opacity-0" : "max-h-12 py-2 opacity-100"
         )}>
             <div className="container mx-auto px-4 md:px-6 flex justify-between items-center h-full">
                 <div className="flex items-center gap-6 lg:gap-10">
-                    <a href={`tel:${siteConfig.contact.phone}`} className="group flex items-center gap-3 hover:text-white transition-colors">
-                        <div className="w-9 h-9 rounded-full bg-white text-[var(--color-primary)] flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300 shrink-0">
-                            <motion.div animate={{ rotate: [0, -15, 15, -15, 0] }} transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}>
-                                <Phone className="w-4 h-4 fill-current" /> 
+                    <a href={`tel:${siteConfig.contact.phone}`} className="group flex items-center gap-2 hover:text-white transition-colors">
+                        <div className="w-7 h-7 rounded-full bg-white text-[var(--color-primary)] flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300 shrink-0">
+                            <motion.div animate={{ rotate: [0, -10, 10, -10, 0] }} transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}>
+                                <Phone className="w-3.5 h-3.5 fill-current" /> 
                             </motion.div>
                         </div>
-                        <div className="flex flex-col leading-none">
-                            <span className="text-[10px] lg:text-[11px] font-bold uppercase tracking-wider opacity-90 mb-0.5 group-hover:text-[var(--color-accent)] transition-colors">24h Pflege-Notruf</span>
-                            <span className="text-[15px] font-black tracking-wide">{siteConfig.contact.phone}</span>
+                        <div className="flex items-center gap-2 leading-none">
+                            <span className="hidden sm:inline text-[10px] font-bold uppercase tracking-wider opacity-80 group-hover:text-[var(--color-accent)] transition-colors"> Telefon:</span>
+                            <span className="text-sm font-black tracking-wide">{siteConfig.contact.phone}</span>
                         </div>
                     </a>
-                    <a href={`mailto:${siteConfig.contact.email}`} className="hidden md:flex items-center gap-2 group opacity-70 hover:opacity-100 hover:text-white transition-all">
-                        <Mail className="w-4 h-4" />
+                    <a href={`mailto:${siteConfig.contact.email}`} className="hidden md:flex items-center gap-2 group opacity-80 hover:opacity-100 transition-all">
+                        <Mail className="w-3.5 h-3.5" />
                         <span className="text-xs font-bold">{siteConfig.contact.email}</span>
                     </a>
                 </div>
                 <div className="flex items-center gap-4">
-                    <div className="hidden lg:flex items-center gap-6">
-                        <Link href="/karriere" className="flex items-center gap-2 text-xs font-bold bg-white/10 px-3 py-1.5 rounded-full hover:bg-white hover:text-[var(--color-primary)] transition-all group">
+                    <div className="hidden lg:flex items-center gap-4">
+                        <Link href="/karriere" className="flex items-center gap-2 text-[10px] font-bold bg-white/10 px-3 py-1 rounded-full hover:bg-white hover:text-[var(--color-primary)] transition-all group uppercase tracking-wider">
                             <span className="relative flex h-2 w-2">
                               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-accent)] opacity-75"></span>
                               <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--color-accent)]"></span>
                             </span>
                             <span>Wir stellen ein</span>
                         </Link>
-                        <div className="flex items-center gap-1.5 opacity-70 text-xs font-bold">
-                            <MapPin className="w-3.5 h-3.5" /> Frankfurt & Umland
+                        <div className="flex items-center gap-1.5 opacity-80 text-[10px] font-bold uppercase tracking-wide">
+                            <MapPin className="w-3 h-3" /> Frankfurt & Umland
                         </div>
                     </div>
                 </div>
@@ -157,25 +159,30 @@ export function Header() {
         {/* ========================================================= */}
         <div className={cn(
             "container mx-auto px-4 md:px-6 transition-all duration-300 relative z-20",
-            (scrolled || isOpen) ? "py-3" : "py-5 lg:py-7" // padding leicht erhöht, um Abschneiden zu verhindern
+            (scrolled || isOpen) ? "py-2" : "py-3 lg:py-4"
         )}>
           <div className="flex items-center justify-between">
             
+            {/* LOGO - ANGEPASSTE GRÖSSE FÜR GESTAPELTES DESIGN */}
             <Link href="/" className="relative z-[60] block shrink-0" onClick={closeMenu}>
                 <DalasLogo 
-                  scrolled={scrolled || isOpen}
+                  variant="default"
                   className={cn(
-                    "transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] h-auto origin-left",
-                    (scrolled || isOpen) ? "w-40 lg:w-60" : "w-48 lg:w-80" // leicht vergrößert für bessere Präsenz
+                    "transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] origin-left",
+                    // WICHTIG: Da das Logo gestapelt ist (Icon oben, Text unten),
+                    // brauchen wir hier keine Breite von 300px (w-80), sonst wird es riesig.
+                    // Stattdessen eine moderate Breite.
+                    (scrolled || isOpen) ? "scale-90" : "scale-100"
                   )}
                 />
             </Link>
 
-            <div className="hidden lg:flex items-center gap-8">
+            {/* DESKTOP NAV */}
+            <div className="hidden lg:flex items-center gap-6 xl:gap-8">
                 <nav className="flex items-center gap-1">
                   {siteConfig.nav.map((item) => (
                       <div key={item.label} className="relative group">
-                        <Link href={item.href || "#"} className={cn("flex items-center gap-1 text-[16px] px-4 py-2 rounded-full transition-all duration-300 font-bold", isActive(item.href) ? "text-[var(--color-primary)] bg-[var(--color-secondary)]" : "text-slate-600 hover:text-[var(--color-primary)] hover:bg-slate-50")}>
+                        <Link href={item.href || "#"} className={cn("flex items-center gap-1 text-[15px] px-3 py-2 rounded-full transition-all duration-300 font-bold", isActive(item.href) ? "text-[var(--color-primary)] bg-[var(--color-primary)]/5" : "text-slate-600 hover:text-[var(--color-primary)] hover:bg-slate-50")}>
                             {item.label}
                             {item.items && <ChevronDown className="h-3.5 w-3.5 opacity-40 group-hover:opacity-100 group-hover:rotate-180 transition-all" />}
                         </Link>
@@ -194,27 +201,28 @@ export function Header() {
                       </div>
                   ))}
                 </nav>
-                <div className="ml-2 pl-4 border-l border-slate-100">
+                <div className="ml-2 pl-6 border-l border-slate-200 h-8 flex items-center">
                   <Link href="/kontakt">
-                    <Button size="lg" className="font-bold text-[14px] px-6 h-11 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] rounded-full shadow-lg shadow-[var(--color-primary)]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all">
+                    <Button size="lg" className="font-bold text-[14px] px-6 h-10 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] rounded-full shadow-lg shadow-[var(--color-primary)]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all">
                         Beratung anfordern
                     </Button>
                   </Link>
                 </div>
             </div>
 
+            {/* MOBILE TOGGLE */}
             <div className="lg:hidden relative z-[60]">
                <button 
                   onClick={() => setIsOpen(!isOpen)} 
                   className={cn(
-                      "flex items-center justify-center w-11 h-11 rounded-full transition-all duration-300 shadow-md",
+                      "flex items-center justify-center w-10 h-10 rounded-full transition-all duration-300 shadow-sm",
                       isOpen 
-                        ? "bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200/50" 
-                        : "bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)] border border-transparent" 
+                        ? "bg-slate-100 text-slate-600 hover:bg-slate-200" 
+                        : "bg-white text-[var(--color-primary)] border border-slate-100 hover:bg-slate-50" 
                   )}
                   aria-label={isOpen ? "Menü schließen" : "Menü öffnen"}
                >
-                  {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                  {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                </button>
             </div>
           </div>
@@ -222,10 +230,11 @@ export function Header() {
 
       </header>
       
-      {/* PLATZHALTER */}
+      {/* PLATZHALTER DAMIT CONTENT NICHT SPRINGT */}
+      {/* Werte angepasst an die neue kompakte Header-Höhe */}
       <div className={cn(
           "w-full bg-transparent pointer-events-none transition-all duration-300", 
-          scrolled ? "h-[85px]" : "h-[135px] lg:h-[155px]" // Werte leicht angepasst für die neuen Paddings
+          scrolled ? "h-[100px]" : "h-[120px] lg:h-[130px]" 
       )} aria-hidden="true" />
 
       {/* ========================================================= */}
@@ -238,11 +247,11 @@ export function Header() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
-            className="lg:hidden fixed inset-0 z-[40] bg-[#fffbf7] pt-[170px] px-4 pb-10 overflow-y-auto" // pt leicht erhöht
+            className="lg:hidden fixed inset-0 z-[40] bg-[#fffbf7] pt-[140px] px-4 pb-10 overflow-y-auto"
           >
             <AnimatedBackground icon={Compass} variant="section" color="text-[var(--color-primary)]" />
             <div className="relative z-10 flex flex-col min-h-full">
-               {/* Inhalt des Menüs bleibt gleich */}
+               
                <div className="flex flex-col items-center mb-8">
                   <motion.div 
                     initial={{ opacity: 0, y: 10 }}
@@ -251,10 +260,6 @@ export function Header() {
                     className="font-script text-[var(--color-accent)] text-4xl flex items-center gap-3 mb-2"
                   >
                      {greeting}
-                     {greeting === "Guten Abend" 
-                        ? <Moon className="w-6 h-6 text-slate-400 fill-slate-400/20" /> 
-                        : <Sun className="w-6 h-6 text-amber-400 fill-amber-400/20" />
-                     } 
                   </motion.div>
                   <p className="text-slate-400 text-xs font-bold uppercase tracking-[0.2em]">Willkommen bei Dalas</p>
                </div>
@@ -272,18 +277,6 @@ export function Header() {
                      </div>
                      <span className="text-sm font-bold text-slate-900">Anrufen</span>
                   </a>
-               </div>
-
-               <div onClick={handleOpenConfigurator} className="group flex items-center gap-4 p-4 rounded-2xl bg-white border border-[var(--color-primary)]/20 shadow-md active:scale-98 transition-transform cursor-pointer mb-6 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-primary)]/5 to-transparent opacity-50" />
-                  <div className="w-12 h-12 bg-[var(--color-primary)] rounded-full flex items-center justify-center text-white shadow-sm relative z-10 shrink-0 group-hover:scale-110 transition-transform">
-                      <Sparkles className="w-6 h-6" />
-                  </div>
-                  <div className="relative z-10 flex-1">
-                     <div className="text-[10px] font-bold text-[var(--color-primary)] uppercase tracking-wider mb-0.5">Schnell-Check</div>
-                     <div className="text-lg font-black text-slate-900 leading-tight">Pflege-Wegweiser</div>
-                  </div>
-                  <ArrowRight className="w-5 h-5 text-[var(--color-accent)] relative z-10 group-hover:translate-x-1 transition-transform" />
                </div>
 
                <nav className="bg-white/80 backdrop-blur-sm rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden mb-6">
