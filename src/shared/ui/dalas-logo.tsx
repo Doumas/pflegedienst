@@ -19,7 +19,7 @@ export const DalasLogo: React.FC<DalasLogoProps> = ({
   // Textfarben
   const dalasColor = variant === "default" ? "text-[#009B77]" : "text-white"; 
   const ugColor = variant === "default" ? "text-slate-900" : "text-white/90";
-  const subTextColor = variant === "default" ? "text-slate-500" : "text-slate-300";
+  const subTextColor = variant === "default" ? "text-slate-700" : "text-slate-300";
 
   // Ein sauberer Herz-Pfad
   const heartPath = "M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z";
@@ -81,7 +81,9 @@ export const DalasLogo: React.FC<DalasLogoProps> = ({
             </span>
 
             {/* UG in Sans-Serif */}
-         
+            <span className={cn("text-lg font-sans font-bold opacity-90 uppercase tracking-widest", ugColor)}>
+              
+            </span>
 
         </div>
 
