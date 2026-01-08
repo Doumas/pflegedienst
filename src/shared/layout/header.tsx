@@ -30,8 +30,6 @@ function HeaderBackgroundAnimation({ show }: { show: boolean }) {
 
     if (!show) return null;
 
-    // FIX: Wir casten ActiveIcon zu 'any', um den Zugriff auf displayName/name 
-    // für TypeScript zu erlauben, ohne dass der Build fehlschlägt.
     const iconKey = typeof ActiveIcon === 'function' 
         ? ((ActiveIcon as any).displayName || (ActiveIcon as any).name || "custom-icon") 
         : "header-bg";
@@ -86,7 +84,6 @@ export function Header() {
   }, []);
 
   useEffect(() => {
-    // Scroll Lock, aber Header bleibt bedienbar
     if (isOpen) {
         document.body.style.overflow = 'hidden';
     } else {
@@ -107,7 +104,7 @@ export function Header() {
       <header 
         className={cn(
           "fixed top-0 left-0 right-0 z-[999] transition-all duration-300 font-sans",
-          (scrolled || isOpen) ? "shadow-sm bg-white" : "" 
+          (scrolled || isOpen) ? "shadow-sm bg-white" : "bg-white" 
         )}
       >
         
@@ -118,7 +115,6 @@ export function Header() {
         {/* ========================================================= */}
         <div className={cn(
             "bg-[var(--color-primary)] text-white transition-all duration-500 ease-in-out overflow-hidden relative z-20",
-            // Bleibt sichtbar wenn Menü offen (isOpen) ODER nicht gescrollt
             (scrolled && !isOpen) ? "max-h-0 py-0 opacity-0" : "max-h-16 py-2.5 opacity-100"
         )}>
             <div className="container mx-auto px-4 md:px-6 flex justify-between items-center h-full">
@@ -161,7 +157,7 @@ export function Header() {
         {/* ========================================================= */}
         <div className={cn(
             "container mx-auto px-4 md:px-6 transition-all duration-300 relative z-20",
-            (scrolled || isOpen) ? "py-2" : "py-4 lg:py-5"
+            (scrolled || isOpen) ? "py-3" : "py-5 lg:py-7" // padding leicht erhöht, um Abschneiden zu verhindern
         )}>
           <div className="flex items-center justify-between">
             
@@ -170,14 +166,12 @@ export function Header() {
                   scrolled={scrolled || isOpen}
                   className={cn(
                     "transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] h-auto origin-left",
-                    (scrolled || isOpen) ? "w-36 lg:w-56" : "w-44 lg:w-72" 
+                    (scrolled || isOpen) ? "w-40 lg:w-60" : "w-48 lg:w-80" // leicht vergrößert für bessere Präsenz
                   )}
                 />
             </Link>
 
-            {/* DESKTOP NAV */}
             <div className="hidden lg:flex items-center gap-8">
-                {/* ... (Desktop Nav Code bleibt gleich) ... */}
                 <nav className="flex items-center gap-1">
                   {siteConfig.nav.map((item) => (
                       <div key={item.label} className="relative group">
@@ -209,8 +203,6 @@ export function Header() {
                 </div>
             </div>
 
-            {/* MOBILE HAMBURGER BUTTON */}
-            {/* Z-Index 60, damit er ÜBER dem Overlay liegt und bedienbar bleibt */}
             <div className="lg:hidden relative z-[60]">
                <button 
                   onClick={() => setIsOpen(!isOpen)} 
@@ -233,7 +225,7 @@ export function Header() {
       {/* PLATZHALTER */}
       <div className={cn(
           "w-full bg-transparent pointer-events-none transition-all duration-300", 
-          scrolled ? "h-[70px]" : "h-[120px] lg:h-[135px]" 
+          scrolled ? "h-[85px]" : "h-[135px] lg:h-[155px]" // Werte leicht angepasst für die neuen Paddings
       )} aria-hidden="true" />
 
       {/* ========================================================= */}
@@ -246,16 +238,11 @@ export function Header() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
-            // HIER IST DER FIX: pt-[160px] sorgt dafür, dass der Inhalt erst unter dem Header beginnt
-            // z-40 liegt unter dem Header (z-999), damit der Header bedienbar bleibt
-            className="lg:hidden fixed inset-0 z-[40] bg-[#fffbf7] pt-[160px] px-4 pb-10 overflow-y-auto"
+            className="lg:hidden fixed inset-0 z-[40] bg-[#fffbf7] pt-[170px] px-4 pb-10 overflow-y-auto" // pt leicht erhöht
           >
-            
             <AnimatedBackground icon={Compass} variant="section" color="text-[var(--color-primary)]" />
-
             <div className="relative z-10 flex flex-col min-h-full">
-               
-               {/* 1. Greeting Area */}
+               {/* Inhalt des Menüs bleibt gleich */}
                <div className="flex flex-col items-center mb-8">
                   <motion.div 
                     initial={{ opacity: 0, y: 10 }}
@@ -272,7 +259,6 @@ export function Header() {
                   <p className="text-slate-400 text-xs font-bold uppercase tracking-[0.2em]">Willkommen bei Dalas</p>
                </div>
                
-               {/* 2. Quick Actions */}
                <div className="grid grid-cols-2 gap-3 mb-6">
                   <Link href="/kontakt" onClick={closeMenu} className="group flex items-center justify-center gap-3 p-4 rounded-2xl bg-white border border-slate-100 shadow-sm active:scale-95 transition-all">
                      <div className="w-8 h-8 bg-[var(--color-primary)]/10 rounded-full flex items-center justify-center text-[var(--color-primary)]">
@@ -288,7 +274,6 @@ export function Header() {
                   </a>
                </div>
 
-               {/* 3. Pflege Wegweiser */}
                <div onClick={handleOpenConfigurator} className="group flex items-center gap-4 p-4 rounded-2xl bg-white border border-[var(--color-primary)]/20 shadow-md active:scale-98 transition-transform cursor-pointer mb-6 relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-primary)]/5 to-transparent opacity-50" />
                   <div className="w-12 h-12 bg-[var(--color-primary)] rounded-full flex items-center justify-center text-white shadow-sm relative z-10 shrink-0 group-hover:scale-110 transition-transform">
@@ -301,7 +286,6 @@ export function Header() {
                   <ArrowRight className="w-5 h-5 text-[var(--color-accent)] relative z-10 group-hover:translate-x-1 transition-transform" />
                </div>
 
-               {/* 4. Navigation Links */}
                <nav className="bg-white/80 backdrop-blur-sm rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden mb-6">
                  {siteConfig.nav.map((item) => (
                    <div key={item.label} className="border-b border-slate-50 last:border-0">
@@ -330,7 +314,6 @@ export function Header() {
                  ))}
                </nav>
                
-               {/* 5. Footer Actions */}
                <div className="mt-auto space-y-4">
                    <Link href="/karriere" onClick={closeMenu} className="flex items-center justify-between p-2 pr-4 bg-[var(--color-primary)] text-white rounded-2xl shadow-lg active:scale-98 transition-transform">
                       <div className="flex items-center gap-4">
@@ -342,12 +325,10 @@ export function Header() {
                       </div>
                       <ArrowRight className="w-5 h-5 opacity-80" />
                    </Link>
-
                    <div className="flex justify-center pt-2">
                       <GoogleTranslator elementId="google_translate_mobile_menu" buttonClassName="bg-white border border-slate-200 text-slate-500 text-[11px] h-9 px-5 rounded-full shadow-sm font-bold uppercase tracking-wide hover:bg-slate-50" />
                    </div>
                </div>
-
             </div>
           </motion.div>
       )}
