@@ -197,4 +197,4 @@ export function AboutHero() {
       </AnimatePresence>
     </>
   );
-}
+} 
