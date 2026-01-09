@@ -114,7 +114,7 @@ export function ProcessSteps() {
             variant="section" 
             color="text-[var(--color-primary)]" 
             // HIER GEÄNDERT: Anzahl auf 22 geändert, um die Positionen neu zu mischen
-            count={1} 
+            count={6} 
             className="opacity-80" 
          />
       {/* 2. Gradient Overlay für Tiefe */}

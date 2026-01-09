@@ -15,23 +15,29 @@ export const DalasLogo: React.FC<DalasLogoProps> = ({
   variant = "default",
   ...props 
 }) => {
-  // Farben (Exakt aus deinem Snippet übernommen)
-  const tealColor = variant === "default" ? "#009B77" : "#ffffff"; 
-  const orangeColor = "#F27405";
+  // 1. FARB-LOGIK (Jetzt synchron mit CSS-Variablen & Bild 2)
   
-  // Textfarben
-  const dalasColor = variant === "default" ? "text-[#009B77]" : "text-white"; 
+  // Hauptfarbe (Haus): Zurück zu Türkis (Primary), wie im Referenz-Bild
+  // Wir nutzen var(--color-primary) statt Hex-Codes
+  const mainColor = variant === "default" ? "var(--color-primary)" : "#ffffff"; 
+  
+  // Akzentfarbe (Herz): Orange (Accent), passend zur "Zuhause leben" Unterstreichung
+  const accentColor = "var(--color-accent)";
+  
+  // 2. TEXT-FARBEN
+  // Dalas Text: Ich lasse es auf Slate-900 (Schwarz), das wirkt am edelsten.
+  // Falls du es Türkis willst wie im Bild, ändere es zu: "text-[var(--color-primary)]"
+  const dalasColor = variant === "default" ? "text-slate-900" : "text-white"; 
+  
   const ugColor = variant === "default" ? "text-slate-900" : "text-white/90";
   const subTextColor = variant === "default" ? "text-slate-500" : "text-slate-300";
 
   return (
     <div 
-      // Layout: Horizontal (Icon links, Text rechts)
       className={cn("flex items-center gap-3 select-none group", className)} 
       {...props}
     >
        <style jsx>{`
-        /* Herz-Pop Animation */
         @keyframes heart-pop-logo {
           0% { transform: scale(0); opacity: 0; }
           50% { transform: scale(1.4); }
@@ -39,45 +45,42 @@ export const DalasLogo: React.FC<DalasLogoProps> = ({
         }
         .animate-heart-badge {
           animation: heart-pop-logo 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s forwards;
-          opacity: 0; /* Start unsichtbar */
+          opacity: 0;
         }
       `}</style>
 
-      {/* 1. DAS ICON: Haus mit Herz-Badge */}
+      {/* 1. DAS ICON */}
       <div className={cn(
           "relative w-11 h-11 shrink-0 transition-transform duration-500",
           scrolled ? "scale-90" : "scale-100"
       )}>
-        
-        {/* Basis: Das Haus */}
+        {/* Haus: Jetzt Primary (Türkis) */}
         <Home 
             className="w-full h-full stroke-[1.5]"
-            style={{ stroke: tealColor }}
+            style={{ stroke: mainColor }}
         />
-        
-        {/* Badge: Das Herz (unten rechts) */}
         <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-1 shadow-sm border border-slate-100 animate-heart-badge">
+            {/* Herz: Jetzt Accent (Orange) */}
             <Heart 
                 className="w-3.5 h-3.5 fill-current" 
-                style={{ color: orangeColor }}
+                style={{ color: accentColor }}
             />
         </div>
       </div>
 
-      {/* 2. DER TEXT (Rechts daneben) */}
+      {/* 2. DER TEXT */}
       <div className="flex flex-col justify-center leading-none">
         
         {/* Titel Zeile */}
         <div className="flex items-baseline gap-2">
-            {/* Dalas in Script-Schrift */}
+            
+            {/* Dalas in Script-Schrift (Schwarz) */}
             <span 
-              className={cn("text-[2rem] leading-none", dalasColor)}
-              style={{ fontFamily: "'Dancing Script', cursive", fontWeight: 700 }}
+              className={cn("text-[2rem] leading-none font-script font-bold", dalasColor)}
             >
               Dalas
             </span>
 
-            {/* UG in Sans-Serif */}
             <span className={cn("text-sm font-sans font-bold opacity-90 uppercase tracking-widest translate-y-[-2px]", ugColor)}>
               UG
             </span>

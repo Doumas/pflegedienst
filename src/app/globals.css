@@ -1,93 +1,114 @@
 @import "tailwindcss";
 
+/* ========================================================================
+   THEME CONFIGURATION (Tailwind v4)
+   Hier definieren wir das Design-System direkt in CSS.
+   ======================================================================== */
+
 @theme {
-  --font-inter: var(--font-inter);
+  /* 1. FONTS (Verknüpft mit layout.tsx) */
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-playfair);
+  --font-script: var(--font-dancing);
 
-  /*
-|--------------------------------------------------------------------------
-| Custom Property Farbdefinitionen
-|--------------------------------------------------------------------------
-*/
-
-  /* ========================================================================
-     🎨 DESIGN SYSTEM & THEME CONFIGURATION
-     ======================================================================== */
-
-  /* ------------------------------------------------------------------------
-     OPTION 2: TÜRKIS & ORANGE (MODERN & VITAL) - [AKTIV]
-     ------------------------------------------------------------------------
-     Wirkung: Professionell (Türkis) trifft auf Lebensfreude (Orange).
-     Sehr beliebte, kontrastreiche Kombination.
-     ======================================================================== */
-  
-  /* HAUPTFARBE (TÜRKIS) - Bleibt bestehen */
+  /* 2. FARBEN: TÜRKIS & ORANGE SCHEMA */
   --color-primary: #0d9488;          /* Teal-600 */
   --color-primary-foreground: #ffffff;
   --color-primary-hover: #0f766e;    /* Teal-700 */
-
   --color-primary-deep: #115e59;     /* Teal-800 */
-  --color-footer-bg: #134e4a;        /* Teal-900 */
-
-  --color-secondary: #f0fdfa;        /* Teal-50 (Hintergrund) */
-  --color-secondary-foreground: #134e4a;
-
-  /* AKZENTFARBE (ORANGE) - Geändert von Rot zu Orange */
-  --color-accent: #f97316;           /* Orange-500: Warm, freundlich, aktiv */
-  --color-accent-hover: #ea580c;     /* Orange-600: Kräftiger für Hover */
   
+  --color-footer-bg: #134e4a;        /* Teal-900 */
+  --color-secondary: #f0fdfa;        /* Teal-50 */
+  --color-secondary-foreground: #134e4a;
   --color-border-soft: #ccfbf1;      /* Teal-100 */
-  --color-accent-soft: #ffedd5;      /* Orange-100: Zartes Orange für Hintergründe */
+
+  --color-accent: #f97316;           /* Orange-500 */
+  --color-accent-hover: #ea580c;     /* Orange-600 */
+  --color-accent-soft: #ffedd5;      /* Orange-100 */
   
   --color-text-light: #f0fdfa;       
   
-  /* Selection: Orange Markierung */
-  --color-selection-bg: #ffedd5;     /* Zartes Orange */
-  --color-selection-text: #0d9488;   /* Türkiser Text */
+  --color-selection-bg: #ffedd5;     
+  --color-selection-text: #0d9488; 
 }
 
 /* ========================================================================
-   LAYOUT & TYPOGRAPHY SETTINGS
+   BASE STYLES & TYPOGRAPHY
    ======================================================================== */
 
-/* --- Container --- */
-/* Zentriert Inhalte mit sicherem Abstand zum Rand */
-.shadow-glow {
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    /* Wichtig: Variable explizit zuweisen */
+    font-family: var(--font-sans);
+    background-color: white;
+    color: #0f172a; /* Slate-900 */
+    -webkit-font-smoothing: antialiased;
+    /* Senior Friendly Base Settings */
+    font-size: 17px; 
+    line-height: 1.6;
+  }
+
+  ::selection {
+    background-color: var(--color-selection-bg);
+    color: var(--color-selection-text);
+  }
+
+  /* AUTOMATISCHES DESIGN FÜR H1-H6 (Hero-Style) */
+  h1 {
+    @apply text-5xl md:text-6xl lg:text-[4.5rem] font-extrabold text-slate-900 tracking-tight leading-[1.05] mb-6 drop-shadow-sm;
+  }
+
+  h2 {
+    @apply text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-[1.1] mb-5;
+  }
+
+  h3 {
+    @apply text-2xl md:text-3xl font-bold text-slate-900 tracking-tight mb-4;
+  }
+
+  h4, h5, h6 {
+    @apply font-bold text-slate-900 mb-3 tracking-tight;
+  }
+
+  p {
+    @apply text-lg text-slate-600 leading-relaxed mb-4 font-medium text-pretty;
+  }
+
+  /* HILFSKLASSEN */
+  .highlight-serif {
+    font-family: var(--font-serif);
+    @apply italic font-medium text-slate-900;
+  }
+
+  .highlight-accent {
+    font-family: var(--font-serif);
+    @apply italic text-[var(--color-accent)];
+  }
+}
+
+/* ========================================================================
+   CUSTOM UTILITIES
+   ======================================================================== */
+
+@utility shadow-glow {
   box-shadow: 0 10px 25px -5px rgba(13, 148, 136, 0.4), 0 8px 10px -6px rgba(13, 148, 136, 0.1);
 }
-.container {
+
+@utility container {
   margin-inline: auto;
   padding-inline: 1.5rem;
   max-width: 1300px; 
   width: 100%;
 }
 
-/* --- Global Reset --- */
-body {
-  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  background-color: #ffffff;
-  color: #0f172a; 
-  
-  /* Senior Friendly Font Boost */
-  font-size: 17px; 
-  line-height: 1.6;
-}
-
-/* --- Headlines --- */
-h1, h2, h3, h4, h5, h6 {
-  letter-spacing: -0.02em;
-}
-
-/* --- Selection --- */
-::selection {
-  background-color: var(--color-selection-bg);
-  color: var(--color-selection-text);
-}
-
 /* ========================================================================
    ANIMATIONS
    ======================================================================== */
 
-/* --- Ken Burns Effect (Slow Zoom) --- */
 @keyframes ken-burns {
   from { transform: scale(1); }
   to { transform: scale(1.1); }
@@ -97,6 +118,7 @@ h1, h2, h3, h4, h5, h6 {
   0%, 100% { transform: translateY(-5%); }
   50% { transform: translateY(5%); }
 }
+
 .animate-bounce-slow {
   animation: bounce-slow 3s infinite ease-in-out;
 }
@@ -106,9 +128,9 @@ h1, h2, h3, h4, h5, h6 {
   will-change: transform; 
 }
 
-/* =========================================
-   GOOGLE TRANSLATE STYLING (Sanft)
-   ========================================= */
+/* ========================================================================
+   GOOGLE TRANSLATE STYLING (Clean Look)
+   ======================================================================== */
 
 .goog-te-gadget {
   font-family: inherit !important;
@@ -139,7 +161,9 @@ h1, h2, h3, h4, h5, h6 {
   border-bottom: 1px solid #e2e8f0 !important;
 }
 
-/* --- GLOBALE PRINT & FLYER STYLES --- */
+/* ========================================================================
+   PRINT & FLYER STYLES (Komplett übernommen)
+   ======================================================================== */
 
 /* A) BILDSCHIRM-VORSCHAU */
 @media screen {

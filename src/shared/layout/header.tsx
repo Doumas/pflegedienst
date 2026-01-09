@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { siteConfig } from "@/config/site";
-import { ChevronDown, X, Phone, Mail, MapPin, ArrowRight, ArrowUpRight, Sun, Moon, Sparkles, Menu, Briefcase, Compass } from "lucide-react";
+import { ChevronDown, X, Phone, Mail, ArrowRight, Menu, Briefcase, Compass } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
 import { Button } from "@/shared/ui/button";
 import { GoogleTranslator } from "@/shared/utils/google-translator";
@@ -13,7 +13,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { AnimatedBackground } from "@/shared/ui/animated-background";
 import { useActiveSection } from "@/shared/context/active-section-context";
 
-// --- LOGO ICON FÜR DEN HINTERGRUND-EFFEKT (Herz) ---
+// --- LOGO ICON FÜR DEN HINTERGRUND-EFFEKT ---
 const LogoIcon = (props: any) => (
     <svg viewBox="0 0 150 130" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" {...props}>
          <path d="M50 90 C 10 65 -10 35 5 18 C 15 5 35 5 48 20 C 50 22 50 22 52 20 C 65 5 85 5 95 18 C 110 35 90 65 50 90 Z" />
@@ -23,7 +23,7 @@ const LogoIcon = (props: any) => (
     </svg>
 );
 
-// --- HEADER HINTERGRUND ANIMATION ---
+// --- HEADER HINTERGRUND ANIMATION (Nur beim Scrollen sichtbar) ---
 function HeaderBackgroundAnimation({ show }: { show: boolean }) {
     let context = null;
     try { context = useActiveSection(); } catch (e) { /* Ignore */ }
@@ -54,6 +54,7 @@ function HeaderBackgroundAnimation({ show }: { show: boolean }) {
                     <ActiveIcon strokeWidth={2} className="w-[600px] h-[600px]" />
                 </motion.div>
             </AnimatePresence>
+            {/* Hier entsteht der weiße Hintergrund beim Scrollen */}
             <div className="absolute inset-0 bg-white/95 backdrop-blur-md" />
         </div>
     );
@@ -86,70 +87,53 @@ export function Header() {
   }, []);
 
   useEffect(() => {
-    if (isOpen) {
-        document.body.style.overflow = 'hidden';
-    } else {
-        document.body.style.overflow = 'unset';
-    }
+    document.body.style.overflow = isOpen ? 'hidden' : 'unset';
   }, [isOpen]);
 
   const closeMenu = () => setIsOpen(false);
-
-  const handleOpenConfigurator = () => {
-      setIsOpen(false); 
-      const timestamp = Date.now();
-      router.push(`/?openConfigurator=true&trigger=${timestamp}#pflege-wegweiser`);
-  };
 
   return (
     <>
       <header 
         className={cn(
-          "fixed top-0 left-0 right-0 z-[999] transition-all duration-300 font-sans border-b",
-          (scrolled || isOpen) ? "shadow-sm border-slate-100" : "bg-white border-transparent" 
+          "fixed top-0 left-0 right-0 z-[999] transition-all duration-300 font-sans",
+          // LOGIK: Transparent wenn oben, Weiß wenn gescrollt
+          (scrolled || isOpen) 
+            ? "shadow-sm border-b border-slate-100/50 py-2" 
+            : "bg-transparent border-b border-transparent py-4"
         )}
       >
         
+        {/* Hintergrund-Ebene (blendet sich ein beim Scrollen) */}
         <HeaderBackgroundAnimation show={scrolled || isOpen} />
 
         {/* ========================================================= */}
-        {/* 1. TOP BAR (TEAL)                                         */}
+        {/* 1. TOP BAR (SCHWEBENDES DESIGN)                           */}
         {/* ========================================================= */}
         <div className={cn(
             "bg-[var(--color-primary)] text-white transition-all duration-500 ease-in-out overflow-hidden relative z-20",
-            (scrolled && !isOpen) ? "max-h-0 py-0 opacity-0" : "max-h-12 py-2 opacity-100"
+            // HIER IST DER TRICK: mx-4 macht es schmaler ("schwebend"), rounded-b-2xl macht es rund
+            "mx-4 md:mx-6 lg:mx-8 rounded-b-2xl", 
+            (scrolled && !isOpen) ? "max-h-0 py-0 opacity-0 mb-0" : "max-h-12 py-1.5 opacity-100 mb-2 shadow-lg shadow-[var(--color-primary)]/20"
         )}>
-            <div className="container mx-auto px-4 md:px-6 flex justify-between items-center h-full">
-                <div className="flex items-center gap-6 lg:gap-10">
+            <div className="px-4 flex justify-between items-center h-full text-xs font-medium">
+                <div className="flex items-center gap-6">
                     <a href={`tel:${siteConfig.contact.phone}`} className="group flex items-center gap-2 hover:text-white transition-colors">
-                        <div className="w-7 h-7 rounded-full bg-white text-[var(--color-primary)] flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300 shrink-0">
-                            <motion.div animate={{ rotate: [0, -10, 10, -10, 0] }} transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}>
-                                <Phone className="w-3.5 h-3.5 fill-current" /> 
-                            </motion.div>
+                        <div className="w-5 h-5 rounded-full bg-white text-[var(--color-primary)] flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                            <Phone className="w-3 h-3 fill-current" /> 
                         </div>
-                        <div className="flex items-center gap-2 leading-none">
-                            <span className="hidden sm:inline text-[10px] font-bold uppercase tracking-wider opacity-80 group-hover:text-[var(--color-accent)] transition-colors"> Telefon:</span>
-                            <span className="text-sm font-black tracking-wide">{siteConfig.contact.phone}</span>
-                        </div>
+                        <span className="font-bold tracking-wide">{siteConfig.contact.phone}</span>
                     </a>
-                    <a href={`mailto:${siteConfig.contact.email}`} className="hidden md:flex items-center gap-2 group opacity-80 hover:opacity-100 transition-all">
+                    <a href={`mailto:${siteConfig.contact.email}`} className="hidden md:flex items-center gap-2 opacity-80 hover:opacity-100 transition-all">
                         <Mail className="w-3.5 h-3.5" />
-                        <span className="text-xs font-bold">{siteConfig.contact.email}</span>
+                        <span>{siteConfig.contact.email}</span>
                     </a>
                 </div>
                 <div className="flex items-center gap-4">
-                    <div className="hidden lg:flex items-center gap-4">
-                        <Link href="/karriere" className="flex items-center gap-2 text-[10px] font-bold bg-white/10 px-3 py-1 rounded-full hover:bg-white hover:text-[var(--color-primary)] transition-all group uppercase tracking-wider">
-                            <span className="relative flex h-2 w-2">
-                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-accent)] opacity-75"></span>
-                              <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--color-accent)]"></span>
-                            </span>
-                            <span>Wir stellen ein</span>
-                        </Link>
-                        <div className="flex items-center gap-1.5 opacity-80 text-[10px] font-bold uppercase tracking-wide">
-                            <MapPin className="w-3 h-3" /> Frankfurt & Umland
-                        </div>
-                    </div>
+                    <Link href="/karriere" className="hidden lg:flex items-center gap-2 px-3 py-0.5 rounded-full bg-white/10 hover:bg-white hover:text-[var(--color-primary)] transition-all group uppercase tracking-wider text-[10px] font-bold">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)] animate-pulse" />
+                        Wir stellen ein
+                    </Link>
                 </div>
             </div>
         </div>
@@ -157,21 +141,15 @@ export function Header() {
         {/* ========================================================= */}
         {/* 2. MAIN HEADER (NAVBAR)                                   */}
         {/* ========================================================= */}
-        <div className={cn(
-            "container mx-auto px-4 md:px-6 transition-all duration-300 relative z-20",
-            (scrolled || isOpen) ? "py-2" : "py-3 lg:py-4"
-        )}>
+        <div className="container mx-auto px-4 md:px-6 relative z-20">
           <div className="flex items-center justify-between">
             
-            {/* LOGO - ANGEPASSTE GRÖSSE FÜR GESTAPELTES DESIGN */}
+            {/* LOGO */}
             <Link href="/" className="relative z-[60] block shrink-0" onClick={closeMenu}>
                 <DalasLogo 
                   variant="default"
                   className={cn(
-                    "transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] origin-left",
-                    // WICHTIG: Da das Logo gestapelt ist (Icon oben, Text unten),
-                    // brauchen wir hier keine Breite von 300px (w-80), sonst wird es riesig.
-                    // Stattdessen eine moderate Breite.
+                    "transition-all duration-500 ease-out origin-left",
                     (scrolled || isOpen) ? "scale-90" : "scale-100"
                   )}
                 />
@@ -182,13 +160,23 @@ export function Header() {
                 <nav className="flex items-center gap-1">
                   {siteConfig.nav.map((item) => (
                       <div key={item.label} className="relative group">
-                        <Link href={item.href || "#"} className={cn("flex items-center gap-1 text-[15px] px-3 py-2 rounded-full transition-all duration-300 font-bold", isActive(item.href) ? "text-[var(--color-primary)] bg-[var(--color-primary)]/5" : "text-slate-600 hover:text-[var(--color-primary)] hover:bg-slate-50")}>
+                        <Link 
+                            href={item.href || "#"} 
+                            className={cn(
+                                "flex items-center gap-1 text-[15px] px-3 py-2 rounded-full transition-all duration-300 font-bold", 
+                                isActive(item.href) 
+                                    ? "text-[var(--color-primary)] bg-[var(--color-primary)]/5" 
+                                    : "text-slate-600 hover:text-[var(--color-accent)] hover:bg-white/50"
+                            )}
+                        >
                             {item.label}
                             {item.items && <ChevronDown className="h-3.5 w-3.5 opacity-40 group-hover:opacity-100 group-hover:rotate-180 transition-all" />}
                         </Link>
+
+                        {/* Dropdown */}
                         {item.items && (
                              <div className="absolute top-full left-1/2 -translate-x-1/2 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 z-50">
-                               <div className="w-64 rounded-[1.5rem] bg-white shadow-xl border border-slate-100 p-2 ring-1 ring-black/5 overflow-hidden">
+                               <div className="w-64 rounded-[1.5rem] bg-white shadow-xl shadow-slate-200/50 border border-slate-100 p-2 ring-1 ring-black/5 overflow-hidden">
                                  {item.items.map((subItem) => (
                                    <Link key={subItem.href} href={subItem.href} className={cn("block px-4 py-3 text-[14px] rounded-xl transition-all font-bold flex items-center justify-between group/link", isActive(subItem.href) ? "bg-[var(--color-primary)]/5 text-[var(--color-primary)]" : "text-slate-600 hover:bg-slate-50 hover:text-[var(--color-primary)]")}>
                                      {subItem.label} 
@@ -203,7 +191,7 @@ export function Header() {
                 </nav>
                 <div className="ml-2 pl-6 border-l border-slate-200 h-8 flex items-center">
                   <Link href="/kontakt">
-                    <Button size="lg" className="font-bold text-[14px] px-6 h-10 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] rounded-full shadow-lg shadow-[var(--color-primary)]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all">
+                    <Button size="lg" className="font-bold text-[14px] px-6 h-10 bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white rounded-full shadow-lg shadow-[var(--color-primary)]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all">
                         Beratung anfordern
                     </Button>
                   </Link>
@@ -230,11 +218,10 @@ export function Header() {
 
       </header>
       
-      {/* PLATZHALTER DAMIT CONTENT NICHT SPRINGT */}
-      {/* Werte angepasst an die neue kompakte Header-Höhe */}
+      {/* PLATZHALTER: Verhindert, dass der Inhalt springt, wenn der Header fixiert ist */}
       <div className={cn(
           "w-full bg-transparent pointer-events-none transition-all duration-300", 
-          scrolled ? "h-[100px]" : "h-[120px] lg:h-[130px]" 
+          scrolled ? "h-[90px]" : "h-[120px]" 
       )} aria-hidden="true" />
 
       {/* ========================================================= */}
@@ -253,11 +240,12 @@ export function Header() {
             <div className="relative z-10 flex flex-col min-h-full">
                
                <div className="flex flex-col items-center mb-8">
+                  {/* Greeting mit Script Font & Accent Color */}
                   <motion.div 
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 }}
-                    className="font-script text-[var(--color-accent)] text-4xl flex items-center gap-3 mb-2"
+                    className="font-script font-bold text-[var(--color-accent)] text-5xl flex items-center gap-3 mb-2"
                   >
                      {greeting}
                   </motion.div>
@@ -288,14 +276,9 @@ export function Header() {
                               {item.label} <ChevronDown className="w-5 h-5 text-slate-300 group-open:rotate-180 transition-transform group-open:text-[var(--color-primary)]"/>
                            </summary>
                            <div className="px-3 pb-3 space-y-1 bg-slate-50/50">
-                              {item.href && (
-                                <Link href={item.href} onClick={closeMenu} className="flex items-center gap-2 text-[var(--color-primary)] font-bold text-xs py-3 px-4 bg-white rounded-xl border border-slate-100 shadow-sm mb-2">
-                                   <ArrowUpRight className="w-3.5 h-3.5" /> Zur Hauptseite "{item.label}"
-                                </Link>
-                              )}
                               {item.items.map(sub => (
-                                 <Link key={sub.href} href={sub.href} onClick={closeMenu} className="block text-slate-600 py-3 px-4 rounded-xl hover:bg-white hover:shadow-sm transition-all text-[14px] font-medium">
-                                    {sub.label}
+                                 <Link key={sub.href} href={sub.href} onClick={closeMenu} className="block text-slate-600 py-3 px-4 rounded-xl hover:bg-white hover:shadow-sm transition-all text-[14px] font-medium flex items-center gap-2">
+                                    <ArrowRight className="w-3 h-3 text-[var(--color-accent)] opacity-50" /> {sub.label}
                                  </Link>
                               ))}
                            </div>

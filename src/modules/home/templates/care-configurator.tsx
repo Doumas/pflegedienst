@@ -9,7 +9,7 @@ import {
 import { Button } from "@/shared/ui/button";
 import { cn } from "@/shared/utils/cn";
 import { motion, AnimatePresence } from "framer-motion";
-import { AnimatedBackground } from "@/shared/ui/animated-background"; 
+// import { AnimatedBackground } from "@/shared/ui/animated-background"; // Falls benötigt, sonst auskommentiert lassen
 
 // --- HELPER HOOK ---
 function useInCenter(options = { threshold: 0.1 }) {
@@ -150,7 +150,7 @@ export function CareConfigurator({ minimal = false }: { minimal?: boolean }) {
                 <div 
                     ref={teaserRef}
                     className={cn(
-                        "bg-white rounded-[2.5rem] border border-slate-100 pointer-events-auto overflow-hidden ring-1 ring-slate-100/50 transform-gpu transition-all duration-500 relative", // relative wichtig für Background
+                        "bg-white rounded-[2.5rem] border border-slate-100 pointer-events-auto overflow-hidden ring-1 ring-slate-100/50 transform-gpu transition-all duration-500 relative", 
                         isTeaserActive 
                             ? "scale-[1.01] shadow-2xl shadow-[var(--color-primary)]/10 border-[var(--color-primary)]/20" 
                             : "scale-100 shadow-2xl shadow-slate-200/50 hover:scale-[1.005] hover:shadow-[var(--color-primary)]/10"
@@ -159,8 +159,6 @@ export function CareConfigurator({ minimal = false }: { minimal?: boolean }) {
                     
                     <div onClick={() => setIsOpen(true)} className="relative cursor-pointer group bg-gradient-to-br from-white via-[var(--color-secondary)]/30 to-[var(--color-secondary)] p-6 md:p-12 hover:bg-white transition-all duration-500 overflow-hidden">
                         
-                        {/* 1. HINTERGRUND ICONS (Config Check) */}
-
                         {/* Glow Effekt */}
                         <div className={cn(
                             "absolute top-0 right-0 w-[300px] h-[300px] bg-[var(--color-primary)]/5 rounded-full blur-[80px] pointer-events-none translate-x-1/2 -translate-y-1/2 transition-all duration-700 z-0",
@@ -189,11 +187,12 @@ export function CareConfigurator({ minimal = false }: { minimal?: boolean }) {
                                     <span className="text-[11px] font-bold uppercase tracking-wider">Profi-Check</span>
                                 </div>
                                 
-                                {/* HEADLINE - MIXED TYPOGRAPHY */}
+                                {/* HEADLINE - MIXED TYPOGRAPHY (Hier angepasst!) */}
                                 <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-slate-900 mb-2 tracking-tight text-balance leading-[1.1]">
                                     Was steht Ihnen zu? <br className="hidden lg:block" />
-                                    {/* HIER GEÄNDERT: Seriöser Look, wie im Hero */}
-                                    <span className="font-serif italic text-[var(--color-primary)] text-[1.1em] font-medium relative inline-block px-1 mt-1">
+                                    
+                                    {/* ÄNDERUNG: font-script + Accent Color (Orange) - Passend zum Hero "Zuhause leben" */}
+                                    <span className="font-script font-bold text-[var(--color-accent)] text-[1.2em] relative inline-block px-1 mt-1">
                                         Anspruch prüfen.
                                         {/* Orange Smile Swoosh */}
                                         <svg className="absolute w-full h-3 -bottom-1 left-0 text-[var(--color-accent)] opacity-80" viewBox="0 0 100 10" preserveAspectRatio="none">
@@ -437,8 +436,8 @@ export function CareConfigurator({ minimal = false }: { minimal?: boolean }) {
                                 <CheckCircle2 className="w-10 h-10" />
                             </div>
                             
-                            {/* Ergebnis Headline mit SERIF FONT */}
-                            <h3 className="text-4xl font-serif italic font-medium text-[var(--color-primary)] mb-2">Analyse abgeschlossen!</h3>
+                            {/* ÄNDERUNG: Ergebnis Headline angepasst an Script-Font und Orange */}
+                            <h3 className="text-4xl font-script font-bold text-[var(--color-accent)] mb-2">Analyse abgeschlossen!</h3>
                             <h4 className="text-xl font-bold text-slate-900 mb-4">Wir haben eine Lösung für Sie.</h4>
                             
                             <p className="text-lg text-slate-600 mb-8 max-w-md mx-auto leading-relaxed font-medium">
