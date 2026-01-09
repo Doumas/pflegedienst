@@ -1,5 +1,8 @@
+"use client";
+
 import React from 'react';
 import { cn } from "@/shared/utils/cn";
+import { Home, Heart } from "lucide-react";
 
 interface DalasLogoProps extends React.HTMLAttributes<HTMLDivElement> {
   scrolled?: boolean;
@@ -13,86 +16,74 @@ export const DalasLogo: React.FC<DalasLogoProps> = ({
   ...props 
 }) => {
   // Farben definieren
-  const tealColor = variant === "default" ? "#009B77" : "#ffffff"; 
-  const orangeColor = "#F27405";
-  
-  // Textfarben
-  const dalasColor = variant === "default" ? "text-[#009B77]" : "text-white"; 
-  const ugColor = variant === "default" ? "text-slate-900" : "text-white/90";
-  const subTextColor = variant === "default" ? "text-slate-700" : "text-slate-300";
-
-  // Ein sauberer Herz-Pfad
-  const heartPath = "M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z";
+  const primaryClass = variant === "default" ? "text-[var(--color-primary)]" : "text-white";
+  const accentClass = "text-[var(--color-accent)]"; // Das Orange für das Herz
+  const textClass = variant === "default" ? "text-[var(--color-primary-deep)]" : "text-white";
+  const subTextClass = variant === "default" ? "text-slate-500" : "text-slate-300";
 
   return (
     <div 
-      className={cn("flex flex-col items-center select-none leading-none", className)} 
+      className={cn("flex items-center gap-3 select-none whitespace-nowrap group", className)} 
       {...props}
     >
-      {/* OBERE ZEILE: Icon + Dalas + UG */}
-      <div className="flex items-center gap-3 mb-1"> 
+      <style jsx>{`
+        /* Herz-Pop Animation */
+        @keyframes heart-pop {
+          0% { transform: scale(0); opacity: 0; }
+          50% { transform: scale(1.4); }
+          100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-heart {
+          animation: heart-pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s forwards; /* 0.5s Verzögerung */
+          opacity: 0; /* Start unsichtbar */
+        }
+      `}</style>
+
+      {/* 1. DAS ICON: Kombiniert aus Lucide Home + Herz */}
+      <div className={cn(
+          "relative w-10 h-10 shrink-0 transition-transform duration-500",
+          scrolled ? "scale-90" : "scale-100"
+      )}>
         
-        {/* DAS ICON: Zwei saubere Herzen ohne "Cut-Out" Artefakte */}
-        <div className="shrink-0 h-11 w-11 flex items-center justify-center relative">
-          <svg
-            viewBox="0 0 24 24"
-            width="100%"
-            height="100%"
-            fill="none"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="overflow-visible"
-          >
-              {/* Herz 1: Türkis (Hintergrund) */}
-              <g transform="translate(-2, -1) scale(0.95) rotate(-10 12 12)">
-                <path
-                  d={heartPath}
-                  stroke={tealColor}
-                  fill="none"
-                  className={cn("transition-all duration-700", scrolled ? "opacity-80" : "opacity-100")}
-                />
-              </g>
-
-              {/* Herz 2: Orange (Vordergrund) */}
-              {/* Wir verzichten hier auf den weißen 'Stroke', damit es nicht verhackt aussieht. 
-                  Stattdessen einfach sauberes Layering. */}
-              <g transform="translate(4, 4) scale(0.85) rotate(10 12 12)">
-                 <path
-                  d={heartPath}
-                  stroke={orangeColor}
-                  // Füllt sich beim Scrollen
-                  fill={scrolled ? orangeColor : "none"} 
-                  className="transition-all duration-500 delay-100"
-                />
-              </g>
-          </svg>
+        {/* Das Haus (Basis) */}
+        <Home 
+            className={cn("w-full h-full stroke-[1.5]", primaryClass)} 
+        />
+        
+        {/* Das Herz (Badge) mit Pop-Animation */}
+        <div className={cn(
+            "absolute -bottom-1 -right-1 bg-white rounded-full p-1 shadow-sm border border-slate-100",
+            // Animation läuft beim Laden ab
+            "animate-heart"
+        )}>
+            <Heart 
+                className={cn("w-3.5 h-3.5 fill-current", accentClass)} 
+            />
         </div>
-
-        {/* TEXT-GRUPPE (Wiederhergestellt) */}
-        <div className="flex items-baseline gap-2 translate-y-1">
-            
-            {/* Dalas in Script-Schrift */}
-            <span 
-              className={cn("text-[2.6rem] leading-none", dalasColor)}
-              style={{ fontFamily: "'Dancing Script', cursive", fontWeight: 500 }}
-            >
-              Dalas
-            </span>
-
-            {/* UG in Sans-Serif */}
-            <span className={cn("text-lg font-sans font-bold opacity-90 uppercase tracking-widest", ugColor)}>
-              
-            </span>
-
-        </div>
-
       </div>
 
-      {/* UNTERE ZEILE: SLOGAN */}
-      <span className={cn("font-sans font-semibold uppercase tracking-[0.05em] text-[.6rem] text-center w-full pl-10", subTextColor)}>
-        Ambulanter Pflegedienst
-      </span>
+      {/* 2. DER TEXT (Dein bevorzugtes Layout) */}
+      <div className={cn(
+        "flex flex-col justify-center leading-none ml-[2px] transition-all duration-500",
+        // Text rückt beim Scrollen minimal näher
+        scrolled ? "-translate-x-1" : "translate-x-0"
+      )}>
+        
+        {/* HAUPTZEILE */}
+        <span className={cn("font-bold text-[1.8em] leading-[.95] transition-colors duration-300 font-sans", textClass)}>
+          DALAS <span className="text-[0.6em] font-bold opacity-60 ml-0.5 align-top mt-1 inline-block">UG</span>
+        </span>
+        
+        {/* UNTERZEILE */}
+        <span className={cn(
+          "font-semibold uppercase tracking-[0.2em] text-[0.58em] mt-1 ml-0.5 transition-opacity duration-300 font-sans", 
+          subTextClass,
+          scrolled ? "opacity-80" : "opacity-100"
+        )}>
+          Ambulanter Pflegedienst
+        </span>
+        
+      </div>
 
     </div>
   );

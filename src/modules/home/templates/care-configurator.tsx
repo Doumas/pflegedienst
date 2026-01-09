@@ -9,7 +9,7 @@ import {
 import { Button } from "@/shared/ui/button";
 import { cn } from "@/shared/utils/cn";
 import { motion, AnimatePresence } from "framer-motion";
-import { AnimatedBackground } from "@/shared/ui/animated-background"; // <--- IMPORT
+import { AnimatedBackground } from "@/shared/ui/animated-background"; 
 
 // --- HELPER HOOK ---
 function useInCenter(options = { threshold: 0.1 }) {
@@ -43,16 +43,6 @@ const CheckIcon = (props: any) => (
         <motion.path d="M9 11l3 3L22 4" variants={{ hidden: { pathLength: 0 }, visible: { pathLength: 1, transition: { duration: 0.5, delay: 0.2 } } }} />
         <motion.path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" variants={{ hidden: { pathLength: 0 }, visible: { pathLength: 1, transition: { duration: 0.8 } } }} />
     </motion.svg>
-);
-
-// --- CUSTOM ICON FÜR HINTERGRUND (DOCUMENT/CHECK) ---
-const ConfigBackgroundIcon = (props: any) => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" {...props}>
-        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-        <line x1="16" y1="2" x2="16" y2="6" />
-        <line x1="8" y1="2" x2="8" y2="6" />
-        <line x1="3" y1="10" x2="21" y2="10" />
-    </svg>
 );
 
 
@@ -202,7 +192,8 @@ export function CareConfigurator({ minimal = false }: { minimal?: boolean }) {
                                 {/* HEADLINE - MIXED TYPOGRAPHY */}
                                 <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-slate-900 mb-2 tracking-tight text-balance leading-[1.1]">
                                     Was steht Ihnen zu? <br className="hidden lg:block" />
-                                    <span className="font-script text-[var(--color-primary)] text-[1.1em] relative inline-block px-1 mt-1">
+                                    {/* HIER GEÄNDERT: Seriöser Look, wie im Hero */}
+                                    <span className="font-serif italic text-[var(--color-primary)] text-[1.1em] font-medium relative inline-block px-1 mt-1">
                                         Anspruch prüfen.
                                         {/* Orange Smile Swoosh */}
                                         <svg className="absolute w-full h-3 -bottom-1 left-0 text-[var(--color-accent)] opacity-80" viewBox="0 0 100 10" preserveAspectRatio="none">
@@ -446,8 +437,8 @@ export function CareConfigurator({ minimal = false }: { minimal?: boolean }) {
                                 <CheckCircle2 className="w-10 h-10" />
                             </div>
                             
-                            {/* Ergebnis Headline mit Script Font für Emotion */}
-                            <h3 className="text-4xl font-script text-[var(--color-primary)] mb-2 font-bold">Analyse abgeschlossen!</h3>
+                            {/* Ergebnis Headline mit SERIF FONT */}
+                            <h3 className="text-4xl font-serif italic font-medium text-[var(--color-primary)] mb-2">Analyse abgeschlossen!</h3>
                             <h4 className="text-xl font-bold text-slate-900 mb-4">Wir haben eine Lösung für Sie.</h4>
                             
                             <p className="text-lg text-slate-600 mb-8 max-w-md mx-auto leading-relaxed font-medium">

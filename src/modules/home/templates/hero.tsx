@@ -106,29 +106,25 @@ export function Hero() {
     <section id="hero-section" className="relative w-full overflow-hidden pt-28 pb-20 lg:pt-40 lg:pb-32 text-center px-4 flex items-center lg:min-h-[90vh] bg-[#fffbf7]">
       
       {/* ============================================================
-          HINTERGRUND LAYOUT (Ambulance Animation)
+          HINTERGRUND LAYOUT
           ============================================================
       */}
       
-      {/* EBENE 1: Statisches Bild (Ganz unten) */}
       <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1581579186913-45ac3e6e3dd2?q=80&w=2048&auto=format&fit=crop')] bg-cover bg-center opacity-[0.08] mix-blend-multiply grayscale-[20%]" />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/90" />
       </div>
 
-      {/* EBENE 2: ANIMATION - Krankenwagen */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
          <AnimatedBackground 
             icon={Ambulance} 
             variant="section" 
             color="text-[var(--color-primary)]" 
-            // HIER GEÄNDERT: Anzahl auf 22 geändert, um die Positionen neu zu mischen
             count={6} 
             className="opacity-80" 
          />
       </div>
 
-      {/* EBENE 3: Punkt-Raster */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.2]" 
            style={{ backgroundImage: 'radial-gradient(var(--color-border-soft) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
 
@@ -157,12 +153,13 @@ export function Hero() {
                     </div>
                 </FadeIn>
 
-            {/* Headline */}
+            {/* Headline - SERIÖSERE SCHRIFT */}
             <FadeIn delay={0.2}>
-                <h1 className="text-5xl md:text-6xl lg:text-[5rem] font-black text-slate-900 mb-4 tracking-tight text-balance leading-[1.0] drop-shadow-sm">
+                <h1 className="text-5xl md:text-6xl lg:text-[5rem] font-extrabold text-slate-900 mb-4 tracking-tight text-balance leading-[1.05] drop-shadow-sm">
                     Gut versorgt. <br/>
                     <span className="relative inline-block px-1 mt-2 lg:mt-3">
-                        <span className="relative z-10 font-script text-[var(--color-primary)] font-bold tracking-normal text-[1.1em]">
+                        {/* HIER GEÄNDERT: font-serif statt font-script, normale font-weight */}
+                        <span className="relative z-10 font-serif font-medium text-[var(--color-primary)] tracking-tight text-[1.0em] italic">
                             Zuhause leben.
                         </span>
                         {/* Orange Unterstreichung */}
@@ -173,10 +170,13 @@ export function Hero() {
                 </h1>
            </FadeIn>
 
-            {/* Subtext */}
+            {/* Subtext - SAUBERER LOOK */}
             <FadeIn delay={0.3}>
                 <p className="text-lg lg:text-xl text-slate-600 leading-relaxed max-w-lg mx-auto lg:mx-0 font-medium text-pretty">
-                Ihr verlässlicher Partner in Frankfurt. Wir verbinden <span className="font-bold text-[var(--color-primary)]">fachliche Kompetenz</span> mit echter <span className="font-script text-2xl text-[var(--color-accent)] px-1">Zuwendung</span> – damit Sie sich sicher fühlen.
+                Ihr verlässlicher Partner in Frankfurt. Wir verbinden <span className="font-bold text-[var(--color-primary)]">fachliche Kompetenz</span> mit echter 
+                {/* HIER GEÄNDERT: kursiv und serif statt script */}
+                <span className="font-serif italic text-2xl text-[var(--color-accent)] px-1.5 font-medium">Zuwendung</span> 
+                – damit Sie sich sicher fühlen.
                 </p>
             </FadeIn>
           </div>
@@ -229,11 +229,12 @@ export function Hero() {
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-primary-deep)] via-transparent to-transparent opacity-90" />
                                     
+                                    {/* SLIDER TEXT - AUCH HIER SERIÖSER */}
                                     <div className="absolute bottom-0 left-0 right-0 p-6 pb-20 lg:p-10 lg:pb-12 text-white translate-y-2 pointer-events-none text-center">
-                                        <p className="font-script text-4xl lg:text-5xl mb-2 drop-shadow-md text-[var(--color-accent)]">
+                                        <p className="font-serif italic text-3xl lg:text-4xl mb-2 drop-shadow-md text-[var(--color-accent)]">
                                             {slide.title}
                                         </p>
-                                        <p className="text-sm sm:text-base font-medium opacity-90 text-slate-100 tracking-wide uppercase">
+                                        <p className="text-sm sm:text-base font-bold opacity-95 text-slate-100 tracking-wider uppercase">
                                             {slide.sub}
                                         </p>
                                     </div>
@@ -336,7 +337,8 @@ export function Hero() {
                         <div className="w-20 h-20 rounded-full bg-green-50 border-4 border-white shadow-xl shadow-green-100 flex items-center justify-center text-[var(--color-primary)] mb-6">
                             <CheckCircle2 className="w-10 h-10" />
                         </div>
-                        <h3 className="text-4xl font-script font-bold text-[var(--color-primary)] mb-1">Gute Nachricht!</h3>
+                        {/* HIER GEÄNDERT: font-bold statt font-script */}
+                        <h3 className="text-4xl font-extrabold text-[var(--color-primary)] mb-1">Gute Nachricht!</h3>
                         <p className="text-slate-600 text-lg mb-8 leading-relaxed max-w-[280px] mx-auto">
                             Wir sind in <strong className="text-slate-900 bg-green-50 px-2 py-0.5 rounded-lg">{zipCode}</strong> für Sie da.
                         </p>

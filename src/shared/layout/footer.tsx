@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Phone, Mail, MapPin, Facebook, Instagram, Linkedin, ArrowRight, HeartHandshake, ArrowUp } from "lucide-react";
+import { Phone, Mail, MapPin, Facebook, Instagram, Linkedin, ArrowRight, HeartHandshake, ArrowUp, HeartIcon } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
 import { buttonVariants } from "@/shared/ui/button";
 import { siteConfig } from "@/config/site";
@@ -62,11 +62,11 @@ export function Footer() {
           
           {/* 1. SEKTIONS-HINTERGRUND (Icons) */}
   <AnimatedBackground 
-            icon={BrandIcon} 
+            icon={HeartIcon} 
             variant="section" 
             color="text-[var(--color-primary)]" 
             // HIER GEÄNDERT: Anzahl auf 22 geändert, um die Positionen neu zu mischen
-            count={12} 
+            count={6} 
             className="opacity-80" 
          />
           {/* 2. Hintergrund-Raster */}
