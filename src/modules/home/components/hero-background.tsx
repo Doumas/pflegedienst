@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatedBackground } from "@/shared/ui/animated-background";
-import { Ambulance } from "lucide-react";
+import { MapPin } from "lucide-react";
 
 export function HeroBackground() {
   return (
@@ -15,7 +15,7 @@ export function HeroBackground() {
       {/* Animierte Ambulanz Icons */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
          <AnimatedBackground 
-            icon={Ambulance} 
+            icon={MapPin} 
             variant="section" 
             color="text-[var(--color-primary)]" 
             count={6} 

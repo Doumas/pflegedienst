@@ -1,14 +1,16 @@
 "use client"; 
 
 import { useState, useEffect } from "react";
-import { Phone, X, MessageCircle } from "lucide-react"; // MessageCircle passt oft besser zu WhatsApp
+import { X, MessageCircle } from "lucide-react";
 import { cn } from "@/shared/utils/cn"; 
 import { getTimeStatus } from "@/shared/utils/time-status"; 
+import { motion, AnimatePresence } from "framer-motion";
 
 const DEFAULT_TIME_STATUS = {
     color: "text-slate-400",
     dot: "bg-slate-400",
     text: "Status wird geladen...",
+    isOpen: false
 };
 
 export function WhatsappFloatingButton() {
@@ -17,10 +19,9 @@ export function WhatsappFloatingButton() {
     const [timeStatus, setTimeStatus] = useState(DEFAULT_TIME_STATUS); 
 
     useEffect(() => {
-        // Kurze Verzögerung beim Start für sanftes Einblenden nach dem Laden der Seite
-        const timerOut = setTimeout(() => setIsVisible(true), 1000);
-
-        const updateStatus = () => setTimeStatus(getTimeStatus(new Date()));
+        // Erscheint zügig (800ms)
+        const timerOut = setTimeout(() => setIsVisible(true), 800);
+        const updateStatus = () => setTimeStatus(getTimeStatus(new Date()) as any);
         updateStatus(); 
         const interval = setInterval(updateStatus, 60000); 
         
@@ -33,78 +34,83 @@ export function WhatsappFloatingButton() {
     if (!showCard) return null;
 
     return (
-        <>
-            <style jsx>{`
-                @keyframes float-y-gentle {
-                    0%, 100% { transform: translateY(0px); }
-                    50% { transform: translateY(-4px); }
-                }
-                .animate-float-gentle {
-                    animation: float-y-gentle 4s ease-in-out infinite;
-                }
-            `}</style>
-
-            <div
-                className={cn(
-                    "fixed bottom-5 left-5 md:bottom-8 md:left-8 z-[990]",
-                    "transition-all duration-700 cubic-bezier(0.34, 1.56, 0.64, 1)", // Schöner "Pop" Effekt beim Erscheinen
-                    isVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-10 scale-90"
-                )}
-            >
-                <a 
-                    href="https://wa.me/491234567890" // Hier deine Nummer eintragen
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className={cn(
-                        "relative group flex items-center gap-3 md:gap-4",
-                        "bg-white/90 backdrop-blur-xl p-3 pr-5 md:p-3.5 md:pr-6",
-                        "rounded-[2rem] border border-[var(--color-primary)]/10", // CI-Farbe im Border
-                        "shadow-[0_8px_30px_rgba(0,0,0,0.12)] hover:shadow-[0_8px_35px_rgba(13,148,136,0.15)]", // Teal Glow beim Hover
-                        "cursor-pointer transition-all duration-300 active:scale-95 animate-float-gentle",
-                        "max-w-[calc(100vw-40px)]"
-                    )}
+        <AnimatePresence>
+            {isVisible && (
+                <motion.div
+                    // Einblend-Animation (Einmalig)
+                    initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                    exit={{ opacity: 0, scale: 0.8, y: 20 }}
+                    className="fixed bottom-4 left-4 md:bottom-8 md:left-8 z-[999]"
                 >
-                
-                    {/* Schließen Button (Dezent integriert) */}
-                    <button 
-                        onClick={(e) => { 
-                            e.preventDefault(); 
-                            e.stopPropagation(); 
-                            setShowCard(false); 
+                    {/* Floating-Container (Permanente, langsame Bewegung) */}
+                    <motion.div
+                        animate={{ y: [0, -4, 0] }}
+                        transition={{
+                            duration: 5, // Sehr langsam (5 Sek)
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                            delay: 1 // Startet erst nach dem Einblenden
                         }}
-                        className="absolute -top-2 -right-2 p-1 bg-white hover:bg-red-50 rounded-full text-slate-400 hover:text-red-500 transition-colors z-50 shadow-sm border border-slate-100"
-                        title="Chat ausblenden"
+                        className="relative"
                     >
-                        <X className="w-3.5 h-3.5" />
-                    </button>
-                    
-                    {/* ICON CONTAINER (WhatsApp Grün + Pulse) */}
-                    <div className="relative shrink-0"> 
-                        <div className="w-11 h-11 md:w-12 md:h-12 rounded-full bg-[#25D366] flex items-center justify-center text-white shadow-lg shadow-[#25D366]/30 group-hover:scale-110 transition-transform duration-300">
-                            {/* Message Icon passt oft besser zu "Chat" als Telefon */}
-                            <MessageCircle className="w-6 h-6 fill-current stroke-[1.5]" />
-                        </div>
-                        {/* Status Dot */}
-                        <div className={cn(
-                            "absolute bottom-0.5 right-0.5 w-3.5 h-3.5 rounded-full border-[2.5px] border-white",
-                            timeStatus.dot 
-                        )} />
-                    </div>
-                    
-                    {/* TEXT CONTAINER */}
-                    <div className="flex flex-col min-w-0">
-                        <span className="text-sm font-bold text-slate-900 leading-none mb-1 group-hover:text-[var(--color-primary)] transition-colors">
-                            WhatsApp Chat
-                        </span>
-                        <span className={cn(
-                            "text-[11px] font-medium leading-none truncate opacity-90", 
-                            timeStatus.color
-                        )}>
-                            {timeStatus.text}
-                        </span>
-                    </div>
-                </a>
-            </div>
-        </>
+                        {/* SCHLIESSEN BUTTON */}
+                        <motion.button 
+                            initial={{ opacity: 0, scale: 0.5 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 0.2, type: "spring", stiffness: 300 }} 
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setShowCard(false);
+                            }}
+                            className={cn(
+                                "absolute -top-2 -right-2 w-7 h-7 bg-white shadow-lg border border-slate-100 rounded-full text-slate-500 z-50",
+                                "flex items-center justify-center active:bg-slate-50"
+                            )}
+                        >
+                            <X className="w-4 h-4" />
+                        </motion.button>
+
+                        <a 
+                            href="https://wa.me/4917646695655" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className={cn(
+                                "flex items-center gap-3 bg-white/95 backdrop-blur-md p-2.5 pr-5 md:p-3 md:pr-6",
+                                "rounded-2xl border border-white/50 shadow-xl shadow-black/5",
+                                "active:scale-95 transition-transform duration-200"
+                            )}
+                        >
+                            <div className="relative shrink-0"> 
+                                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-[#25D366] flex items-center justify-center text-white shadow-sm">
+                                    <MessageCircle className="w-6 h-6 fill-current" />
+                                </div>
+                                
+                                {timeStatus.isOpen && (
+                                    <span className="absolute -bottom-1 -right-1 flex h-3 w-3">
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                        <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 border-2 border-white"></span>
+                                    </span>
+                                )}
+                            </div>
+                            
+                            <div className="flex flex-col text-left text-slate-900">
+                                <span className="text-[13px] font-black leading-none mb-0.5">
+                                    WhatsApp
+                                </span>
+                                <span className={cn(
+                                    "text-[10px] font-bold uppercase tracking-wider leading-none",
+                                    timeStatus.isOpen ? "text-emerald-600" : "text-slate-400"
+                                )}>
+                                    {timeStatus.isOpen ? "Online" : "Büro geschlossen"}
+                                </span>
+                            </div>
+                        </a>
+                    </motion.div>
+                </motion.div>
+            )}
+        </AnimatePresence>
     );
 }

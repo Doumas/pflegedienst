@@ -29,7 +29,8 @@ export function AboutHero() {
 
   return (
     <>
-      <section className="pt-32 pb-16 lg:pt-44 lg:pb-24 px-4 relative z-10 overflow-hidden bg-[#fffbf7]">
+      {/* REDUZIERT: Sektions-Padding oben/unten für einen kompakteren Look */}
+      <section className="pt-24 pb-16 lg:pt-36 lg:pb-24 px-4 relative z-10 overflow-hidden bg-[#fffbf7]">
         
         {/* BACKGROUND */}
         <div className="absolute inset-0 pointer-events-none -z-10 isolate">
@@ -45,30 +46,27 @@ export function AboutHero() {
 
         <div className="container mx-auto flex flex-col items-center relative z-10">
           
-          {/* 1. BADGE */}
-          <FadeIn delay={0.1} className="w-full flex justify-center">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 backdrop-blur-sm border border-[var(--color-border-soft)] text-[var(--color-primary-deep)] text-xs font-bold tracking-wide uppercase shadow-sm mb-8 lg:mb-10">
-              <motion.div
-                animate={{ scale: [1, 1.2, 1], rotate: [0, 15, -15, 0] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                className="flex items-center justify-center text-[var(--color-accent)]"
-              >
-                <Sparkles className="w-3.5 h-3.5 fill-current" />
-              </motion.div>
-              <span>Unsere Philosophie</span>
+          {/* 1. STANDORT-BADGE: mb-6 statt mb-10 für einen engeren Flow */}
+          <FadeIn delay={0.1} className="w-full flex justify-center mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[var(--color-primary)]/10 text-[var(--color-primary)] text-xs font-bold tracking-widest uppercase shadow-sm">
+                <motion.div
+                    animate={{ rotate: [0, 15, -15, 0], scale: [1, 1.1, 1] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                >
+                    <Sparkles className="w-3.5 h-3.5 text-[var(--color-accent)]" />
+                </motion.div>
+                <span>Borsigallee 37, 60388 Frankfurt</span>
             </div>
           </FadeIn>
 
-          {/* 2. HEADLINE (Zentriert & Design angepasst) */}
-          <FadeIn delay={0.2} className="w-full">
-            <h1 className="text-center text-5xl md:text-6xl lg:text-[5.5rem] font-black text-slate-900 mb-12 tracking-tight leading-[1.05] drop-shadow-sm max-w-5xl mx-auto text-balance">
+          {/* 2. HEADLINE: mb-10 statt mb-14 für bessere Symmetrie */}
+          <FadeIn delay={0.2} className="w-full flex justify-center mb-10">
+            <h1 className="text-center text-5xl md:text-6xl lg:text-[5.5rem] font-black text-slate-900 tracking-tight leading-[1.05] drop-shadow-sm max-w-5xl text-balance">
               Menschlichkeit ist unser <br/>
               <span className="relative inline-block px-2 mt-2 lg:mt-4">
-                  {/* UPDATE: Jetzt Orange & Script Font (wie im Hero) */}
                   <span className="relative z-10 text-[var(--color-accent)] font-script font-bold tracking-normal text-[1.1em]">
                       höchstes Gut.
                   </span>
-                  {/* Welle in Orange */}
                   <svg className="absolute w-[110%] h-3 lg:h-5 -bottom-2 -left-[5%] text-[var(--color-accent)] -z-0 opacity-80" viewBox="0 0 100 10" preserveAspectRatio="none">
                       <path d="M0 5 Q 50 15 100 5" stroke="currentColor" strokeWidth="8" fill="none" strokeLinecap="round" />
                   </svg>
@@ -77,7 +75,7 @@ export function AboutHero() {
           </FadeIn>
 
           {/* 3. KARTEN-STAPEL */}
-          <FadeIn delay={0.3} className="relative w-full max-w-5xl mx-auto h-[400px] md:h-[500px] lg:h-[650px]">
+          <FadeIn delay={0.3} className="relative w-full max-w-5xl h-[400px] md:h-[500px] lg:h-[650px]">
              {/* Dekorative Schatten-Karten */}
              <div className="absolute inset-0 bg-[var(--color-accent-soft)] rounded-[3.5rem] rotate-2 scale-[1.02] border-4 border-white shadow-xl -z-10 opacity-80" />
              <div className="absolute inset-0 bg-[var(--color-primary)]/10 rounded-[3.5rem] -rotate-2 scale-[1.01] border-4 border-white shadow-lg -z-20 opacity-60" />
@@ -103,23 +101,14 @@ export function AboutHero() {
                             />
                         </motion.div>
                     </AnimatePresence>
-                    
-                    {/* Overlay für Textlesbarkeit */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-90" />
                 </div>
 
-                {/* Text auf dem Bild */}
                 <div className="absolute inset-0 flex flex-col items-center justify-end text-center p-8 lg:p-16 pointer-events-none z-20 pb-20">
                     <p className="text-xl md:text-2xl lg:text-3xl text-white font-medium leading-relaxed max-w-3xl mx-auto drop-shadow-xl">
                         &quot;Wir möchten Ihnen nicht nur helfen, sondern Ihnen die Sorge nehmen. 
                         Lernen Sie hier die Menschen kennen, denen Sie Ihre Liebsten anvertrauen.&quot;
                     </p>
-                </div>
-
-                <div className="absolute top-8 right-8 z-30 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onClick={(e) => { e.stopPropagation(); setIsFullscreen(true); }} className="bg-white/20 hover:bg-white/40 backdrop-blur-md text-white p-3 rounded-full shadow-lg transition-transform active:scale-95 pointer-events-auto cursor-pointer">
-                        <Maximize2 className="w-6 h-6" />
-                    </button>
                 </div>
 
                 <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-3 z-30 pointer-events-auto">
@@ -138,8 +127,6 @@ export function AboutHero() {
           </FadeIn>
         </div>
       </section>
-      
-      {/* Fullscreen Modal Logic hier einfügen falls separat benötigt, oder global lösen */}
     </>
   );
 }

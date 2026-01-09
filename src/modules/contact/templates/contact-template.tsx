@@ -6,13 +6,14 @@ import { siteConfig } from "@/config/site";
 import { 
   Phone, Mail, MapPin, Clock, ArrowRight, CheckCircle2, 
   MessageSquare, Loader2, Sparkles, Navigation, HelpCircle, 
-  Calendar, FileText, Heart, X, AlertTriangle, ChevronLeft, ChevronRight
+  Calendar, FileText, Heart, X, AlertTriangle, ChevronLeft, ChevronRight, Activity
 } from "lucide-react";
 import { useForm, ValidationError } from "@formspree/react";
 import { Button } from "@/shared/ui/button";
 import { FadeIn } from "@/shared/ui/fade-in";
 import { CareConfigurator } from "@/modules/home/templates/care-configurator";
 import { cn } from "@/shared/utils/cn";
+import { motion } from "framer-motion";
 
 type ModalType = "none" | "appointment" | "invoice";
 
@@ -22,51 +23,39 @@ export function ContactTemplate() {
   const router = useRouter();
   const pathname = usePathname();
   
-  // DEFAULT: Sonstiges (Allgemeine Frage)
   const [subject, setSubject] = useState("Sonstiges");
-  
-  // ANPASSUNG: Standard-Text direkt setzen (wird bei Konfigurator-Aufruf überschrieben)
   const [messageText, setMessageText] = useState("Guten Tag,\n\nich habe eine allgemeine Frage zu...");
-  
   const [activeModal, setActiveModal] = useState<ModalType>("none");
   const [invoiceNr, setInvoiceNr] = useState("");
 
-  // Kalender States
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
-  // --- AUTOMATIK: TEXT ERSTELLEN DURCH URL PARAMETER (Pflege-Konfigurator) ---
   useEffect(() => {
     const who = searchParams.get("who");
     const level = searchParams.get("level");
     const type = searchParams.get("type");
     const freq = searchParams.get("freq");
 
-    // Nur wenn Parameter da sind, überschreiben wir den Standard-Text
     if (who || level || type) {
       let text = "Guten Tag,\n\nich habe Ihren Pflege-Check genutzt und interessiere mich für eine Beratung.\n\n";
-      
       if (who) text += `📌 Für wen: ${who === "mich" ? "Mich selbst" : "Einen Angehörigen"}\n`;
       if (level) text += `📌 Pflegegrad: ${level}\n`;
       if (type) text += `📌 Benötigte Leistung: ${type}\n`;
       if (freq) text += `📌 Gewünschte Häufigkeit: ${freq}\n`;
-      
       text += "\nBitte melden Sie sich bei mir, um die Details zu besprechen.";
-      
       setMessageText(text);
       setSubject("Pflegeberatung");
-      
       setTimeout(() => {
         document.getElementById("anfrage-formular")?.scrollIntoView({ behavior: "smooth", block: "center" });
       }, 100);
     }
   }, [searchParams]);
 
-  const googleMapsUrl = `http://googleusercontent.com/maps.google.com/maps?q=${encodeURIComponent(siteConfig.contact.address)}`;
+  const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(siteConfig.contact.address)}`;
 
   const handleTopicClick = (id: string) => {
     setSubject(id);
-    
     if (id === "Pflegeberatung") {
       const params = new URLSearchParams(searchParams.toString());
       params.set("openConfigurator", "true");
@@ -77,22 +66,18 @@ export function ContactTemplate() {
       setActiveModal("invoice");
       setInvoiceNr(""); 
     } else {
-      // Wenn man zurück zu "Sonstiges" klickt
       setMessageText("Guten Tag,\n\nich habe eine allgemeine Frage zu...");
     }
   };
 
-  // --- KALENDER LOGIK ---
   const isHoliday = (date: Date) => {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const dateString = `${day}.${month}`;
     const year = date.getFullYear();
     const fixedHolidays = ["01.01", "01.05", "03.10", "24.12", "25.12", "26.12", "31.12"];
-    const moving2025 = ["18.04", "21.04", "29.05", "09.06", "19.06"];
     const moving2026 = ["03.04", "06.04", "14.05", "25.05", "04.06"];
     if (fixedHolidays.includes(dateString)) return true;
-    if (year === 2025 && moving2025.includes(dateString)) return true;
     if (year === 2026 && moving2026.includes(dateString)) return true;
     return false;
   };
@@ -131,7 +116,6 @@ export function ContactTemplate() {
     if (prev.getMonth() >= today.getMonth() || prev.getFullYear() > today.getFullYear()) setCurrentMonth(prev);
   };
 
-  // --- TEXT GENERATOREN ---
   const applyAppointmentText = (type: "urgent" | "planned", date?: Date) => {
     let text = "";
     if (type === "urgent") {
@@ -162,38 +146,48 @@ export function ContactTemplate() {
   ];
 
   return (
-    <div className="relative min-h-screen bg-white font-sans pb-20 selection:bg-[var(--color-primary)]/20 overflow-hidden">
+    <div className="relative min-h-screen bg-[#fffbf7] font-sans pb-20 selection:bg-[var(--color-primary)]/20 overflow-hidden text-slate-900">
       
       {/* Background FX */}
-      <div className="absolute inset-0 opacity-[0.4] pointer-events-none transform-gpu" style={{ backgroundImage: 'radial-gradient(var(--color-border-soft) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
-      <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[1000px] h-[700px] bg-[var(--color-secondary)]/60 rounded-full blur-[120px] opacity-70 pointer-events-none transform-gpu" />
-      <div className="absolute top-[20%] right-[-10%] w-[600px] h-[600px] bg-[var(--color-primary)]/5 rounded-full blur-[100px] md:animate-pulse pointer-events-none transform-gpu" style={{ animationDuration: '6s' }} />
+      <div className="absolute inset-0 pointer-events-none -z-10">
+        <div className="absolute inset-0 opacity-[0.2]" 
+             style={{ backgroundImage: 'radial-gradient(var(--color-primary) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+        <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[1000px] h-[700px] bg-[var(--color-secondary)]/40 rounded-full blur-[120px]" />
+      </div>
 
       <div className="relative z-10">
       
-        {/* HEADER: MOBILE CENTER / DESKTOP LEFT */}
-        <section className="pt-24 pb-16 lg:pt-32 lg:pb-24 px-4">
+        {/* HEADER: ZENTRIERT AUF MOBILE / LINKS AUF DESKTOP */}
+        <section className="pt-24 pb-16 lg:pt-36 lg:pb-24 px-4">
           <div className="container mx-auto">
-             <div className="flex flex-col items-center lg:items-start text-center lg:text-left max-w-3xl mx-auto lg:mx-0">
+             <div className="flex flex-col items-center lg:items-start text-center lg:text-left max-w-4xl mx-auto lg:mx-0">
                 <FadeIn delay={0.1}>
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-sm border border-[var(--color-border-soft)] text-[var(--color-primary)] text-xs font-bold tracking-wide uppercase shadow-sm mb-8">
-                    <MessageSquare className="w-3 h-3 text-[var(--color-accent)]" />
-                    <span>Kontakt & Hilfe</span>
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[var(--color-primary)]/10 text-[var(--color-primary)] text-xs font-bold tracking-widest uppercase shadow-sm mb-8">
+                        <motion.div
+                            animate={{ rotate: [0, 10, -10, 0], scale: [1, 1.1, 1] }}
+                            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                        >
+                            <MessageSquare className="w-3.5 h-3.5 text-[var(--color-accent)]" />
+                        </motion.div>
+                        <span>Kontakt & Beratung</span>
                     </div>
                 </FadeIn>
                <FadeIn delay={0.2}>
-                   <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1]">
+                   <h1 className="text-5xl md:text-6xl lg:text-[5.5rem] font-black text-slate-900 mb-8 tracking-tight text-balance leading-[1.05]">
                     Wir sind <br/>
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)] relative inline-block">
-                        für Sie da.
-                        <svg className="absolute w-full h-3 -bottom-1 left-0 text-[var(--color-accent)] -z-10 opacity-40" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" /></svg>
+                    <span className="relative inline-block px-2 mt-2">
+                        <span className="relative z-10 font-script text-[var(--color-accent)] font-bold tracking-normal">
+                            für Sie da.
+                        </span>
+                        <svg className="absolute w-[110%] h-3 lg:h-5 -bottom-2 -left-2 text-[var(--color-accent)] -z-0 opacity-80" viewBox="0 0 100 10" preserveAspectRatio="none">
+                            <path d="M0 5 Q 50 15 100 5" stroke="currentColor" strokeWidth="8" fill="none" strokeLinecap="round" />
+                        </svg>
                     </span>
                     </h1>
                </FadeIn>
                 <FadeIn delay={0.3}>
-                    <p className="text-xl text-slate-600 leading-relaxed max-w-2xl font-medium">
-                    Ob Pflegegrad, Erstgespräch oder einfach nur eine Frage: <br className="hidden md:block"/>
-                    Wir nehmen uns Zeit für Ihr Anliegen.
+                    <p className="text-xl md:text-2xl text-slate-600 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-medium text-pretty">
+                    Ob Pflegegrad, Erstgespräch oder einfach nur eine Frage: Wir nehmen uns persönlich Zeit für Ihr Anliegen.
                     </p>
                 </FadeIn>
              </div>
@@ -207,80 +201,67 @@ export function ContactTemplate() {
             {/* LINKS: Kontakt Infos */}
             <div className="lg:col-span-5 space-y-6">
               
-              {/* Phone */}
               <FadeIn delay={0.4} direction="right">
-                <a href={`tel:${siteConfig.contact.phone}`} className="flex items-center gap-5 p-6 rounded-[2rem] bg-white border border-[var(--color-border-soft)] hover:border-[var(--color-accent)]/30 hover:shadow-xl hover:shadow-[var(--color-accent)]/5 transition-all group cursor-pointer relative overflow-hidden transform-gpu">
-                    <div className="absolute right-0 top-0 w-24 h-full bg-gradient-to-l from-[var(--color-secondary)]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <div className="w-14 h-14 bg-[var(--color-secondary)] rounded-2xl flex items-center justify-center text-[var(--color-primary)] shrink-0 transition-all duration-300 group-hover:scale-110 group-hover:bg-[var(--color-accent)] group-hover:text-white">
+                <a href={`tel:${siteConfig.contact.phone}`} className="flex items-center gap-5 p-6 rounded-[2rem] bg-white border border-slate-100 hover:border-[var(--color-primary)]/30 hover:shadow-xl transition-all duration-300 group transform-gpu">
+                    <div className="w-14 h-14 bg-[var(--color-secondary)] rounded-2xl flex items-center justify-center text-[var(--color-primary)] group-hover:scale-110 group-hover:bg-[var(--color-primary)] group-hover:text-white transition-all duration-300">
                         <Phone className="w-6 h-6" />
                     </div>
-                    <div>
-                        <p className="font-bold text-slate-900 mb-0.5 group-hover:text-[var(--color-accent)] transition-colors">Rufen Sie uns an</p>
-                        <p className="text-lg text-slate-600 font-medium transition-colors">{siteConfig.contact.phone}</p>
+                    <div className="text-left">
+                        <p className="font-bold text-slate-500 text-xs uppercase tracking-widest mb-1">Anrufen</p>
+                        <p className="text-xl font-black text-slate-900 group-hover:text-[var(--color-primary)] transition-colors">{siteConfig.contact.phone}</p>
                     </div>
                 </a>
               </FadeIn>
               
-              {/* Mail */}
               <FadeIn delay={0.5} direction="right">
-                <a href={`mailto:${siteConfig.contact.email}`} className="flex items-center gap-5 p-6 rounded-[2rem] bg-white border border-[var(--color-border-soft)] hover:border-[var(--color-accent)]/30 hover:shadow-xl hover:shadow-[var(--color-accent)]/5 transition-all group cursor-pointer relative overflow-hidden transform-gpu">
-                    <div className="w-14 h-14 bg-[var(--color-secondary)] rounded-2xl flex items-center justify-center text-[var(--color-primary)] shrink-0 transition-all duration-300 group-hover:scale-110 group-hover:bg-[var(--color-accent)] group-hover:text-white">
+                <a href={`mailto:${siteConfig.contact.email}`} className="flex items-center gap-5 p-6 rounded-[2rem] bg-white border border-slate-100 hover:border-[var(--color-primary)]/30 hover:shadow-xl transition-all duration-300 group transform-gpu">
+                    <div className="w-14 h-14 bg-[var(--color-secondary)] rounded-2xl flex items-center justify-center text-[var(--color-primary)] group-hover:scale-110 group-hover:bg-[var(--color-primary)] group-hover:text-white transition-all duration-300">
                         <Mail className="w-6 h-6" />
                     </div>
-                    <div className="overflow-hidden">
-                        <p className="font-bold text-slate-900 mb-0.5 group-hover:text-[var(--color-accent)] transition-colors">Schreiben Sie uns</p>
-                        <p className="text-lg text-slate-600 font-medium transition-colors truncate">{siteConfig.contact.email}</p>
+                    <div className="min-w-0 flex-1 text-left">
+                        <p className="font-bold text-slate-500 text-xs uppercase tracking-widest mb-1">E-Mail</p>
+                        <p className="text-lg font-black text-slate-900 group-hover:text-[var(--color-primary)] transition-colors truncate">{siteConfig.contact.email}</p>
                     </div>
                 </a>
               </FadeIn>
 
-              {/* WhatsApp Card */}
-              <FadeIn delay={0.6} direction="right">
-                <a href="#" className="flex items-center gap-5 p-6 rounded-[2rem] bg-green-50/50 border border-green-100 hover:border-green-300 hover:bg-green-50 hover:shadow-lg hover:shadow-green-100 transition-all group cursor-pointer relative overflow-hidden transform-gpu">
-                    <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-green-600 shrink-0 shadow-sm group-hover:scale-110 transition-transform">
-                        <MessageSquare className="w-6 h-6" />
-                    </div>
-                    <div>
-                        <p className="font-bold text-green-900 mb-0.5 group-hover:text-green-700 transition-colors">WhatsApp Chat</p>
-                        <p className="text-sm text-green-700">Antwort in wenigen Minuten</p>
-                    </div>
-                    <ArrowRight className="ml-auto w-5 h-5 text-green-600 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
-                </a>
-              </FadeIn>
-
-              {/* Maps */}
+              {/* Maps Card */}
               <FadeIn delay={0.7} direction="right">
-                <div className="rounded-[2.5rem] bg-white border border-[var(--color-border-soft)] p-3 overflow-hidden group relative shadow-lg transform-gpu">
-                    <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer" className="block h-48 w-full rounded-[2rem] bg-slate-100 relative overflow-hidden opacity-90 group-hover:opacity-100 transition-opacity cursor-pointer">
-                        <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(#cbd5e1 2px, transparent 2px)', backgroundSize: '20px 20px', opacity: 0.6 }}></div>
+                <div className="rounded-[2.5rem] bg-white border border-slate-100 p-4 shadow-xl transform-gpu group">
+                    <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer" className="block h-48 w-full rounded-[2rem] bg-slate-100 relative overflow-hidden">
+                        <div className="absolute inset-0 opacity-[0.2]" style={{ backgroundImage: 'radial-gradient(var(--color-primary) 2px, transparent 2px)', backgroundSize: '24px 24px' }} />
                         <div className="absolute inset-0 flex items-center justify-center z-10">
-                            <div className="bg-white/90 backdrop-blur-sm px-5 py-2.5 rounded-full flex items-center gap-2 shadow-sm text-slate-700 font-bold text-sm group-hover:scale-105 transition-transform border border-slate-100 group-hover:text-[var(--color-accent)] group-hover:border-[var(--color-accent)]/20">
-                                <MapPin className="w-4 h-4 text-[var(--color-primary)] group-hover:text-[var(--color-accent)]" /> Karte öffnen
+                            <div className="bg-white px-6 py-3 rounded-full flex items-center gap-2 shadow-lg text-slate-900 font-bold transition-transform group-hover:scale-105 border border-slate-100">
+                                <MapPin className="w-4 h-4 text-[var(--color-accent)]" /> Karte öffnen
                             </div>
                         </div>
                     </a>
-                    <div className="p-5">
-                        <h4 className="font-bold text-slate-900 text-lg mb-1">{siteConfig.contact.address}</h4>
-                        <p className="text-sm text-slate-500 mb-5 flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[var(--color-accent)]"/> Kostenlose Parkplätze im Hof.</p>
-                        <Button asChild variant="outline" className="w-full justify-between bg-white hover:bg-[var(--color-accent)] hover:text-white hover:border-[var(--color-accent)] border-slate-200 text-slate-700 cursor-pointer rounded-xl h-12 transition-all group/btn">
-                        <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer">
-                            Route planen <Navigation className="w-4 h-4 text-[var(--color-primary)] group-hover/btn:text-white" />
-                        </a>
+                    <div className="p-6 text-left">
+                        <h4 className="font-black text-slate-900 text-xl mb-2">{siteConfig.contact.address}</h4>
+                        <p className="text-sm text-slate-500 mb-6 flex items-center gap-2 font-medium">
+                            <CheckCircle2 className="w-4 h-4 text-[var(--color-primary)]"/> Kostenlose Parkplätze vor Ort.
+                        </p>
+                        <Button asChild className="w-full bg-[var(--color-secondary)] text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white rounded-xl h-14 font-black transition-all shadow-sm">
+                            <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer">
+                                Route planen <Navigation className="ml-2 w-4 h-4" />
+                            </a>
                         </Button>
                     </div>
                 </div>
               </FadeIn>
               
-              {/* Notruf Mini */}
+              {/* Notruf Patient */}
               <FadeIn delay={0.8} direction="right">
-                <div className="p-6 rounded-[2rem] bg-[var(--color-footer-bg)] text-white flex items-center gap-5 shadow-xl shadow-black/5 relative overflow-hidden transform-gpu">
-                    <div className="absolute -right-4 -top-4 w-24 h-24 bg-[var(--color-accent)]/10 rounded-full blur-xl"></div>
-                    <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center animate-pulse shrink-0 border border-white/10">
-                        <Clock className="w-6 h-6" />
-                    </div>
-                    <div>
-                        <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">24h Notruf für Patienten</div>
-                        <div className="text-xl font-bold tracking-wide">089 / 123 456 99</div>
+                <div className="p-8 rounded-[2.5rem] bg-[var(--color-footer-bg)] text-white shadow-2xl relative overflow-hidden">
+                    <div className="absolute -right-4 -top-4 w-32 h-32 bg-[var(--color-accent)]/10 rounded-full blur-2xl" />
+                    <div className="flex items-center gap-6 relative z-10 text-left">
+                        <div className="w-14 h-14 bg-white/10 rounded-full flex items-center justify-center animate-pulse border border-white/20">
+                            <Clock className="w-7 h-7 text-[var(--color-accent)]" />
+                        </div>
+                        <div>
+                            <p className="text-[10px] font-bold text-[var(--color-accent)] uppercase tracking-widest mb-1">24h Rufbereitschaft</p>
+                            <p className="text-2xl font-black tracking-tight">089 / 123 456 99</p>
+                        </div>
                     </div>
                 </div>
               </FadeIn>
@@ -288,93 +269,81 @@ export function ContactTemplate() {
             </div>
 
             {/* RECHTS: Das Formular */}
-            <div id="anfrage-formular" className="lg:col-span-7 bg-white p-8 md:p-10 rounded-[3rem] shadow-2xl shadow-slate-200/50 border border-[var(--color-border-soft)] relative scroll-mt-32 transform-gpu">
-              <Sparkles className="absolute top-10 right-10 w-6 h-6 text-[var(--color-accent)] animate-pulse" />
+            <div id="anfrage-formular" className="lg:col-span-7 bg-white p-8 md:p-12 rounded-[3rem] shadow-2xl border border-slate-100 relative scroll-mt-32 transform-gpu">
+              <Sparkles className="absolute top-12 right-12 w-6 h-6 text-[var(--color-accent)]/20 animate-pulse" />
 
               {state.succeeded ? (
-                <div className="text-center py-20 h-full flex flex-col items-center justify-center animate-in zoom-in-95">
-                  <div className="w-24 h-24 bg-green-50 text-green-600 rounded-full flex items-center justify-center mx-auto mb-8 shadow-sm"><CheckCircle2 className="w-12 h-12" /></div>
-                  <h3 className="text-3xl font-bold text-slate-900 mb-4">Nachricht gesendet!</h3>
-                  <Button variant="outline" onClick={() => window.location.reload()} className="rounded-2xl h-12 px-8 cursor-pointer">Zurück</Button>
+                <div className="text-center py-20">
+                  <div className="w-24 h-24 bg-[var(--color-secondary)] text-[var(--color-primary)] rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
+                    <CheckCircle2 className="w-12 h-12" />
+                  </div>
+                  <h3 className="text-3xl font-black text-slate-900 mb-4 tracking-tight text-center">Nachricht gesendet!</h3>
+                  <p className="text-slate-500 mb-8 font-medium text-center">Wir melden uns innerhalb von 24 Stunden bei Ihnen.</p>
+                  <Button variant="outline" onClick={() => window.location.reload()} className="rounded-2xl h-14 px-10 font-bold border-2 border-[var(--color-primary)] text-[var(--color-primary)]">Zurück</Button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-8">
-                  <FadeIn delay={0.4}>
-                    {/* FORM HEADER: MOBILE CENTER / DESKTOP LEFT */}
-                    <div className="text-center lg:text-left">
-                        <h3 className="text-3xl font-bold text-slate-900 mb-2">Schreiben Sie uns</h3>
-                        <p className="text-slate-500">Worum geht es bei Ihrer Anfrage?</p>
-                    </div>
-                  </FadeIn>
+                <form onSubmit={handleSubmit} className="space-y-10 text-left">
+                  <div>
+                    <h3 className="text-3xl font-black text-slate-900 mb-4 tracking-tight">Nachricht senden</h3>
+                    <p className="text-slate-500 font-medium">Was können wir für Sie tun?</p>
+                  </div>
 
-                  {/* TOPIC BUTTONS */}
+                  {/* TOPICS */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                     {topics.map((topic, i) => (
-                        <FadeIn key={topic.id} delay={0.5 + (i * 0.1)}>
-                            <button
+                     {topics.map((topic) => (
+                        <button
+                            key={topic.id}
                             type="button"
                             onClick={() => handleTopicClick(topic.id)}
-                            className={`group w-full relative flex items-center gap-3 p-4 rounded-2xl border text-left transition-all duration-300 cursor-pointer
-                                ${subject === topic.id 
-                                ? 'bg-[var(--color-primary)]/5 border-[var(--color-primary)] text-[var(--color-primary)] shadow-md scale-[1.02]' 
-                                : 'bg-white border-slate-100 text-slate-600 hover:border-[var(--color-primary)]/30 hover:bg-slate-50'}`}
-                            >
-                            <topic.icon className={`w-5 h-5 transition-colors duration-300 ${subject === topic.id ? 'text-[var(--color-accent)]' : 'text-slate-400 group-hover:text-[var(--color-accent)]'}`} />
+                            className={cn(
+                                "flex items-center gap-4 p-5 rounded-2xl border text-left transition-all duration-300",
+                                subject === topic.id 
+                                    ? "bg-[var(--color-primary)] border-transparent text-white shadow-xl shadow-[var(--color-primary)]/20" 
+                                    : "bg-slate-50 border-slate-100 text-slate-600 hover:bg-white hover:border-[var(--color-primary)]/20"
+                            )}
+                        >
+                            <topic.icon className={cn("w-5 h-5", subject === topic.id ? "text-white" : "text-[var(--color-primary)]")} />
                             <span className="font-bold text-sm">{topic.label}</span>
-                            {subject === topic.id && <CheckCircle2 className="absolute right-4 w-5 h-5 text-[var(--color-primary)]" />}
-                            </button>
-                        </FadeIn>
+                        </button>
                      ))}
                   </div>
                   <input type="hidden" name="_subject" value={`Neue Anfrage: ${subject}`} />
 
                   {/* INPUTS */}
-                  <div className="space-y-6">
-                    <FadeIn delay={0.7}>
-                        <div className="grid md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Vorname</label>
-                            <input name="vorname" type="text" required className="w-full h-14 px-5 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:border-[var(--color-accent)] focus:ring-4 focus:ring-[var(--color-accent)]/10 transition-all font-medium text-slate-900" placeholder="Max" />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Nachname</label>
-                            <input name="nachname" type="text" required className="w-full h-14 px-5 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:border-[var(--color-accent)] focus:ring-4 focus:ring-[var(--color-accent)]/10 transition-all font-medium text-slate-900" placeholder="Mustermann" />
-                        </div>
-                        </div>
-                    </FadeIn>
-                    <FadeIn delay={0.8}>
-                        <div className="grid md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">E-Mail</label>
-                            <input name="email" type="email" required className="w-full h-14 px-5 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:border-[var(--color-accent)] focus:ring-4 focus:ring-[var(--color-accent)]/10 transition-all font-medium text-slate-900" placeholder="ihre@email.de" />
-                            <ValidationError prefix="Email" field="email" errors={state.errors} className="text-red-500 text-xs mt-1 block" />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Telefon</label>
-                            <input name="phone" type="tel" className="w-full h-14 px-5 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:border-[var(--color-accent)] focus:ring-4 focus:ring-[var(--color-accent)]/10 transition-all font-medium text-slate-900" placeholder="Für Rückrufe" />
-                        </div>
-                        </div>
-                    </FadeIn>
-                    <FadeIn delay={0.9}>
-                        <div className="space-y-2">
-                        <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Ihre Nachricht</label>
-                        <textarea 
-                            name="message" 
-                            rows={6} 
-                            required 
-                            className="w-full p-5 rounded-2xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:border-[var(--color-accent)] focus:ring-4 focus:ring-[var(--color-accent)]/10 transition-all resize-none font-medium text-slate-900 placeholder:text-slate-400 leading-relaxed" 
-                            value={messageText} 
-                            onChange={(e) => setMessageText(e.target.value)} 
-                        />
-                        </div>
-                    </FadeIn>
+                  <div className="grid md:grid-cols-2 gap-8">
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-4">Vorname</label>
+                        <input name="vorname" type="text" required className="w-full h-14 px-6 rounded-2xl border border-slate-100 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-[var(--color-primary)]/5 focus:border-[var(--color-primary)] outline-none transition-all font-black text-slate-900" placeholder="Max" />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-4">Nachname</label>
+                        <input name="nachname" type="text" required className="w-full h-14 px-6 rounded-2xl border border-slate-100 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-[var(--color-primary)]/5 focus:border-[var(--color-primary)] outline-none transition-all font-black text-slate-900" placeholder="Mustermann" />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-4">E-Mail Adresse</label>
+                        <input name="email" type="email" required className="w-full h-14 px-6 rounded-2xl border border-slate-100 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-[var(--color-primary)]/5 focus:border-[var(--color-primary)] outline-none transition-all font-black text-slate-900" placeholder="ihre@email.de" />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-4">Telefonnummer</label>
+                        <input name="phone" type="tel" className="w-full h-14 px-6 rounded-2xl border border-slate-100 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-[var(--color-primary)]/5 focus:border-[var(--color-primary)] outline-none transition-all font-black text-slate-900" placeholder="Für Rückrufe" />
+                    </div>
                   </div>
 
-                  <FadeIn delay={1.0}>
-                    <Button type="submit" disabled={state.submitting} className="cursor-pointer w-full h-16 text-lg bg-[var(--color-primary)] hover:bg-[var(--color-accent)] text-white rounded-2xl shadow-xl shadow-[var(--color-primary)]/20 font-bold transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-[var(--color-accent)]/30">
-                        {state.submitting ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <span className="flex items-center gap-2">Anfrage absenden <ArrowRight className="w-5 h-5" /></span>}
-                    </Button>
-                  </FadeIn>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-4">Ihre Nachricht</label>
+                    <textarea 
+                        name="message" 
+                        rows={6} 
+                        required 
+                        className="w-full p-6 rounded-2xl border border-slate-100 bg-slate-50 focus:bg-white focus:ring-4 focus:ring-[var(--color-primary)]/5 focus:border-[var(--color-primary)] outline-none transition-all resize-none font-black text-slate-900 leading-relaxed" 
+                        value={messageText} 
+                        onChange={(e) => setMessageText(e.target.value)} 
+                    />
+                  </div>
+
+                  <Button type="submit" disabled={state.submitting} className="w-full h-16 text-lg bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white rounded-2xl shadow-xl shadow-[var(--color-primary)]/20 font-black transition-all hover:-translate-y-1">
+                      {state.submitting ? <Loader2 className="w-6 h-6 animate-spin" /> : <span className="flex items-center gap-3">Anfrage jetzt absenden <ArrowRight className="w-5 h-5" /></span>}
+                  </Button>
                 </form>
               )}
             </div>
@@ -384,59 +353,53 @@ export function ContactTemplate() {
 
       {/* MODALS */}
       {activeModal !== "none" && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl p-8 md:p-10 relative animate-in zoom-in-95 slide-in-from-bottom-4 duration-300">
-            <button onClick={() => setActiveModal("none")} className="absolute top-6 right-6 p-2 bg-slate-100 rounded-full hover:bg-red-50 hover:text-red-500 transition-colors cursor-pointer"><X className="w-5 h-5" /></button>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/60 backdrop-blur-md">
+          <div className="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl p-10 relative">
+            <button onClick={() => setActiveModal("none")} className="absolute top-6 right-6 p-3 bg-slate-50 hover:bg-red-50 text-slate-400 hover:text-red-500 rounded-full transition-all">
+                <X className="w-5 h-5" />
+            </button>
 
-            {/* APPOINTMENT */}
+            {/* APPOINTMENT MODAL */}
             {activeModal === "appointment" && (
-              <div className="space-y-6">
-                <div className="w-16 h-16 bg-[var(--color-secondary)] rounded-full flex items-center justify-center text-[var(--color-primary)] mb-2 mx-auto md:mx-0"> {/* Icon zentriert mobile, links desktop wäre optional, aber für Modal ist zentriert oft besser. Ich lasse es hier mal safe. */}
-                  <Calendar className="w-8 h-8" />
+              <div className="space-y-8">
+                <div className="text-left">
+                    <h3 className="text-3xl font-black text-slate-900 mb-2 tracking-tight">Wann passt es?</h3>
+                    <p className="text-slate-500 font-medium">Wir melden uns zur Bestätigung.</p>
                 </div>
-                <h3 className="text-2xl font-black text-slate-900 text-center md:text-left">Wann passt es Ihnen?</h3>
                 
-                <button onClick={() => applyAppointmentText("urgent")} className="w-full p-4 rounded-xl border border-red-100 bg-red-50/50 hover:bg-red-50 text-left flex items-center gap-3 group transition-colors cursor-pointer">
-                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-red-500"><AlertTriangle className="w-5 h-5" /></div>
-                  <div>
-                    <span className="block font-bold text-red-900">Notfall / Heute</span>
-                    <span className="text-xs text-red-700/70">Schnellstmöglich</span>
+                <button onClick={() => applyAppointmentText("urgent")} className="w-full p-5 rounded-2xl border-2 border-red-50 bg-red-50/30 hover:bg-red-50 transition-all text-left flex items-center gap-4 group">
+                  <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-red-500"><AlertTriangle className="w-6 h-6" /></div>
+                  <div className="flex-1">
+                    <span className="block font-black text-red-900">Akuter Bedarf</span>
+                    <span className="text-xs text-red-700/70 font-bold uppercase tracking-wider">Schnellstmöglich</span>
                   </div>
-                  <ArrowRight className="ml-auto w-4 h-4 text-red-300 group-hover:text-red-500" />
+                  <ArrowRight className="w-5 h-5 text-red-300 group-hover:translate-x-1 transition-transform" />
                 </button>
 
-                <div className="relative flex py-2 items-center">
-                   <div className="flex-grow border-t border-slate-100"></div>
-                   <span className="flex-shrink-0 mx-4 text-slate-300 text-xs font-bold uppercase">Oder Wunschtermin</span>
-                   <div className="flex-grow border-t border-slate-100"></div>
-                </div>
-
-                <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
-                   <div className="flex items-center justify-between mb-4">
-                      <button onClick={prevMonth} className="p-1 hover:bg-white rounded-full cursor-pointer"><ChevronLeft className="w-5 h-5 text-slate-400" /></button>
-                      <span className="font-bold text-slate-700">{currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
-                      <button onClick={nextMonth} className="p-1 hover:bg-white rounded-full cursor-pointer"><ChevronRight className="w-5 h-5 text-slate-400" /></button>
+                <div className="bg-slate-50 rounded-[2rem] p-6 border border-slate-100">
+                   <div className="flex items-center justify-between mb-6">
+                      <button onClick={prevMonth} className="p-2 hover:bg-white rounded-lg transition-all"><ChevronLeft className="w-5 h-5 text-slate-400" /></button>
+                      <span className="font-black text-slate-900">{currentMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
+                      <button onClick={nextMonth} className="p-2 hover:bg-white rounded-lg transition-all"><ChevronRight className="w-5 h-5 text-slate-400" /></button>
                    </div>
-                   <div className="grid grid-cols-7 gap-1 text-center mb-2">
-                      {['Mo','Di','Mi','Do','Fr','Sa','So'].map(d => <span key={d} className="text-xs font-bold text-slate-300 uppercase">{d}</span>)}
-                   </div>
-                   <div className="grid grid-cols-7 gap-1">
+                   <div className="grid grid-cols-7 gap-2">
+                      {['Mo','Di','Mi','Do','Fr','Sa','So'].map(d => <span key={d} className="text-[10px] font-black text-slate-300 uppercase text-center mb-2">{d}</span>)}
                       {Array.from({ length: getFirstDayOfMonth(currentMonth.getFullYear(), currentMonth.getMonth()) }).map((_, i) => <div key={`empty-${i}`} />)}
                       {Array.from({ length: getDaysInMonth(currentMonth.getFullYear(), currentMonth.getMonth()) }).map((_, i) => {
                          const day = i + 1;
                          const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
                          date.setHours(0,0,0,0);
-                         const isWeekend = date.getDay() === 0 || date.getDay() === 6;
-                         const isTooEarly = date < minDate;
-                         const isHolidayDate = isHoliday(date);
-                         const disabled = isWeekend || isTooEarly || isHolidayDate;
+                         const disabled = date.getDay() === 0 || date.getDay() === 6 || date < minDate || isHoliday(date);
                          return (
                             <button 
                                key={day} 
                                disabled={disabled}
                                onClick={() => handleDateClick(day)}
-                               className={`h-9 w-9 rounded-full flex items-center justify-center text-sm font-medium transition-all ${disabled ? 'text-slate-300 cursor-not-allowed bg-transparent' : 'text-slate-700 hover:bg-[var(--color-primary)] hover:text-white cursor-pointer bg-white border border-slate-100 shadow-sm'} ${selectedDate?.getTime() === date.getTime() ? 'bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary)]' : ''}`}
-                               title={isHolidayDate ? "Feiertag / Betriebsruhe" : ""}
+                               className={cn(
+                                   "h-10 w-10 rounded-full flex items-center justify-center text-sm font-bold transition-all",
+                                   disabled ? "text-slate-200" : "bg-white text-slate-900 hover:bg-[var(--color-accent)] hover:text-white shadow-sm",
+                                   selectedDate?.getTime() === date.getTime() && "bg-[var(--color-primary)] text-white"
+                               )}
                             >
                                {day}
                             </button>
@@ -447,37 +410,32 @@ export function ContactTemplate() {
               </div>
             )}
 
-            {/* INVOICE */}
+            {/* INVOICE MODAL */}
             {activeModal === "invoice" && (
-              <div className="space-y-6">
-                <div className="w-16 h-16 bg-[var(--color-secondary)] rounded-full flex items-center justify-center text-[var(--color-primary)] mb-2 mx-auto md:mx-0">
-                  <FileText className="w-8 h-8" />
+              <div className="space-y-8 text-left">
+                <div>
+                    <h3 className="text-3xl font-black text-slate-900 mb-2 tracking-tight">Büro & Verwaltung</h3>
+                    <p className="text-slate-500 font-medium">Fragen zu Kosten und Abrechnung.</p>
                 </div>
-                <h3 className="text-2xl font-black text-slate-900 text-center md:text-left">Verwaltung & Rechnung</h3>
                 
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Rechnungsnummer (Optional)</label>
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Rechnungsnummer</label>
                     <input 
                       type="text" 
                       value={invoiceNr}
                       onChange={(e) => setInvoiceNr(e.target.value)}
-                      className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:border-[var(--color-accent)] focus:outline-none transition-all"
+                      className="w-full h-14 px-5 rounded-xl border border-slate-100 bg-slate-50 focus:border-[var(--color-accent)] outline-none font-black text-slate-900"
                       placeholder="z.B. RE-2024-..." 
                     />
                   </div>
                   
-                  <div className="grid gap-3">
-                    <button onClick={() => applyInvoiceText("invoice")} className="w-full py-3 rounded-xl bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-hover)] font-bold shadow-md shadow-[var(--color-primary)]/20 cursor-pointer">
-                      Frage zur Rechnung stellen
+                  <div className="grid gap-3 pt-4">
+                    <button onClick={() => applyInvoiceText("invoice")} className="w-full h-14 rounded-xl bg-[var(--color-primary)] text-white font-black hover:bg-[var(--color-primary-hover)] transition-all shadow-lg shadow-[var(--color-primary)]/20 cursor-pointer">
+                      Anliegen zur Rechnung
                     </button>
-                    <div className="relative flex py-2 items-center">
-                      <div className="flex-grow border-t border-slate-100"></div>
-                      <span className="flex-shrink-0 mx-4 text-slate-300 text-xs font-bold uppercase">Oder</span>
-                      <div className="flex-grow border-t border-slate-100"></div>
-                    </div>
-                    <button onClick={() => applyInvoiceText("supplies")} className="w-full py-3 rounded-xl border border-slate-200 text-slate-600 hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] font-bold bg-white cursor-pointer">
-                      Pflegehilfsmittel / Anschaffung
+                    <button onClick={() => applyInvoiceText("supplies")} className="w-full h-14 rounded-xl border-2 border-slate-100 text-slate-700 font-black hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-all cursor-pointer">
+                      Hilfsmittel Abrechnung
                     </button>
                   </div>
                 </div>

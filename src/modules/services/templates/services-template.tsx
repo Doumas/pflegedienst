@@ -7,9 +7,10 @@ import { Button } from "@/shared/ui/button";
 import { FadeIn } from "@/shared/ui/fade-in"; 
 import { useState, useEffect, useRef } from "react";
 import { cn } from "@/shared/utils/cn";
+import { motion } from "framer-motion"; // Für die Badge-Animation
 
 // --- HELPER HOOK ---
-function useInCenter(options = { threshold: 0.5 }) {
+function useInCenter(options = { threshold: 0.1 }) {
     const ref = useRef<HTMLAnchorElement>(null);
     const [isInCenter, setIsInCenter] = useState(false);
 
@@ -43,72 +44,63 @@ function ServiceCard({ service }: { service: any }) {
         >
             <div className={cn(
                 "h-full flex flex-col bg-white rounded-[2.5rem] border p-8 shadow-lg shadow-slate-200/50 transition-all duration-500 relative overflow-hidden transform-gpu",
-                // Hover: Teal Border & Shadow für Kompetenz
                 isInCenter 
-                    ? "border-[var(--color-primary)]/30 shadow-xl -translate-y-1" 
-                    : "border-[var(--color-border-soft)] hover:shadow-xl hover:border-[var(--color-primary)]/30 hover:-translate-y-1"
+                    ? "border-[var(--color-primary)]/30 shadow-xl -translate-y-1.5" 
+                    : "border-slate-100 hover:shadow-xl hover:border-[var(--color-primary)]/30 hover:-translate-y-1.5"
             )}>
                 
-                {/* Gradient: Subtil Teal im Hintergrund */}
                 <div className={cn(
-                    "absolute inset-0 bg-gradient-to-br from-[var(--color-primary)]/5 to-transparent transition-opacity duration-700 pointer-events-none",
+                    "absolute inset-0 bg-gradient-to-br from-[var(--color-secondary)] to-transparent transition-opacity duration-700 pointer-events-none",
                     isInCenter ? "opacity-100" : "opacity-0 group-hover:opacity-100"
                 )} />
 
                 <div className="relative z-10 mb-6">
-                    {/* ICON: Teal Background, White Icon */}
                     <div className={cn(
-                        "mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl border shadow-sm transition-all duration-500",
+                        "mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl border transition-all duration-500",
                         isInCenter 
-                            ? "bg-[var(--color-primary)] text-white border-transparent scale-105" 
-                            : "bg-[var(--color-secondary)] border-[var(--color-border-soft)] text-[var(--color-primary)] group-hover:bg-[var(--color-primary)] group-hover:text-white group-hover:border-transparent group-hover:scale-105"
+                            ? "bg-[var(--color-primary)] text-white border-transparent shadow-lg shadow-[var(--color-primary)]/20 scale-105" 
+                            : "bg-white border-slate-100 text-[var(--color-primary)] group-hover:bg-[var(--color-primary)] group-hover:text-white group-hover:border-transparent group-hover:scale-105"
                     )}>
-                        <service.icon className="h-8 w-8 transition-transform duration-500" />
+                        <service.icon className="h-8 w-8" />
                     </div>
 
                     <h3 className={cn(
-                        "text-2xl font-bold mb-2 transition-colors duration-300",
-                        isInCenter ? "text-[var(--color-primary)]" : "text-slate-900 group-hover:text-[var(--color-primary)]"
+                        "text-2xl font-black mb-3 transition-colors duration-300 tracking-tight",
+                        isInCenter ? "text-slate-900" : "text-slate-800 group-hover:text-slate-900"
                     )}>
                         {service.title}
                     </h3>
                     
-                    {/* Ladebalken: Orange Accent als "Lebenslinie" */}
                     <div className={cn(
                         "h-1 rounded-full transition-all duration-700 ease-out",
-                        isInCenter ? "w-16 bg-[var(--color-accent)]" : "w-8 bg-[var(--color-secondary)] group-hover:w-16 group-hover:bg-[var(--color-accent)]"
+                        isInCenter ? "w-20 bg-[var(--color-accent)]" : "w-8 bg-slate-100 group-hover:w-20 group-hover:bg-[var(--color-accent)]"
                     )} />
                 </div>
                 
-                <p className="relative z-10 text-slate-600 mb-8 leading-relaxed flex-grow font-medium">
+                <p className="relative z-10 text-slate-600 mb-8 leading-relaxed flex-grow font-medium text-pretty">
                     {service.description}
                 </p>
 
                 <div className={cn(
-                    "relative z-10 space-y-3 rounded-2xl p-5 border transition-colors duration-500",
-                    isInCenter ? "bg-white/60 border-[var(--color-primary)]/10" : "bg-slate-50/50 border-slate-100 group-hover:bg-white/60 group-hover:border-[var(--color-primary)]/10"
+                    "relative z-10 space-y-3 rounded-2xl p-5 border transition-all duration-500",
+                    isInCenter ? "bg-white border-[var(--color-primary)]/10 shadow-sm" : "bg-slate-50/50 border-transparent group-hover:bg-white group-hover:border-[var(--color-primary)]/10 group-hover:shadow-sm"
                 )}>
                     {service.features.slice(0, 3).map((f: string, j: number) => (
-                        <div key={j} className="flex items-start gap-3 text-sm text-slate-600 font-medium">
-                            <div className="mt-0.5 min-w-[16px] flex justify-center">
-                                {/* Checkmark auch in Orange für Konsistenz */}
-                                <Check className="w-4 h-4 text-[var(--color-accent)] stroke-[3]" />
+                        <div key={j} className="flex items-start gap-3 text-sm text-slate-600 font-bold">
+                            <div className="mt-0.5 flex-shrink-0">
+                                <Check className="w-4 h-4 text-[var(--color-primary)] stroke-[3]" />
                             </div>
                             <span className="leading-tight">{f}</span>
                         </div>
                     ))}
                 </div>
 
-                {/* CTA ARROW: Teal */}
                 <div className={cn(
-                    "absolute bottom-8 right-8 w-10 h-10 rounded-full bg-white border border-slate-100 flex items-center justify-center transition-all duration-500 shadow-sm",
-                    isInCenter 
-                        ? "opacity-100 scale-100 text-[var(--color-primary)] border-[var(--color-primary)]/20" 
-                        : "text-slate-400 opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 group-hover:text-[var(--color-primary)] group-hover:border-[var(--color-primary)]/20"
+                    "mt-8 flex items-center gap-2 text-sm font-bold transition-all duration-300",
+                    isInCenter ? "text-[var(--color-primary)] translate-x-1" : "text-slate-400 group-hover:text-[var(--color-primary)] group-hover:translate-x-1"
                 )}>
-                    <ArrowRight className="w-5 h-5" />
+                    Details ansehen <ArrowRight className="w-4 h-4" />
                 </div>
-
             </div>
         </Link>
     );
@@ -116,47 +108,45 @@ function ServiceCard({ service }: { service: any }) {
 
 export function ServicesTemplate() {
   return (
-    <div className="relative min-h-screen bg-white font-sans overflow-hidden">
+    <div className="relative min-h-screen bg-[#fffbf7] font-sans overflow-hidden">
 
-      {/* HINTERGRUND FX (Warm Tone) */}
-      <div className="absolute inset-0 opacity-[0.4] pointer-events-none transform-gpu" 
-           style={{ backgroundImage: 'radial-gradient(var(--color-border-soft) 1px, transparent 1px)', backgroundSize: '32px 32px' }}>
+      {/* BACKGROUND ELEMENTS */}
+      <div className="absolute inset-0 pointer-events-none -z-10">
+        <div className="absolute inset-0 opacity-[0.2]" 
+             style={{ backgroundImage: 'radial-gradient(var(--color-primary) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+        <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-[var(--color-accent-soft)]/40 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[10%] left-[-5%] w-[500px] h-[500px] bg-[var(--color-secondary)]/50 rounded-full blur-[100px]" />
       </div>
-      
-      <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[1000px] h-[700px] bg-[var(--color-secondary)]/60 rounded-full blur-[120px] opacity-70 pointer-events-none transform-gpu will-change-transform" />
-      <div className="absolute top-[20%] right-[-10%] w-[600px] h-[600px] bg-[var(--color-primary)]/5 rounded-full blur-[100px] animate-pulse pointer-events-none transform-gpu" style={{ animationDuration: '6s' }} />
-      <div className="absolute bottom-0 left-[-10%] w-[500px] h-[500px] bg-[var(--color-accent)]/10 rounded-full blur-[80px] pointer-events-none transform-gpu" />
 
-
-      {/* --- CONTENT WRAPPER --- */}
       <div className="relative z-10">
 
-        {/* --- HEADER --- */}
-        <section className="pt-24 pb-16 lg:pt-32 lg:pb-24 px-4">
+        {/* --- HEADER (Jetzt komplett zentriert) --- */}
+        <section className="pt-24 pb-16 lg:pt-36 lg:pb-24 px-4">
           <div className="container mx-auto">
             
-            <div className="flex flex-col items-center lg:items-start text-center lg:text-left max-w-4xl mx-auto lg:mx-0">
+            <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
                 
-                {/* Badge mit Custom Icon */}
+                {/* Badge mit Animation */}
                 <FadeIn delay={0.1}>
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-sm border border-[var(--color-border-soft)] text-[var(--color-primary)] text-xs font-bold tracking-wide uppercase shadow-sm mb-8">
-                        {/* Haus/Herz Icon */}
-                        <svg className="w-3.5 h-3.5 text-[var(--color-primary)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M3 12a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7z" />
-                            <path d="M12 8C12 8 13.5 6 15 6C16.5 6 17.5 7 17.5 8.5C17.5 11 12 15 12 15C12 15 6.5 11 6.5 8.5C6.5 7 7.5 6 9 6C10.5 6 12 8 12 8Z" className="text-[var(--color-accent)] stroke-[var(--color-accent)]" />
-                        </svg>
-                        <span>Unser Versprechen</span>
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[var(--color-primary)]/10 text-[var(--color-primary)] text-xs font-bold tracking-widest uppercase shadow-sm mb-8">
+                        <motion.div
+                            animate={{ rotate: [0, 15, -15, 0], scale: [1, 1.1, 1] }}
+                            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                        >
+                            <Activity className="w-3.5 h-3.5 text-[var(--color-accent)]" />
+                        </motion.div>
+                        <span>Unser Leistungsspektrum</span>
                     </div>
                 </FadeIn>
                 
-               {/* Headline mit Script Font & Orange Underline */}
                <FadeIn delay={0.2}>
-                   <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 mb-6 tracking-tight text-balance leading-[1.1]">
+                   <h1 className="text-5xl md:text-6xl lg:text-[5.5rem] font-black text-slate-900 mb-8 tracking-tight text-balance leading-[1.05]">
                     Gut versorgt <br/>
-                    <span className="font-script text-[var(--color-primary)] text-[1.1em] relative inline-block px-1 mt-1 font-normal">
-                        in jedem Alter.
-                        {/* Orange Smile Swoosh */}
-                        <svg className="absolute w-[110%] h-3 -bottom-2 -left-1 text-[var(--color-accent)] -z-10 opacity-80" viewBox="0 0 100 10" preserveAspectRatio="none">
+                    <span className="relative inline-block px-2 mt-2">
+                        <span className="relative z-10 font-script text-[var(--color-accent)] font-bold tracking-normal">
+                            in jedem Alter.
+                        </span>
+                        <svg className="absolute w-[110%] h-3 lg:h-5 -bottom-2 -left-2 text-[var(--color-accent)] -z-0 opacity-80" viewBox="0 0 100 10" preserveAspectRatio="none">
                             <path d="M0 5 Q 50 15 100 5" stroke="currentColor" strokeWidth="8" fill="none" strokeLinecap="round" />
                         </svg>
                     </span>
@@ -164,16 +154,15 @@ export function ServicesTemplate() {
                </FadeIn>
                 
                 <FadeIn delay={0.3}>
-                    <p className="text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-medium">
-                    Von der medizinischen Behandlungspflege bis zur liebevollen Alltagshilfe. 
-                    Wir sind da, wo Sie sich am wohlsten fühlen: <span className="text-[var(--color-accent)] font-script text-2xl px-1">Zuhause.</span>
+                    <p className="text-xl md:text-2xl text-slate-600 leading-relaxed max-w-2xl mx-auto font-medium text-pretty">
+                    Vom medizinischen Fachdienst bis zur herzlichen Unterstützung im Alltag. Wir ermöglichen Ihnen ein <span className="text-[var(--color-primary)] font-bold">würdevolles Leben</span> in Ihren eigenen vier Wänden.
                     </p>
                 </FadeIn>
             </div>
           </div>
         </section>
 
-        {/* --- GRID BEREICH --- */}
+        {/* --- GRID --- */}
         <section className="pb-32 container px-4 md:px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             
@@ -183,21 +172,26 @@ export function ServicesTemplate() {
               </FadeIn>
             ))}
 
-            {/* CTA CARD (Sonderstatus) */}
+            {/* CALL TO ACTION CARD */}
             <FadeIn delay={0.8} className="h-full">
-                <div className="h-full flex flex-col justify-center items-center text-center p-8 rounded-[2.5rem] border-2 border-dashed border-slate-200 bg-slate-50/50 hover:bg-[var(--color-secondary)]/30 hover:border-[var(--color-primary)]/20 transition-all duration-300 group cursor-pointer transform-gpu">
-                    <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center mb-4 shadow-sm text-slate-400 group-hover:text-[var(--color-primary)] transition-colors">
-                        <Activity className="w-8 h-8" />
+                <div className="h-full flex flex-col justify-center items-center text-center p-10 rounded-[2.5rem] border-2 border-dashed border-slate-200 bg-white/50 hover:bg-white hover:border-[var(--color-primary)]/30 transition-all duration-500 group cursor-pointer relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-accent-soft)]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    
+                    <div className="w-20 h-20 rounded-2xl bg-[var(--color-secondary)] flex items-center justify-center mb-6 shadow-sm text-[var(--color-primary)] group-hover:scale-110 group-hover:bg-[var(--color-primary)] group-hover:text-white transition-all duration-500 relative z-10">
+                        <Activity className="w-10 h-10" />
                     </div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-2">Individuelle Beratung?</h3>
-                    <p className="text-slate-500 text-sm mb-6 max-w-xs font-medium">
-                        Nicht sicher, welche Leistung passt? Wir beraten Sie kostenlos vor Ort.
-                    </p>
-                    <Link href="/kontakt">
-                        <Button variant="outline" className="border-[var(--color-primary)] text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white rounded-2xl h-12 px-8 font-bold transition-all">
-                        Kontakt aufnehmen
-                        </Button>
-                    </Link>
+                    
+                    <div className="relative z-10">
+                        <h3 className="text-2xl font-black text-slate-900 mb-3">Individuelle Beratung?</h3>
+                        <p className="text-slate-600 text-sm mb-8 max-w-xs font-bold leading-relaxed">
+                            Nicht sicher, welche Leistung für Sie oder Ihre Angehörigen am besten passt?
+                        </p>
+                        <Link href="/kontakt">
+                            <Button size="lg" className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white rounded-2xl px-10 font-bold shadow-xl shadow-[var(--color-primary)]/20">
+                                Jetzt anfragen
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
             </FadeIn>
 
