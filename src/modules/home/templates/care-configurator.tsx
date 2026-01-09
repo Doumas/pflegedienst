@@ -144,7 +144,7 @@ export function CareConfigurator({ minimal = false }: { minimal?: boolean }) {
     <>
       {/* 1. TEASER SECTION */}
       {!minimal && (
-        <section id="pflege-wegweiser" className="relative z-30 mt-0 lg:-mt-20 px-4 md:px-6 pb-20 pointer-events-none">
+        <section id="pflege-wegweiser" className="relative z-30 mt-0 lg:-mt-20 pb-20 pointer-events-none">
             <div className="container mx-auto max-w-7xl">
                 {/* TEASER KARTE */}
                 <div 

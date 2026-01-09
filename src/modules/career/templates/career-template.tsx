@@ -5,12 +5,13 @@ import Link from "next/link";
 import { Button } from "@/shared/ui/button";
 import { 
   Briefcase, CheckCircle2, Clock, Euro, Car, Coffee, Heart, 
-  Sparkles, Quote, X, Send, MessageCircle, Star, ArrowRight, User, Check, Activity, Loader2, ChevronLeft, ChevronRight
+  Sparkles, Quote, X, Send, MessageCircle, Star, ArrowRight, User, Check, Activity, Loader2
 } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
 import { FadeIn } from "@/shared/ui/fade-in";
 import { motion, AnimatePresence } from "framer-motion";
 
+// --- DATA ---
 const jobs = [
   {
     id: "fachkraft",
@@ -35,7 +36,8 @@ const jobs = [
   }
 ];
 
-function useInCenter(options = { threshold: 0.5 }) {
+// --- HELPER HOOK ---
+function useInCenter(options = { threshold: 0.1 }) {
     const ref = useRef<HTMLDivElement>(null);
     const [isInCenter, setIsInCenter] = useState(false);
 
@@ -57,6 +59,8 @@ function useInCenter(options = { threshold: 0.5 }) {
     return { ref, isInCenter };
 }
 
+// --- SUB-KOMPONENTEN ---
+
 function JobCard({ job, onSelect }: { job: typeof jobs[0], onSelect: (job: typeof jobs[0]) => void }) {
     const { ref, isInCenter } = useInCenter();
 
@@ -65,23 +69,28 @@ function JobCard({ job, onSelect }: { job: typeof jobs[0], onSelect: (job: typeo
             ref={ref}
             onClick={() => onSelect(job)}
             className={cn(
-                "group cursor-pointer bg-white rounded-[2.5rem] p-4 lg:pr-10 border transition-all duration-500 flex flex-col lg:flex-row items-center gap-6 relative overflow-hidden transform-gpu",
+                "group cursor-pointer bg-white rounded-[2.5rem] border p-8 shadow-lg shadow-slate-200/50 transition-all duration-500 flex flex-col lg:flex-row items-center gap-8 relative overflow-hidden transform-gpu",
                 isInCenter 
-                    ? "border-[var(--color-primary)]/30 shadow-2xl shadow-[var(--color-primary)]/10 scale-[1.01]" 
-                    : "border-slate-100 hover:border-[var(--color-primary)]/30 hover:shadow-xl hover:scale-[1.01]"
+                    ? "border-[var(--color-primary)]/30 shadow-xl -translate-y-1.5" 
+                    : "border-slate-100 hover:shadow-xl hover:border-[var(--color-primary)]/30 hover:-translate-y-1.5"
             )}
         >
             <div className={cn(
-                "w-full lg:w-32 h-32 rounded-[2rem] flex flex-col items-center justify-center text-center shrink-0 transition-all duration-500",
+                "absolute inset-0 bg-gradient-to-br from-[var(--color-secondary)]/30 to-transparent transition-opacity duration-700 pointer-events-none",
+                isInCenter ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+            )} />
+
+            <div className={cn(
+                "relative z-10 w-full lg:w-28 h-28 rounded-2xl border transition-all duration-500 flex flex-col items-center justify-center text-center shrink-0",
                 isInCenter 
-                    ? "bg-[var(--color-primary)] text-white scale-105 shadow-lg shadow-[var(--color-primary)]/20" 
-                    : "bg-[var(--color-secondary)] text-[var(--color-primary)] group-hover:bg-[var(--color-primary)] group-hover:text-white"
+                    ? "bg-[var(--color-primary)] text-white border-transparent shadow-lg scale-105" 
+                    : "bg-white border-slate-100 text-[var(--color-primary)] group-hover:bg-[var(--color-primary)] group-hover:text-white group-hover:border-transparent group-hover:scale-105"
             )}>
                 <Briefcase className="w-8 h-8 mb-1" />
-                <span className="text-[9px] font-black uppercase tracking-widest">Offene Stelle</span>
+                <span className="text-[9px] font-black uppercase tracking-widest">Stelle</span>
             </div>
 
-            <div className="flex-1 text-center lg:text-left">
+            <div className="relative z-10 flex-1 text-center lg:text-left">
                 <h3 className="text-2xl font-black text-slate-900 mb-3 tracking-tight">{job.title}</h3>
                 <div className="flex flex-wrap justify-center lg:justify-start gap-2 mb-4">
                     <span className="px-4 py-1.5 rounded-full bg-slate-50 text-slate-600 text-xs font-bold border border-slate-100 flex items-center gap-2">
@@ -100,9 +109,11 @@ function JobCard({ job, onSelect }: { job: typeof jobs[0], onSelect: (job: typeo
                 </div>
             </div>
 
-            <Button className="rounded-2xl h-14 px-8 font-black bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white shadow-xl shadow-[var(--color-primary)]/20 group-hover:-translate-y-0.5 transition-all">
-                Express bewerben
-            </Button>
+            <div className="relative z-10">
+                <Button className="rounded-2xl h-14 px-8 font-black bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white shadow-xl shadow-[var(--color-primary)]/20 transition-all">
+                    Express bewerben
+                </Button>
+            </div>
         </div>
     );
 }
@@ -114,47 +125,54 @@ function BenefitCard({ benefit }: { benefit: any }) {
         <div 
             ref={ref}
             className={cn(
-                "group p-10 rounded-[2.5rem] bg-white border transition-all duration-500 relative overflow-hidden transform-gpu h-full flex flex-col items-center lg:items-start text-center lg:text-left",
+                "group p-10 rounded-[2.5rem] bg-white border transition-all duration-500 relative overflow-hidden transform-gpu h-full flex flex-col items-center lg:items-start text-center lg:text-left shadow-lg shadow-slate-200/50",
                 isInCenter 
-                    ? "border-[var(--color-primary)]/20 shadow-2xl shadow-[var(--color-primary)]/5 -translate-y-1.5" 
-                    : "border-slate-100 hover:border-[var(--color-primary)]/20 hover:shadow-xl hover:-translate-y-1.5"
+                    ? "border-[var(--color-primary)]/30 shadow-xl -translate-y-1.5" 
+                    : "border-slate-100 hover:border-[var(--color-primary)]/30 hover:shadow-xl hover:-translate-y-1.5"
             )}
         >
+             <div className={cn(
+                "absolute inset-0 bg-gradient-to-br from-[var(--color-secondary)]/20 to-transparent transition-opacity duration-700 pointer-events-none",
+                isInCenter ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+            )} />
+
             <div className={cn(
-                "w-16 h-16 rounded-2xl flex items-center justify-center mb-8 transition-all duration-500",
+                "relative z-10 w-16 h-16 rounded-2xl flex items-center justify-center mb-8 border transition-all duration-500",
                 isInCenter 
-                    ? "scale-110 rotate-3 bg-[var(--color-primary)] text-white shadow-lg shadow-[var(--color-primary)]/20" 
-                    : "bg-[var(--color-secondary)] text-[var(--color-primary)] group-hover:bg-[var(--color-primary)] group-hover:text-white group-hover:rotate-3"
+                    ? "bg-[var(--color-primary)] text-white border-transparent shadow-lg scale-105" 
+                    : "bg-white border-slate-100 text-[var(--color-primary)] group-hover:bg-[var(--color-primary)] group-hover:text-white group-hover:border-transparent group-hover:scale-105"
             )}>
                 <benefit.icon className="w-8 h-8" />
             </div>
-            <h3 className="text-xl font-black text-slate-900 mb-4 tracking-tight">{benefit.title}</h3>
-            <p className="text-slate-600 leading-relaxed font-medium text-sm text-pretty">{benefit.text}</p>
+            <h3 className="relative z-10 text-xl font-black text-slate-900 mb-4 tracking-tight">{benefit.title}</h3>
+            <p className="relative z-10 text-slate-600 leading-relaxed font-medium text-sm text-pretty">{benefit.text}</p>
         </div>
     );
 }
+
+// --- MAIN TEMPLATE ---
 
 export function CareerTemplate() {
   const [selectedJob, setSelectedJob] = useState<typeof jobs[0] | null>(null);
 
   return (
-    <div className="relative min-h-screen bg-[#fffbf7] font-sans pb-20 selection:bg-[var(--color-primary)]/20 overflow-hidden">
+    <div className="relative min-h-screen bg-[#fffbf7] font-sans overflow-hidden">
       
-      {/* BACKGROUND FX */}
+      {/* BACKGROUND ELEMENTS */}
       <div className="absolute inset-0 pointer-events-none -z-10">
         <div className="absolute inset-0 opacity-[0.2]" 
              style={{ backgroundImage: 'radial-gradient(var(--color-primary) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-        <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[1000px] h-[700px] bg-[var(--color-accent-soft)]/40 rounded-full blur-[120px]" />
+        <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-[var(--color-accent-soft)]/40 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[10%] left-[-5%] w-[500px] h-[500px] bg-[var(--color-secondary)]/50 rounded-full blur-[100px]" />
       </div>
 
       <div className="relative z-10">
       
-        {/* --- HEADER (Korrektur: Jetzt vollständig zentriert) --- */}
+        {/* --- HEADER --- */}
         <section className="pt-24 pb-16 lg:pt-36 lg:pb-24 px-4">
-          <div className="container mx-auto flex flex-col items-center text-center max-w-5xl">
+          <div className="container mx-auto flex flex-col items-center text-center max-w-4xl">
             
             <FadeIn delay={0.1}>
-                {/* Badge mit thematischem Icon und Animation */}
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[var(--color-primary)]/10 text-[var(--color-primary)] text-xs font-bold tracking-widest uppercase shadow-sm mb-8">
                     <motion.div
                         animate={{ rotate: [0, 15, -15, 0], scale: [1, 1.1, 1] }}
@@ -193,7 +211,7 @@ export function CareerTemplate() {
                    Offene Stellen ansehen
                  </Button>
                </Link>
-               <Button variant="outline" size="lg" className="w-full h-16 px-10 text-lg border-2 border-green-200 text-green-700 bg-white hover:bg-green-50 rounded-2xl font-black flex gap-3 justify-center transition-all">
+               <Button variant="outline" size="lg" className="w-full h-16 px-10 text-lg border-2 border-emerald-100 text-emerald-700 bg-white hover:bg-emerald-50 rounded-2xl font-black flex gap-3 justify-center transition-all">
                    <MessageCircle className="w-6 h-6" /> WhatsApp Chat
                </Button>
             </FadeIn>
@@ -201,7 +219,7 @@ export function CareerTemplate() {
         </section>
 
         {/* --- BENEFITS --- */}
-        <section className="py-24 container px-4 md:px-6 relative">
+        <section className="py-24 lg:pb-32 container px-4 md:px-6 relative mx-auto">
           <div className="mb-20 flex flex-col items-center text-center max-w-2xl mx-auto">
             <FadeIn>
                 <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 mb-6 tracking-tight leading-[1.1]">
@@ -232,7 +250,7 @@ export function CareerTemplate() {
         {/* --- TESTIMONIAL --- */}
         <section className="py-24 lg:py-32 bg-[var(--color-footer-bg)] text-white relative overflow-hidden">
            <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-[var(--color-primary)]/10 rounded-full blur-[150px] pointer-events-none" />
-           <div className="container relative z-10 px-4 md:px-6">
+           <div className="container relative z-10 px-4 md:px-6 mx-auto">
               <FadeIn direction="up">
                 <div className="bg-white/5 border border-white/10 rounded-[3rem] p-10 md:p-20 backdrop-blur-md max-w-5xl mx-auto flex flex-col lg:flex-row items-center gap-16 shadow-2xl relative overflow-hidden text-center lg:text-left">
                     <div className="relative shrink-0">
@@ -276,15 +294,15 @@ export function CareerTemplate() {
 
             <div className="space-y-6">
               {jobs.map((job, i) => (
-                <FadeIn key={i} delay={0.2 + (i * 0.1)} direction="left">
+                <FadeIn key={i} delay={0.2 + (i * 0.1)} direction="left" className="h-full">
                     <JobCard job={job} onSelect={setSelectedJob} />
                 </FadeIn>
               ))}
             </div>
 
             <FadeIn delay={0.6} className="mt-20">
-               <div className="bg-[var(--color-secondary)] border border-[var(--color-primary)]/10 p-12 rounded-[3rem] text-center shadow-xl relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--color-accent-soft)] rounded-full blur-3xl opacity-40" />
+               <div className="bg-[var(--color-secondary)] border border-[var(--color-primary)]/10 p-12 rounded-[3rem] text-center shadow-xl relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--color-accent-soft)] rounded-full blur-3xl opacity-40 transition-transform group-hover:scale-125" />
                   <div className="relative z-10">
                       <h4 className="text-2xl font-black text-slate-900 mb-3 flex items-center justify-center gap-3">
                          <Sparkles className="w-6 h-6 text-[var(--color-accent)]" /> Initiativbewerbung?
@@ -319,6 +337,8 @@ export function CareerTemplate() {
   );
 }
 
+// --- SUB-COMPONENT: MODAL ---
+
 function QuickApplyModal({ jobTitle, onClose }: { jobTitle: string; onClose: () => void }) {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -352,7 +372,7 @@ function QuickApplyModal({ jobTitle, onClose }: { jobTitle: string; onClose: () 
             </div>
             <h3 className="text-3xl font-black text-slate-900 leading-tight pr-6">{jobTitle}</h3>
           </div>
-          <button onClick={onClose} className="p-3 bg-white rounded-xl text-slate-400 hover:text-red-500 transition-all shadow-sm">
+          <button onClick={onClose} className="p-3 bg-white rounded-xl text-slate-400 hover:text-red-500 transition-all shadow-sm cursor-pointer">
             <X className="w-6 h-6" />
           </button>
         </div>

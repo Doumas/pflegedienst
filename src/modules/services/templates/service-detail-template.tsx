@@ -4,19 +4,20 @@ import { notFound } from "next/navigation";
 import { Button } from "@/shared/ui/button";
 import { 
   CheckCircle, 
-  ChevronRight, 
   Home, 
   ArrowRight, 
   Calendar, 
   MessageCircle, 
   FileHeart, 
-  CalendarCheck 
+  CalendarCheck,
+  Sparkles 
 } from "lucide-react";
 import Link from "next/link";
 import { servicesData } from "@/modules/services/data/services"; 
 import { FadeIn } from "@/shared/ui/fade-in"; 
 import { useState, useEffect, useRef } from "react";
 import { cn } from "@/shared/utils/cn";
+import { AnimatedBackground } from "@/shared/ui/animated-background";
 
 // --- HELPER HOOK ---
 function useInCenter(options = { threshold: 0.5 }) {
@@ -134,11 +135,12 @@ export function ServiceDetailTemplate({ slug }: { slug: string }) {
   return (
     <div className="relative min-h-screen bg-[#fffbf7] font-sans pb-20 selection:bg-[var(--color-primary)]/20 overflow-hidden">
       
-      {/* Background FX */}
+      {/* Background FX - Jetzt mit Haus-Icons für Brand-Konsistenz */}
       <div className="absolute inset-0 pointer-events-none -z-10">
+        <AnimatedBackground icon={Home} variant="section" color="text-[var(--color-primary)]" count={6} className="opacity-20" />
         <div className="absolute inset-0 opacity-[0.2]" 
              style={{ backgroundImage: 'radial-gradient(var(--color-primary) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-        <div className="absolute top-[-5%] left-1/2 -translate-x-1/2 w-[1000px] h-[700px] bg-[var(--color-secondary)]/40 rounded-full blur-[120px]" />
+        <div className="absolute top-[-5%] left-1/2 -translate-x-1/2 w-full max-w-[1000px] h-[700px] bg-[var(--color-secondary)]/40 rounded-full blur-[120px]" />
       </div>
 
       <div className="relative z-10">
@@ -151,7 +153,7 @@ export function ServiceDetailTemplate({ slug }: { slug: string }) {
                 
                 {/* Breadcrumb */}
                 <FadeIn delay={0.1}>
-                    <div className="flex items-center justify-center lg:justify-start gap-3 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 mb-10">
+                    <div className="flex items-center justify-center lg:justify-start gap-3 text-[10px] font-black uppercase tracking-[0.25em] text-slate-400 mb-10">
                         <Link href="/" className="hover:text-[var(--color-primary)] transition-colors">Home</Link>
                         <span className="w-1 h-1 rounded-full bg-slate-300" />
                         <Link href="/leistungen" className="hover:text-[var(--color-primary)] transition-colors">Leistungen</Link>
@@ -184,7 +186,7 @@ export function ServiceDetailTemplate({ slug }: { slug: string }) {
         </section>
 
         {/* --- CONTENT --- */}
-        <div className="container px-4 md:px-6 pb-24">
+        <div className="container px-4 md:px-6 pb-24 mx-auto">
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-start">
             
             <div className="lg:col-span-8 space-y-20">
@@ -228,7 +230,7 @@ export function ServiceDetailTemplate({ slug }: { slug: string }) {
                             Ihr Weg zur <br/>
                             <span className="relative inline-block mt-2">
                                 <span className="relative z-10 font-script text-[var(--color-accent)] font-bold text-[1.1em]">Versorgung.</span>
-                                <svg className="absolute w-[110%] h-3 -bottom-1 -left-2 text-white/20 -z-0" viewBox="0 0 100 10" preserveAspectRatio="none">
+                                <svg className="absolute w-[110%] h-3 lg:h-5 -bottom-1 -left-2 text-white/20 -z-0" viewBox="0 0 100 10" preserveAspectRatio="none">
                                     <path d="M0 5 Q 50 15 100 5" stroke="currentColor" strokeWidth="8" fill="none" strokeLinecap="round" />
                                 </svg>
                             </span>
@@ -249,13 +251,13 @@ export function ServiceDetailTemplate({ slug }: { slug: string }) {
 
             </div>
 
-            {/* SIDEBAR */}
+            {/* SIDEBAR - VOLLSTÄNDIG ERHALTEN */}
             <div className="lg:col-span-4 space-y-8 sticky top-32">
               <FadeIn delay={0.6} direction="left">
                 <div className="bg-white p-3 rounded-[2.5rem] shadow-xl shadow-slate-200/40 border border-slate-100">
                     <div className="bg-[var(--color-secondary)] p-5 rounded-[1.8rem] mb-3 flex items-center gap-3">
-                        <div className="w-2 h-2 rounded-full bg-[var(--color-primary)] animate-pulse" />
-                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-primary)]">Leistungen</span>
+                        <Sparkles className="w-4 h-4 text-[var(--color-primary)] animate-pulse" />
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--color-primary)]">Leistungen</span>
                     </div>
                     <nav className="space-y-1">
                     {servicesData.map((s) => (

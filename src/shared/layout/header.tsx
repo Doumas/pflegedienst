@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { siteConfig } from "@/config/site";
-import { ChevronDown, X, Phone, Mail, ArrowRight, Menu, Briefcase, Compass } from "lucide-react";
+import { ChevronDown, X, Phone, Mail, ArrowRight, Menu, Briefcase, Compass, LayoutGrid } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
 import { Button } from "@/shared/ui/button";
 import { GoogleTranslator } from "@/shared/utils/google-translator";
@@ -23,7 +23,7 @@ const LogoIcon = (props: any) => (
     </svg>
 );
 
-// --- HEADER HINTERGRUND ANIMATION (Nur beim Scrollen sichtbar) ---
+// --- HEADER HINTERGRUND ANIMATION ---
 function HeaderBackgroundAnimation({ show }: { show: boolean }) {
     let context = null;
     try { context = useActiveSection(); } catch (e) { /* Ignore */ }
@@ -54,7 +54,6 @@ function HeaderBackgroundAnimation({ show }: { show: boolean }) {
                     <ActiveIcon strokeWidth={2} className="w-[600px] h-[600px]" />
                 </motion.div>
             </AnimatePresence>
-            {/* Hier entsteht der weiße Hintergrund beim Scrollen */}
             <div className="absolute inset-0 bg-white/95 backdrop-blur-md" />
         </div>
     );
@@ -97,22 +96,17 @@ export function Header() {
       <header 
         className={cn(
           "fixed top-0 left-0 right-0 z-[999] transition-all duration-300 font-sans",
-          // LOGIK: Transparent wenn oben, Weiß wenn gescrollt
           (scrolled || isOpen) 
             ? "shadow-sm border-b border-slate-100/50 py-2" 
             : "bg-transparent border-b border-transparent py-4"
         )}
       >
         
-        {/* Hintergrund-Ebene (blendet sich ein beim Scrollen) */}
         <HeaderBackgroundAnimation show={scrolled || isOpen} />
 
-        {/* ========================================================= */}
-        {/* 1. TOP BAR (SCHWEBENDES DESIGN)                           */}
-        {/* ========================================================= */}
+        {/* 1. TOP BAR */}
         <div className={cn(
             "bg-[var(--color-primary)] text-white transition-all duration-500 ease-in-out overflow-hidden relative z-20",
-            // HIER IST DER TRICK: mx-4 macht es schmaler ("schwebend"), rounded-b-2xl macht es rund
             "mx-4 md:mx-6 lg:mx-8 rounded-b-2xl", 
             (scrolled && !isOpen) ? "max-h-0 py-0 opacity-0 mb-0" : "max-h-12 py-1.5 opacity-100 mb-2 shadow-lg shadow-[var(--color-primary)]/20"
         )}>
@@ -138,13 +132,10 @@ export function Header() {
             </div>
         </div>
 
-        {/* ========================================================= */}
-        {/* 2. MAIN HEADER (NAVBAR)                                   */}
-        {/* ========================================================= */}
+        {/* 2. MAIN HEADER */}
         <div className="container mx-auto px-4 md:px-6 relative z-20">
           <div className="flex items-center justify-between">
             
-            {/* LOGO */}
             <Link href="/" className="relative z-[60] block shrink-0" onClick={closeMenu}>
                 <DalasLogo 
                   variant="default"
@@ -173,10 +164,19 @@ export function Header() {
                             {item.items && <ChevronDown className="h-3.5 w-3.5 opacity-40 group-hover:opacity-100 group-hover:rotate-180 transition-all" />}
                         </Link>
 
-                        {/* Dropdown */}
                         {item.items && (
                              <div className="absolute top-full left-1/2 -translate-x-1/2 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 z-50">
                                <div className="w-64 rounded-[1.5rem] bg-white shadow-xl shadow-slate-200/50 border border-slate-100 p-2 ring-1 ring-black/5 overflow-hidden">
+                                 {/* Übersichtspunkt im Desktop Dropdown */}
+                                 <Link 
+                                    href={item.href || "#"} 
+                                    className="block px-4 py-3 text-[14px] rounded-xl transition-all font-black flex items-center justify-between group/link bg-slate-50 text-[var(--color-primary)] mb-1"
+                                 >
+                                     Übersicht: {item.label}
+                                     <LayoutGrid className="w-3.5 h-3.5" />
+                                 </Link>
+                                 <div className="h-px bg-slate-100 my-1 mx-2" />
+                                 
                                  {item.items.map((subItem) => (
                                    <Link key={subItem.href} href={subItem.href} className={cn("block px-4 py-3 text-[14px] rounded-xl transition-all font-bold flex items-center justify-between group/link", isActive(subItem.href) ? "bg-[var(--color-primary)]/5 text-[var(--color-primary)]" : "text-slate-600 hover:bg-slate-50 hover:text-[var(--color-primary)]")}>
                                      {subItem.label} 
@@ -205,10 +205,9 @@ export function Header() {
                   className={cn(
                       "flex items-center justify-center w-10 h-10 rounded-full transition-all duration-300 shadow-sm",
                       isOpen 
-                        ? "bg-slate-100 text-slate-600 hover:bg-slate-200" 
-                        : "bg-white text-[var(--color-primary)] border border-slate-100 hover:bg-slate-50" 
+                        ? "bg-slate-100 text-slate-600" 
+                        : "bg-white text-[var(--color-primary)] border border-slate-100" 
                   )}
-                  aria-label={isOpen ? "Menü schließen" : "Menü öffnen"}
                >
                   {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                </button>
@@ -218,15 +217,12 @@ export function Header() {
 
       </header>
       
-      {/* PLATZHALTER: Verhindert, dass der Inhalt springt, wenn der Header fixiert ist */}
       <div className={cn(
           "w-full bg-transparent pointer-events-none transition-all duration-300", 
           scrolled ? "h-[90px]" : "h-[120px]" 
       )} aria-hidden="true" />
 
-      {/* ========================================================= */}
-      {/* 3. MOBILE MENU OVERLAY                                    */}
-      {/* ========================================================= */}
+      {/* 3. MOBILE MENU OVERLAY */}
       <AnimatePresence>
       {isOpen && (
           <motion.div 
@@ -240,7 +236,6 @@ export function Header() {
             <div className="relative z-10 flex flex-col min-h-full">
                
                <div className="flex flex-col items-center mb-8">
-                  {/* Greeting mit Script Font & Accent Color */}
                   <motion.div 
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -273,12 +268,23 @@ export function Header() {
                       {item.items ? (
                         <details className="group">
                            <summary className="flex justify-between items-center p-4 text-[16px] font-bold text-slate-800 cursor-pointer list-none select-none hover:bg-slate-50 transition-colors">
-                              {item.label} <ChevronDown className="w-5 h-5 text-slate-300 group-open:rotate-180 transition-transform group-open:text-[var(--color-primary)]"/>
+                              {item.label}
+                              <ChevronDown className="w-5 h-5 text-slate-300 transition-transform group-open:rotate-180 group-open:text-[var(--color-primary)]"/>
                            </summary>
                            <div className="px-3 pb-3 space-y-1 bg-slate-50/50">
+                              {/* Übersichtspunkt im Mobile Dropdown */}
+                              <Link 
+                                href={item.href || "#"} 
+                                onClick={closeMenu} 
+                                className="block text-[var(--color-primary)] py-3 px-4 rounded-xl bg-white shadow-sm transition-all text-[14px] font-black flex items-center justify-between"
+                              >
+                                 Alle {item.label} im Überblick
+                                 <LayoutGrid className="w-3.5 h-3.5" />
+                              </Link>
+                              
                               {item.items.map(sub => (
                                  <Link key={sub.href} href={sub.href} onClick={closeMenu} className="block text-slate-600 py-3 px-4 rounded-xl hover:bg-white hover:shadow-sm transition-all text-[14px] font-medium flex items-center gap-2">
-                                    <ArrowRight className="w-3 h-3 text-[var(--color-accent)] opacity-50" /> {sub.label}
+                                    <ArrowRight className="w-3.5 h-3.5 text-[var(--color-accent)] opacity-50" /> {sub.label}
                                  </Link>
                               ))}
                            </div>
