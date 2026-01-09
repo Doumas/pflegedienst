@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { cn } from "@/shared/utils/cn";
+import { Home, Heart } from "lucide-react";
 
 interface DalasLogoProps extends React.HTMLAttributes<HTMLDivElement> {
   scrolled?: boolean;
@@ -14,7 +15,7 @@ export const DalasLogo: React.FC<DalasLogoProps> = ({
   variant = "default",
   ...props 
 }) => {
-  // Farben (Exakt aus deinem Snippet)
+  // Farben (Exakt aus deinem Snippet übernommen)
   const tealColor = variant === "default" ? "#009B77" : "#ffffff"; 
   const orangeColor = "#F27405";
   
@@ -23,51 +24,44 @@ export const DalasLogo: React.FC<DalasLogoProps> = ({
   const ugColor = variant === "default" ? "text-slate-900" : "text-white/90";
   const subTextColor = variant === "default" ? "text-slate-500" : "text-slate-300";
 
-  // Dein Herz-Pfad
-  const heartPath = "M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z";
-
   return (
     <div 
-      // Layout: Horizontal (Icon links, Text rechts) für den Header
-      className={cn("flex items-center gap-3 select-none", className)} 
+      // Layout: Horizontal (Icon links, Text rechts)
+      className={cn("flex items-center gap-3 select-none group", className)} 
       {...props}
     >
-      {/* 1. DAS ICON (Zwei Herzen aus deiner Version) */}
+       <style jsx>{`
+        /* Herz-Pop Animation */
+        @keyframes heart-pop-logo {
+          0% { transform: scale(0); opacity: 0; }
+          50% { transform: scale(1.4); }
+          100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-heart-badge {
+          animation: heart-pop-logo 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s forwards;
+          opacity: 0; /* Start unsichtbar */
+        }
+      `}</style>
+
+      {/* 1. DAS ICON: Haus mit Herz-Badge */}
       <div className={cn(
-          "shrink-0 h-11 w-11 flex items-center justify-center relative transition-transform duration-300",
+          "relative w-11 h-11 shrink-0 transition-transform duration-500",
           scrolled ? "scale-90" : "scale-100"
       )}>
-        <svg
-          viewBox="0 0 24 24"
-          width="100%"
-          height="100%"
-          fill="none"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="overflow-visible"
-        >
-            {/* Herz 1: Türkis (Hintergrund) */}
-            <g transform="translate(-2, -1) scale(0.95) rotate(-10 12 12)">
-              <path
-                d={heartPath}
-                stroke={tealColor}
-                fill="none"
-                className={cn("transition-all duration-700", scrolled ? "opacity-80" : "opacity-100")}
-              />
-            </g>
-
-            {/* Herz 2: Orange (Vordergrund) */}
-            <g transform="translate(4, 4) scale(0.85) rotate(10 12 12)">
-               <path
-                d={heartPath}
-                stroke={orangeColor}
-                // Füllt sich beim Scrollen
-                fill={scrolled ? orangeColor : "none"} 
-                className="transition-all duration-500 delay-100"
-              />
-            </g>
-        </svg>
+        
+        {/* Basis: Das Haus */}
+        <Home 
+            className="w-full h-full stroke-[1.5]"
+            style={{ stroke: tealColor }}
+        />
+        
+        {/* Badge: Das Herz (unten rechts) */}
+        <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-1 shadow-sm border border-slate-100 animate-heart-badge">
+            <Heart 
+                className="w-3.5 h-3.5 fill-current" 
+                style={{ color: orangeColor }}
+            />
+        </div>
       </div>
 
       {/* 2. DER TEXT (Rechts daneben) */}
@@ -91,8 +85,9 @@ export const DalasLogo: React.FC<DalasLogoProps> = ({
 
         {/* Slogan Zeile */}
         <span className={cn(
-            "font-sans font-bold uppercase tracking-[0.15em] text-[0.6rem] mt-0.5", 
-            subTextColor
+            "font-sans font-bold uppercase tracking-[0.15em] text-[0.6rem] mt-0.5 transition-opacity duration-300", 
+            subTextColor,
+            scrolled ? "opacity-90" : "opacity-100"
         )}>
             Ambulanter Pflegedienst
         </span>
