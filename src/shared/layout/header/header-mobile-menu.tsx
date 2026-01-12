@@ -14,7 +14,6 @@ interface HeaderMobileMenuProps {
 
 export function HeaderMobileMenu({ isOpen, closeMenu }: HeaderMobileMenuProps) {
   const router = useRouter();
-  // State für Accordions (welches ist gerade offen?)
   const [openSection, setOpenSection] = useState<string | null>(null);
 
   const toggleSection = (label: string) => {
@@ -23,7 +22,15 @@ export function HeaderMobileMenu({ isOpen, closeMenu }: HeaderMobileMenuProps) {
 
   const menuVariants = {
     closed: { opacity: 0, y: -20 },
-    open: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.32, 0.72, 0, 1] } }
+    open: { 
+        opacity: 1, 
+        y: 0, 
+        transition: { 
+            duration: 0.4, 
+            // FIX: 'as const' macht das Array zum Tuple, was TypeScript glücklich macht
+            ease: [0.32, 0.72, 0, 1] as const 
+        } 
+    }
   };
 
   return (
@@ -34,7 +41,6 @@ export function HeaderMobileMenu({ isOpen, closeMenu }: HeaderMobileMenuProps) {
             animate="open"
             exit="closed"
             variants={menuVariants}
-            // ÄNDERUNG: pt-[160px] sorgt für massig Abstand nach oben, wie im Hunter Beispiel
             className="lg:hidden fixed inset-0 z-[40] bg-[var(--color-secondary)] pt-[160px] px-6 pb-10 flex flex-col h-[100dvh] overflow-y-auto"
           >
              {/* NAVIGATION - Hunter Style (Listen mit Linien) */}
@@ -54,7 +60,6 @@ export function HeaderMobileMenu({ isOpen, closeMenu }: HeaderMobileMenuProps) {
                               <span className="text-2xl font-bold text-[var(--color-primary-deep)] tracking-tight">
                                 {item.label}
                               </span>
-                              {/* Hunter Style: Plus / Minus Icon rechts */}
                               {isExpanded ? (
                                 <Minus className="w-5 h-5 text-[var(--color-primary)]" />
                               ) : (
@@ -98,14 +103,13 @@ export function HeaderMobileMenu({ isOpen, closeMenu }: HeaderMobileMenuProps) {
                             <span className="text-2xl font-bold text-[var(--color-primary-deep)] tracking-tight group-hover:text-[var(--color-primary)] transition-colors">
                                 {item.label}
                             </span>
-                            {/* Optional: Pfeil oder leer bei normalen Links */}
                         </Link>
                       )}
                    </div>
                  );
                })}
                
-               {/* KARRIERE (Extrapunkt wie im Topbar) */}
+               {/* KARRIERE (Extrapunkt) */}
                <div className="border-b border-[var(--color-primary-deep)]/10">
                     <Link href="/karriere" onClick={closeMenu} className="w-full flex justify-between items-center py-5 group">
                         <span className="text-2xl font-bold text-[var(--color-primary)] tracking-tight">

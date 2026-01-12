@@ -1,9 +1,9 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useMediaQuery } from "@/shared/hooks/use-media-query"; 
-// Falls du keinen Hook hast, nutze ich eine einfache CSS-Lösung oder Logik unten.
-// Ich baue es hier robust ohne Hook, indem ich CSS Grid nutze.
+
+// FEHLERBEHEBUNG: Der Import zu 'use-media-query' wurde entfernt, 
+// da wir das responsive Verhalten direkt über CSS (Tailwind) lösen.
 
 interface SlideData {
   id: number;
@@ -18,7 +18,7 @@ interface HeroTextSliderProps {
 
 export function HeroTextSlider({ slides, current }: HeroTextSliderProps) {
   
-  // Wir berechnen die 3 sichtbaren Slides für den Desktop
+  // Wir berechnen die 3 theoretisch sichtbaren Slides für den Desktop
   const getVisibleSlides = () => {
     const visible = [];
     for (let i = 0; i < 3; i++) {
@@ -42,12 +42,11 @@ export function HeroTextSlider({ slides, current }: HeroTextSliderProps) {
               key={`${slide.id}-${index}`} // Unique Key für saubere Animation
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }} // Optional: Ausblend-Animation
+              exit={{ opacity: 0, x: -20 }} 
               transition={{ duration: 0.5, ease: "easeOut", delay: index * 0.1 }}
-              // STYLING:
-              // Mobile: Nur der erste (index 0) ist sichtbar -> 'hidden lg:flex' für die anderen
-              // Desktop: Alle 3 sind sichtbar
-              // Border-Right: Trennlinie zwischen den Items (Hunter Style)
+              // STYLING LOGIK:
+              // Index 0 (Aktuell): Immer sichtbar ("flex")
+              // Index 1 & 2 (Vorschau): Nur auf Desktop sichtbar ("hidden lg:flex")
               className={`
                 flex-col justify-center px-6 lg:px-10 h-full border-r border-[var(--color-primary-deep)]/10
                 ${index === 0 ? "flex" : "hidden lg:flex"} 
