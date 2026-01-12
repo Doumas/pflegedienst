@@ -1,6 +1,6 @@
 import { Inter, Dancing_Script, Playfair_Display } from "next/font/google"; 
 import "./globals.css";
-import { Header } from "@/shared/layout/header";
+import { Header } from "@/shared/layout/header/header";
 import { Footer } from "@/shared/layout/footer";
 import { GoogleLayoutShift } from "@/shared/utils/google-layout-shift";
 import { ActiveSectionProvider } from "@/shared/context/active-section-context";

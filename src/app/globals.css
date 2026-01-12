@@ -2,34 +2,34 @@
 
 /* ========================================================================
    THEME CONFIGURATION (Tailwind v4)
-   Hier definieren wir das Design-System direkt in CSS.
    ======================================================================== */
 
 @theme {
-  /* 1. FONTS (Verknüpft mit layout.tsx) */
-  --font-sans: var(--font-inter);
-  --font-serif: var(--font-playfair);
-  --font-script: var(--font-dancing);
+  /* 1. FONTS */
+  --font-heading: "Poppins", sans-serif;
+  --font-body: "Clear Sans", "Helvetica Neue", sans-serif;
 
-  /* 2. FARBEN: TÜRKIS & ORANGE SCHEMA */
-  --color-primary: #0d9488;          /* Teal-600 */
+  /* 2. COLORS */
+  
+  /* Primary (Türkis/Blau) */
+  --color-primary: #77b4b4;          
   --color-primary-foreground: #ffffff;
-  --color-primary-hover: #0f766e;    /* Teal-700 */
-  --color-primary-deep: #115e59;     /* Teal-800 */
+  --color-primary-hover: #5da0a0;
   
-  --color-footer-bg: #134e4a;        /* Teal-900 */
-  --color-secondary: #f0fdfa;        /* Teal-50 */
-  --color-secondary-foreground: #134e4a;
-  --color-border-soft: #ccfbf1;      /* Teal-100 */
+  /* Dark / Text Elements */
+  --color-primary-deep: #373636;     
+  --color-text-main: #373636;
+  
+  /* Background (Creme/Weiß) - Sauberer Hintergrund */
+  --color-secondary: #fff8ed;        
+  --color-secondary-foreground: #373636;
+  
+  /* Marker Color (Für die kleinen Plus-Zeichen) */
+  --color-marker: #77b4b4;               
 
-  --color-accent: #f97316;           /* Orange-500 */
-  --color-accent-hover: #ea580c;     /* Orange-600 */
-  --color-accent-soft: #ffedd5;      /* Orange-100 */
-  
-  --color-text-light: #f0fdfa;       
-  
-  --color-selection-bg: #ffedd5;     
-  --color-selection-text: #0d9488; 
+  /* Selection */
+  --color-selection-bg: #77b4b4;     
+  --color-selection-text: #ffffff; 
 }
 
 /* ========================================================================
@@ -42,14 +42,13 @@
   }
 
   body {
-    /* Wichtig: Variable explizit zuweisen */
-    font-family: var(--font-sans);
-    background-color: white;
-    color: #0f172a; /* Slate-900 */
+    font-family: var(--font-body);
+    background-color: var(--color-secondary); /* #fff8ed */
+    color: var(--color-text-main);            /* #373636 */
     -webkit-font-smoothing: antialiased;
-    /* Senior Friendly Base Settings */
-    font-size: 17px; 
-    line-height: 1.6;
+    font-size: 17px;
+    letter-spacing: -0.02em; /* Leichtes Tracking für Fließtext */
+    line-height: 1.5; 
   }
 
   ::selection {
@@ -57,221 +56,130 @@
     color: var(--color-selection-text);
   }
 
-  /* AUTOMATISCHES DESIGN FÜR H1-H6 (Hero-Style) */
-  h1 {
-    @apply text-5xl md:text-6xl lg:text-[4.5rem] font-extrabold text-slate-900 tracking-tight leading-[1.05] mb-6 drop-shadow-sm;
+  /* --- HEADLINES (Swiss Style Block) --- */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    color: var(--color-primary-deep);
+    font-weight: 700; 
+    
+    /* Deine Vorgaben: Sehr enges Schriftbild */
+    letter-spacing: -0.068em;
+    line-height: 0.95; /* Leicht erhöht von 0.92, damit Unterlängen nicht abgeschnitten werden */
+    margin-bottom: 1.5rem;
   }
-
-  h2 {
-    @apply text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-[1.1] mb-5;
-  }
-
-  h3 {
-    @apply text-2xl md:text-3xl font-bold text-slate-900 tracking-tight mb-4;
-  }
-
-  h4, h5, h6 {
-    @apply font-bold text-slate-900 mb-3 tracking-tight;
-  }
+  
+  h1 { @apply text-5xl md:text-6xl lg:text-7xl; }
+  h2 { @apply text-4xl md:text-5xl lg:text-6xl; }
+  h3 { @apply text-3xl md:text-4xl; }
+  h4 { @apply text-2xl md:text-3xl; }
+  h5, h6 { @apply text-xl; }
 
   p {
-    @apply text-lg text-slate-600 leading-relaxed mb-4 font-medium text-pretty;
+    @apply text-[var(--color-text-main)] mb-6 font-normal text-pretty;
+    line-height: 1.6; 
+    max-width: 65ch; 
   }
 
-  /* HILFSKLASSEN */
-  .highlight-serif {
-    font-family: var(--font-serif);
-    @apply italic font-medium text-slate-900;
-  }
-
-  .highlight-accent {
-    font-family: var(--font-serif);
-    @apply italic text-[var(--color-accent)];
+  /* Highlight-Klasse für farbige Wörter im Text */
+  .highlight-text {
+    color: var(--color-primary);
+    font-weight: 700;
   }
 }
 
 /* ========================================================================
-   CUSTOM UTILITIES
+   CUSTOM UTILITIES (Tailwind v4 Clean)
    ======================================================================== */
 
-@utility shadow-glow {
-  box-shadow: 0 10px 25px -5px rgba(13, 148, 136, 0.4), 0 8px 10px -6px rgba(13, 148, 136, 0.1);
+/* CROSSHAIR MARKER (+)
+   Erzeugt nur das kleine Plus-Zeichen an strategischen Stellen.
+   Kein Hintergrund-Raster mehr!
+*/
+@utility crosshair-marker {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+  z-index: 10;
+
+  /* Die Linien des Plus-Zeichens */
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    background-color: var(--color-marker);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  &::before { width: 100%; height: 1px; } /* Waagerecht */
+  &::after { height: 100%; width: 1px; }  /* Senkrecht */
 }
 
 @utility container {
   margin-inline: auto;
   padding-inline: 1.5rem;
-  max-width: 1300px; 
+  max-width: 1400px; 
   width: 100%;
+}
+
+/* Kantige Buttons für den Swiss Look */
+@utility btn-swiss {
+  @apply px-6 py-3 bg-[var(--color-primary-deep)] text-white font-bold tracking-tight hover:bg-[var(--color-primary)] transition-colors duration-300;
+  border-radius: 2px; /* Fast eckig */
+}
+
+@utility shadow-glow {
+  box-shadow: 0 10px 30px -5px rgba(119, 180, 180, 0.3);
 }
 
 /* ========================================================================
    ANIMATIONS
    ======================================================================== */
 
-@keyframes ken-burns {
-  from { transform: scale(1); }
-  to { transform: scale(1.1); }
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes bounce-slow {
-  0%, 100% { transform: translateY(-5%); }
-  50% { transform: translateY(5%); }
-}
-
-.animate-bounce-slow {
-  animation: bounce-slow 3s infinite ease-in-out;
-}
-
-.animate-ken-burns {
-  animation: ken-burns 20s ease-in-out infinite alternate;
-  will-change: transform; 
+.animate-fade-in {
+  animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* ========================================================================
-   GOOGLE TRANSLATE STYLING (Clean Look)
+   GOOGLE TRANSLATE & PRINT
    ======================================================================== */
 
-.goog-te-gadget {
-  font-family: inherit !important;
-  color: transparent !important;
-  font-size: 0px !important;
-}
-
+.goog-te-gadget { font-size: 0px !important; color: transparent !important; }
 .goog-te-gadget .goog-te-combo {
-  margin: 0 !important;
-  padding: 8px 12px !important;
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 6px !important;
-  background-color: white !important;
-  color: #0f172a !important;
-  font-size: 14px !important;
-  cursor: pointer !important;
-  outline: none !important;
-  width: 100% !important;
+  margin: 0 !important; padding: 8px 12px !important; border: 1px solid #e2e8f0 !important;
+  border-radius: 0px !important; background-color: white !important; color: #373636 !important;
+  font-size: 14px !important; cursor: pointer !important; width: 100% !important;
 }
+.goog-te-gadget img, .goog-te-gadget-icon, #goog-gt-tt { display: none !important; }
+.goog-te-banner-frame { display: none !important; }
 
-.goog-te-gadget img, .goog-te-gadget-icon { display: none !important; }
-#goog-gt-tt { display: none !important; visibility: hidden !important; }
-.goog-text-highlight { background-color: transparent !important; box-shadow: none !important; }
-
-.goog-te-banner-frame {
-  position: static !important;
-  box-shadow: none !important;
-  border-bottom: 1px solid #e2e8f0 !important;
-}
-
-/* ========================================================================
-   PRINT & FLYER STYLES (Komplett übernommen)
-   ======================================================================== */
-
-/* A) BILDSCHIRM-VORSCHAU */
 @media screen {
   #print-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    background-color: rgba(15, 23, 42, 0.95);
-    overflow-y: auto;
-    padding: 40px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    position: fixed; inset: 0; z-index: 9999; background-color: rgba(55, 54, 54, 0.98);
+    overflow-y: auto; padding: 40px 20px; display: flex; flex-direction: column; align-items: center;
   }
-
-  #flyer-content-container {
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-    width: auto;
-    margin-top: 60px; 
-    margin-bottom: 60px;
-  }
-
+  #flyer-content-container { display: flex; flex-direction: column; gap: 40px; margin-block: 60px; }
   .flyer-page {
-    width: 210mm;
-    height: 297mm;
-    background: white;
-    padding: 0; 
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5); 
-    position: relative;
-    overflow: hidden;
-    max-width: 90vw;
-    aspect-ratio: 210/297;
+    width: 210mm; height: 297mm; background: white; 
+    position: relative; overflow: hidden; max-width: 90vw; aspect-ratio: 210/297;
   }
 }
 
-/* B) DRUCK-ANSICHT */
 @media print {
-  @page {
-    size: A4 portrait;
-    margin: 0;
-  }
-
-  .hide-on-print {
-    display: none !important;
-  }
-
-  html, body {
-    width: 100%;
-    height: auto !important;
-    overflow: visible !important;
-    background-color: white !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  #print-overlay {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: auto !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    background: white !important;
-    display: block !important;
-    z-index: 99999;
-    overflow: visible !important;
-  }
-
-  #flyer-content-container {
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    display: block !important;
-    gap: 0 !important;
-  }
-
+  @page { size: A4 portrait; margin: 0; }
+  .hide-on-print { display: none !important; }
+  html, body { width: 100%; height: auto !important; background: white !important; margin: 0 !important; padding: 0 !important; }
+  #print-overlay { position: absolute !important; top: 0 !important; left: 0 !important; width: 100% !important; background: white !important; display: block !important; z-index: 99999; }
   .flyer-page {
-    width: 100% !important;
-    height: 297mm !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: none !important;
-    background: white !important;
-    
-    page-break-after: always !important;
-    break-after: page !important;
-    
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-    box-shadow: none !important; 
-    filter: none !important;
+    width: 100% !important; height: 297mm !important; margin: 0 !important; padding: 0 !important; border: none !important;
+    page-break-after: always !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; box-shadow: none !important; 
   }
-
-  .flyer-page:last-child {
-    page-break-after: auto !important;
-    break-after: auto !important;
-    height: auto !important;
-  }
-
-  * {
-    box-shadow: none !important;
-    text-shadow: none !important;
-  }
-
-  .no-print {
-    display: none !important;
-  }
+  .no-print { display: none !important; }
 }

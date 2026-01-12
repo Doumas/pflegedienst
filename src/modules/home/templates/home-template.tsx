@@ -1,16 +1,21 @@
 "use client";
 
-// Bestehende Imports
+// --- 1. CORE COMPONENTS ---
 import { Hero } from "./hero";
 import { CareConfigurator } from "./care-configurator"; 
 import { GoogleReviews } from "./google-reviews";
 import { AboutSection } from "./about-section";
-import { FeaturesAndServices } from "@/modules/home/templates/FeaturesAndServices";
 import { FaqSection } from "./faq-section"; 
 import { CareerTeaser } from "./career-teaser"; 
 import { ProcessSteps } from "./process-steps";
 
-// --- NEU: Imports für die Header-Logik ---
+// --- 2. NEW "HUNTER STYLE" COMPONENTS ---
+import { StatsSection } from "@/modules/home/components/stats-section";
+import { ServiceSectorSlider } from "@/modules/home/components/service-sector-slider";
+import { ContactGridSection } from "@/modules/home/components/contact-grid-section";
+import { ResourceDownloadSection } from "@/modules/home/components/resource-download-section"; // <--- NEU
+
+// --- 3. SHARED UI ---
 import { SectionTracker } from "@/shared/ui/section-tracker";
 import { 
   Home, 
@@ -20,53 +25,72 @@ import {
   Compass, 
   Star, 
   HelpCircle, 
-  Briefcase 
+  Briefcase, 
+  BarChart3, 
+  LayoutGrid, 
+  Phone,
+  FileText // <--- Icon für Downloads
 } from "lucide-react";
 
 export function HomeTemplate() {
   return (
     <div className="flex flex-col min-h-screen font-sans">
       
-      {/* 1. HERO SECTION -> Home Icon */}
+      {/* 1. HERO: Der emotionale Einstieg */}
       <SectionTracker icon={Home} id="hero">
         <Hero />
       </SectionTracker>
 
-      {/* 2. & 3. Configurator -> ClipboardCheck (Passt zum "Profi-Check") */}
+      {/* 2. STATS: Der dunkle "Breaker" für Autorität (24/7) */}
+      <SectionTracker icon={BarChart3} id="fakten">
+        <StatsSection />
+      </SectionTracker>
+
+      {/* 3. SECTORS: Die strukturierte Übersicht der Leistungen */}
+      <SectionTracker icon={LayoutGrid} id="fachbereiche">
+        <ServiceSectorSlider />
+      </SectionTracker>
+
+      {/* 4. CONTACT GRID: Direktkontakt & Optionen */}
+      <SectionTracker icon={Phone} id="kontakt">
+        <ContactGridSection />
+      </SectionTracker>
+
+      {/* 5. DOWNLOADS & TOOLS: Hilfsmittel (Direkt unter Kontakt platziert) */}
+      <SectionTracker icon={FileText} id="downloads">
+        <ResourceDownloadSection />
+      </SectionTracker>
+      
+      {/* 6. CONFIGURATOR: Das interaktive Tool für Leads 
       <SectionTracker icon={ClipboardCheck} id="pflege-check">
         <CareConfigurator />
       </SectionTracker>
-
-      {/* 4. BRAND STORY -> Users (Team/Philosophie) */}
+*/}
+      {/* 7. ABOUT: Die menschliche Seite 
       <SectionTracker icon={Users} id="ueber-uns">
         <AboutSection />
       </SectionTracker>
-
-      {/* 5. SERVICES -> Heart (Pflege/Leistungen) */}
-      <SectionTracker icon={Heart} id="leistungen">
-        <FeaturesAndServices />
-      </SectionTracker>
-
-      {/* 6. HOW-TO -> Compass (Wegweiser/Ablauf) */}
+*/}
+      {/* 8. PROCESS: Wie es funktioniert 
       <SectionTracker icon={Compass} id="ablauf">
         <ProcessSteps />
       </SectionTracker>
-
-      {/* 7. SOCIAL PROOF -> Star (Bewertungen) */}
+*/}
+      {/* 9. REVIEWS: Social Proof
       <SectionTracker icon={Star} id="bewertungen">
         <GoogleReviews />
       </SectionTracker>
-
-      {/* 8. OBJECTION HANDLING -> HelpCircle (FAQ) */}
+ */}
+      {/* 10. FAQ: Einwände behandeln 
       <SectionTracker icon={HelpCircle} id="faq">
         <FaqSection />
       </SectionTracker>
-
-      {/* 9. RECRUITING -> Briefcase (Karriere) */}
+*/}
+      {/* 11. CAREER: Recruiting (kurz vor Schluss) 
       <SectionTracker icon={Briefcase} id="karriere">
         <CareerTeaser />
       </SectionTracker>
-      
+      */}
     </div>
   );
 }

@@ -1,118 +1,166 @@
-"use client"; 
+"use client";
 
-import { motion } from "framer-motion"; 
-import { MapPin, Heart, ShieldCheck, Star } from "lucide-react"; 
+import { useState, useEffect } from "react";
+import { ArrowLeft, ArrowRight, ArrowRight as LinkArrow } from "lucide-react";
 import { FadeIn } from "@/shared/ui/fade-in";
+import Link from "next/link";
 
-// Pfade für Hero-Komponenten
-import { HeroBackground } from "../components/hero-background";
-import { HeroSlider } from "../components/hero-slider";
-import { HeroWidget } from "../components/hero-widget";
+// Importiere die Komponenten
+import { HeroImages } from "../components/hero-images";
+import { HeroTextSlider } from "../components/hero-text-slider";
+
+// --- 10 PASSENDE SLIDES FÜR DALAS PFLEGEDIENST ---
+const TEXT_SLIDES = [
+  { 
+    id: 1, 
+    label: "Persönliche Nähe",
+    description: "Wir nehmen uns Zeit für echte Begegnungen und hören zu."
+  },
+  { 
+    id: 2, 
+    label: "Fachkompetenz",
+    description: "Stetige Fortbildung für medizinische Versorgung auf höchstem Niveau."
+  },
+  { 
+    id: 3, 
+    label: "24/7 Erreichbarkeit",
+    description: "Sicherheit rund um die Uhr. Wir sind immer für Sie da."
+  },
+  { 
+    id: 4, 
+    label: "Pflegeberatung",
+    description: "Wir helfen bei Anträgen und klären Pflegegrad-Fragen kostenlos."
+  },
+  { 
+    id: 5, 
+    label: "Grundpflege",
+    description: "Unterstützung bei der Körperpflege, Ernährung und Mobilität."
+  },
+  { 
+    id: 6, 
+    label: "Behandlungspflege",
+    description: "Medikamentengabe, Wundversorgung und Injektionen nach Plan."
+  },
+  { 
+    id: 7, 
+    label: "Hauswirtschaft",
+    description: "Unterstützung im Haushalt, beim Einkauf und Kochen."
+  },
+  { 
+    id: 8, 
+    label: "Verhinderungspflege",
+    description: "Wir springen ein, wenn pflegende Angehörige eine Auszeit brauchen."
+  },
+  { 
+    id: 9, 
+    label: "Palliativpflege",
+    description: "Würdevolle Begleitung in der letzten Lebensphase."
+  },
+  { 
+    id: 10, 
+    label: "Betreuungsleistung",
+    description: "Spaziergänge, Gespräche und Begleitung im Alltag."
+  }
+];
+
+const Marker = ({ className }: { className?: string }) => (
+  <div className={`crosshair-marker ${className}`} aria-hidden="true" />
+);
 
 export function Hero() {
+  const [current, setCurrent] = useState(0);
+
+  // Auto-Play
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrent(prev => (prev + 1) % TEXT_SLIDES.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const next = () => setCurrent((p) => (p + 1) % TEXT_SLIDES.length);
+  // Modulo-Logik für Rückwärts-Navigation korrigiert
+  const prev = () => setCurrent((p) => (p - 1 + TEXT_SLIDES.length) % TEXT_SLIDES.length);
+
   return (
-    <section id="hero-section" className="relative w-full overflow-hidden pt-24 pb-16 lg:pt-36 lg:pb-32 flex flex-col bg-[#fffbf7]">
+    <section className="relative w-full pt-32 lg:pt-40 bg-[var(--color-secondary)] overflow-hidden flex flex-col justify-between min-h-screen">
       
-      {/* 1. HINTERGRUND */}
-      <HeroBackground />
-      
-      <div className="container relative z-10 px-4 md:px-6 mx-auto">
-        <div className="flex flex-col items-center text-center">
+      {/* 1. HAUPTBEREICH (Oben) */}
+      <div className="container mx-auto px-6 relative flex-1">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 h-full items-start">
           
-          {/* --- OBERER TEIL: BADGE & ÜBERSCHRIFT --- */}
-          <FadeIn delay={0.1}>
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[var(--color-primary)]/10 text-[var(--color-primary)] text-xs font-bold tracking-widest uppercase shadow-sm mb-6">
-                  <motion.div
-                      animate={{ rotate: [0, 15, -15, 0], scale: [1, 1.1, 1] }}
-                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  >
-                      <MapPin className="w-3.5 h-3.5 text-[var(--color-accent)]" />
-                  </motion.div>
-                  <span>Borsigallee 37, 60388 Frankfurt</span>
-              </div>
-          </FadeIn>
-
-          <FadeIn delay={0.2}>
-              <h1 className="text-5xl md:text-7xl lg:text-[5.5rem] font-black text-slate-900 tracking-tight text-balance leading-[1.05] mb-10">
-                  Gut versorgt. <br/>
-                  <span className="relative inline-block px-2 mt-2 lg:mt-3">
-                      <span className="relative z-10 font-script font-bold text-[var(--color-accent)] tracking-normal text-[1.15em]">
-                          Zuhause leben.
-                      </span>
-                      <svg className="absolute w-[115%] h-3 lg:h-6 -bottom-2 -left-[7.5%] text-[var(--color-accent)] -z-0 opacity-80" viewBox="0 0 100 10" preserveAspectRatio="none">
-                          <path d="M0 5 Q 50 15 100 5" stroke="currentColor" strokeWidth="8" fill="none" strokeLinecap="round" />
-                      </svg>
-                  </span>
+          {/* LINKS: Content */}
+          <div className="flex flex-col relative z-20 pt-8 lg:pt-12">
+            <Marker className="-left-4 top-0" />
+            
+            <FadeIn>
+              <h1 className="text-5xl md:text-7xl font-semibold leading-[1.0] tracking-tight text-[var(--color-text-main)] mb-8">
+                Wir stellen den Menschen in das <br />
+                <span className="text-[var(--color-primary)]">Zentrum</span> der Pflege.
               </h1>
-          </FadeIn>
+            </FadeIn>
 
-          {/* --- MITTE: SLIDER --- */}
-          <FadeIn delay={0.3} className="w-full max-w-4xl mx-auto mb-10">
-             <HeroSlider />
-          </FadeIn>
-
-          {/* --- UNTERER TEIL: TEXT --- */}
-          <FadeIn delay={0.4}>
-              <p className="text-xl md:text-2xl text-slate-600 leading-relaxed max-w-2xl mx-auto font-medium text-pretty mb-16">
-                  Ihr verlässlicher Partner in Frankfurt. Wir verbinden <span className="text-[var(--color-primary)] font-bold">fachliche Expertise</span> mit echter 
-                  <span className="relative inline-block ml-2">
-                       <span className="font-script text-3xl md:text-4xl text-[var(--color-accent)] font-bold">Zuwendung</span>
-                  </span> 
-                  <br className="hidden md:block" />– damit Sie sich jeden Tag sicher fühlen.
+            <FadeIn delay={0.2}>
+              <p className="text-lg md:text-xl text-slate-600 leading-relaxed max-w-lg mb-10">
+                Pflege neu gedacht: Weg von der Bürokratie, hin zur echten Begegnung. 
+                Wir verbinden professionelle Versorgung in Frankfurt mit menschlicher Nähe.
               </p>
-          </FadeIn>
+            </FadeIn>
 
-          {/* --- UNTERNEHMENS-PITCH (Vollbreite Karte) --- */}
-          <FadeIn delay={0.5} direction="up" className="w-full pt-8 lg:pt-12">
-              <div className="relative p-8 lg:p-14 rounded-[3rem] bg-white border border-slate-100 shadow-2xl shadow-slate-200/40 overflow-hidden text-left">
-                  {/* Subtiler Glow Effekt */}
-                  <div className="absolute top-0 right-0 w-80 h-80 bg-[var(--color-secondary)] rounded-full blur-[100px] opacity-20 -mr-40 -mt-40 pointer-events-none" />
-                  
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-16 items-center relative z-10">
-                      <div className="lg:col-span-2 space-y-6">
-                          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--color-secondary)]/50 text-[var(--color-primary)] text-[10px] font-black uppercase tracking-[0.2em]">
-                              <Star className="w-3 h-3 fill-current text-[var(--color-accent)]" />
-                              Über Dalas Pflege
-                          </div>
-                          <h2 className="text-3xl lg:text-4xl font-black text-slate-900 leading-tight">
-                              Mehr als nur Pflege – <br className="hidden sm:block"/>
-                              <span className="text-[var(--color-primary)]">Ein Stück Lebensqualität.</span>
-                          </h2>
-                          <p className="text-lg text-slate-600 leading-relaxed font-medium text-pretty">
-                              Wir unterstützen Senioren und Familien in Frankfurt dabei, die vertraute Umgebung des eigenen Zuhauses zu erhalten. Unser Team vereint <span className="text-slate-900 font-black">medizinische Behandlungspflege</span> mit <span className="text-[var(--color-accent)] font-extrabold">liebevoller Alltagsbegleitung</span> – mit Herz und Fachverstand.
-                          </p>
-                      </div>
-
-                      {/* Quick-Benefits */}
-                      <div className="grid grid-cols-1 gap-4">
-                          {[
-                              { icon: ShieldCheck, title: "Qualität", desc: "Zugelassen bei allen Kassen" },
-                              { icon: Heart, title: "Persönlich", desc: "Feste Bezugspflegekräfte" },
-                          ].map((item, i) => (
-                              <div key={i} className="flex items-center gap-5 p-5 rounded-2xl bg-[#fffbf7] border border-slate-100 shadow-sm transition-all hover:border-[var(--color-primary)]/20 hover:shadow-md">
-                                  <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center text-[var(--color-accent)] shadow-sm shrink-0">
-                                      <item.icon className="w-6 h-6" />
-                                  </div>
-                                  <div className="text-left">
-                                      <h4 className="font-black text-slate-400 uppercase text-[9px] tracking-widest leading-none mb-1.5">{item.title}</h4>
-                                      <p className="font-bold text-slate-800 text-sm leading-tight">{item.desc}</p>
-                                  </div>
-                              </div>
-                          ))}
-                      </div>
-                  </div>
-              </div>
-          </FadeIn>
-
-          {/* --- WIDGET (PLZ-CHECK) --- */}
-          <div className="w-full pt-12 lg:pt-16">
-            <FadeIn delay={0.6} className="w-full flex justify-center">
-                <HeroWidget />
+            <FadeIn delay={0.3}>
+              <Link 
+                href="/pflegekraft-finden" 
+                className="group inline-flex items-center gap-2 text-lg font-bold text-[var(--color-text-main)] hover:text-[var(--color-primary)] transition-colors"
+              >
+                 <span>Unsere Leistungen entdecken</span>
+                 <LinkArrow className="w-5 h-5 transition-transform group-hover:translate-x-2" />
+              </Link>
             </FadeIn>
           </div>
 
+          {/* RECHTS: Bilder (Statisch) */}
+          <div className="relative w-full h-full hidden lg:block">
+             <Marker className="-top-4 -left-4" />
+             <HeroImages />
+          </div>
+          
+          {/* Mobile Fallback Image */}
+          <div className="lg:hidden w-full h-[350px] relative mt-8">
+             <HeroImages />
+          </div>
         </div>
       </div>
+
+      {/* 2. TEXT-SLIDER BEREICH (Unten - Multi Column) */}
+      <div className="w-full border-t border-[var(--color-primary-deep)]/10 mt-16 lg:mt-0 bg-[var(--color-secondary)] relative z-30">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col lg:flex-row h-auto lg:h-48">
+            
+            {/* DER SLIDER (Nimmt den meisten Platz ein) */}
+            <div className="flex-1 py-8 lg:py-0 border-r border-[var(--color-primary-deep)]/10 lg:border-none overflow-hidden">
+                <HeroTextSlider slides={TEXT_SLIDES} current={current} />
+            </div>
+
+            {/* CONTROLS (Rechts angedockt) */}
+            <div className="flex lg:flex-col border-t lg:border-t-0 lg:border-l border-[var(--color-primary-deep)]/10 h-16 lg:h-auto w-full lg:w-24 shrink-0">
+                <button 
+                    onClick={prev} 
+                    className="flex-1 flex items-center justify-center hover:bg-white hover:text-[var(--color-primary)] transition-colors border-r lg:border-r-0 lg:border-b border-[var(--color-primary-deep)]/10 group"
+                >
+                    <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
+                </button>
+                <button 
+                    onClick={next} 
+                    className="flex-1 flex items-center justify-center hover:bg-white hover:text-[var(--color-primary)] transition-colors group"
+                >
+                    <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
     </section>
   );
 }
