@@ -22,7 +22,7 @@ export interface ServiceItem {
   details: string;
 }
 
-// --- GRUPPE 1: FACHBEREICHE ---
+// --- GRUPPE 1: FACHBEREICHE (Spezialisierte Pflege) ---
 export const SECTORS: ServiceItem[] = [
   {
     id: "01",
@@ -31,7 +31,7 @@ export const SECTORS: ServiceItem[] = [
     description: "Höchste medizinische Sicherheit für beatmungspflichtige Patienten im eigenen Zuhause.",
     icon: Activity,
     href: "/leistungen/intensivpflege",
-    image: "/images/home/hero-bg.jpg", 
+    image: "/images/home/hero-bg.jpg", // Bitte Bild anpassen
     features: ["Beatmungspflege", "Trachealkanülenmanagement", "24h Monitoring", "Enge Kooperation mit Fachärzten"],
     details: "Schwerstpflegebedürftigkeit bedeutet nicht, dass das Leben im eigenen Zuhause enden muss. Wir schaffen eine Umgebung, die maximale Sicherheit mit menschlicher Wärme verbindet."
   },
@@ -42,7 +42,7 @@ export const SECTORS: ServiceItem[] = [
     description: "Große Hilfe für kleine Helden. Fachkompetenz mit ganz viel Herz.",
     icon: Baby,
     href: "/leistungen/kinderintensivpflege",
-    image: "/images/home/hero-bg2.jpg", 
+    image: "/images/home/hero-bg2.jpg", // Bitte Bild anpassen
     features: ["Schul- & Kitaservice", "Häusliche Beatmung", "Entlastung der Eltern", "Familienintegration"],
     details: "Kinder sind keine kleinen Erwachsenen. Wir begleiten schwerkranke Kinder in ihrem Alltag und ermöglichen ihnen so viel Normalität wie möglich."
   },
@@ -53,7 +53,7 @@ export const SECTORS: ServiceItem[] = [
     description: "Begleitung auf dem letzten Weg – schmerzfrei, würdevoll und geborgen.",
     icon: Sunset,
     href: "/leistungen/palliativpflege",
-    image: "/images/home/hero-bg3.jpg", 
+    image: "/images/home/hero-bg3.jpg", // Bitte Bild anpassen
     features: ["Schmerztherapie", "Psychosoziale Begleitung", "24h Rufbereitschaft", "Hospiz-Kooperation"],
     details: "In der letzten Lebensphase geht es nicht mehr um Heilung, sondern um Lebensqualität. Wir sorgen für eine schmerzfreie Zeit im Kreise der Familie."
   },
@@ -64,13 +64,13 @@ export const SECTORS: ServiceItem[] = [
     description: "Rund-um-die-Uhr Präsenz für ein Leben ohne Angst und Einsamkeit.",
     icon: UserCheck,
     href: "/leistungen/24h-betreuung",
-    image: "/images/home/hero-bg4.jpg", 
+    image: "/images/home/hero-bg4.jpg", // Bitte Bild anpassen
     features: ["1:1 Versorgung", "Strukturierter Tagesablauf", "Nächtliche Sicherheit", "Teilhabe am Leben"],
     details: "Eine echte Alternative zum Pflegeheim. Ein festes Team wechselt sich ab, sodass lückenlos jemand vor Ort ist – für Sicherheit und Gesellschaft."
   }
 ];
 
-// --- GRUPPE 2: UNSERE LEISTUNGEN ---
+// --- GRUPPE 2: UNSERE LEISTUNGEN (Allgemeine Versorgung) ---
 export const SERVICES: ServiceItem[] = [
   {
     id: "01",
@@ -117,8 +117,3 @@ export const SERVICES: ServiceItem[] = [
     details: "Wir sehen das nicht als Kontrolle, sondern als Coaching. Wir prüfen, ob Ihnen höhere Zuschüsse oder Hilfsmittel zustehen."
   }
 ];
-
-// --- WICHTIG FÜR DEN FEHLER: ---
-// Wir exportieren 'servicesData' als Kombination aus beiden Listen.
-// Das Template sucht genau nach diesem Export.
-export const servicesData = [...SECTORS, ...SERVICES];

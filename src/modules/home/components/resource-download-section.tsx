@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Download, FileText, ArrowRight, Calculator, Phone } from "lucide-react";
+import { Download, ArrowRight, Calculator, Phone } from "lucide-react";
 import { FadeIn } from "@/shared/ui/fade-in";
 import Link from "next/link";
 
@@ -63,13 +63,13 @@ export function ResourceDownloadSection() {
   const prevTool = () => setCurrentTool((prev) => (prev - 1 + TOOLS.length) % TOOLS.length);
 
   return (
-    <section className="w-full bg-white py-24 lg:py-32 overflow-hidden">
+    <section className="w-full bg-white py-24 lg:py-32 overflow-hidden border-t border-[var(--color-primary-deep)]/5">
       <div className="container mx-auto px-6">
         
         {/* HEADER */}
         <div className="flex flex-col lg:flex-row justify-between items-end mb-20 gap-8">
             <FadeIn>
-                <h2 className="text-5xl md:text-6xl font-semibold tracking-tight text-[var(--color-primary-deep)] leading-[1.0]">
+                <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-[var(--color-text-main)] leading-[1.0]">
                     Wissen & <br/>
                     <span className="text-[var(--color-primary)]">Werkzeuge</span>
                 </h2>
@@ -151,7 +151,7 @@ export function ResourceDownloadSection() {
                             </span>
                             
                             <h3 className="text-3xl font-bold text-[var(--color-primary-deep)] mb-6 leading-tight">
-                                "{TOOLS[currentTool].title}"
+                                &quot;{TOOLS[currentTool].title}&quot;
                             </h3>
                             
                             <p className="text-lg text-slate-600 font-medium leading-relaxed mb-8">

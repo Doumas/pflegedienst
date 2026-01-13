@@ -1,37 +1,45 @@
-import { ServiceDetailTemplate } from "@/modules/services/templates/service-detail-template";
-// KORREKTUR: Der Pfad zeigt jetzt auf dein Modul
-import { servicesData } from "@/modules/services/data/services"; 
 import { notFound } from "next/navigation";
+// Achte darauf, dass dieser Pfad zu deinem Template stimmt
+import { ServiceDetailTemplate } from "@/modules/services/templates/service-detail-template";
 
-// 1. SEO Titel generieren
-export async function generateMetadata(props: { params: Promise<{ slug: string }> }) {
-  const params = await props.params;
-  const service = servicesData.find((s) => s.slug === params.slug);
-  return {
-    title: service ? `${service.title} | Pflegedienst Dalas` : "Leistung nicht gefunden",
+// KORREKTUR: Wir importieren jetzt die BEIDEN neuen Listen
+// Der Pfad muss auf deine Datei zeigen (laut Fehlermeldung: modules/services/data/services)
+import { SERVICES, SECTORS } from "@/modules/services/data/services";
+
+// Wir werfen beide Listen zusammen, damit wir in ALLEN Leistungen suchen können
+const ALL_SERVICES = [...SECTORS, ...SERVICES];
+
+interface PageProps {
+  params: {
+    slug: string;
   };
 }
 
-// 2. Static Params für den Export (Wichtig für Static Site Generation)
-export async function generateStaticParams() {
-  return servicesData.map((service) => ({
+// Generiert statische Pfade für ALLE Leistungen (SEO & Performance)
+export function generateStaticParams() {
+  return ALL_SERVICES.map((service) => ({
     slug: service.slug,
   }));
 }
 
-// 3. Die eigentliche Seite
-export default async function ServicePage(props: { params: Promise<{ slug: string }> }) {
-  // Next.js 15: Params müssen awaited werden
-  const params = await props.params;
-  
-  // Wir prüfen, ob ein Service mit diesem Slug existiert
-  const serviceExists = servicesData.some((s) => s.slug === params.slug);
+export function generateMetadata({ params }: PageProps) {
+  const service = ALL_SERVICES.find((s) => s.slug === params.slug);
+  if (!service) return;
 
-  if (!serviceExists) {
-    return notFound();
+  return {
+    title: `${service.title} | Dalas Pflege`,
+    description: service.description,
+  };
+}
+
+export default function ServicePage({ params }: PageProps) {
+  // Wir suchen den Slug in der kombinierten Liste
+  const service = ALL_SERVICES.find((s) => s.slug === params.slug);
+
+  if (!service) {
+    notFound();
   }
 
-  // WICHTIG: Wir übergeben NUR den String 'slug'. 
-  // Das Template lädt sich die Daten (inkl. Icons) dann selbst.
-  return <ServiceDetailTemplate slug={params.slug} />;
+  // Wir übergeben die gefundenen Daten an dein Template
+  return <ServiceDetailTemplate service={service} />;
 }

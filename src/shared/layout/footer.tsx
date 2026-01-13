@@ -1,233 +1,140 @@
 "use client";
 
 import Link from "next/link";
-import { Phone, Mail, MapPin, Facebook, Instagram, Linkedin, ArrowRight, HeartHandshake, ArrowUp, HeartIcon } from "lucide-react";
-import { cn } from "@/shared/utils/cn";
-import { buttonVariants } from "@/shared/ui/button";
+import { 
+  ArrowUp, 
+  Linkedin, 
+  Instagram, 
+  Facebook, 
+  Mail, 
+  Phone, 
+  MapPin 
+} from "lucide-react";
 import { siteConfig } from "@/config/site";
 import { DalasLogo } from "@/shared/ui/dalas-logo";
-import { FadeIn } from "@/shared/ui/fade-in"; 
-import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
-import { AnimatedBackground } from "@/shared/ui/animated-background"; 
-
-// --- HELPER HOOK ---
-function useInCenter(options = { threshold: 0.5 }) {
-    const ref = useRef<HTMLDivElement>(null);
-    const [isInCenter, setIsInCenter] = useState(false);
-
-    useEffect(() => {
-        const element = ref.current;
-        if (!element) return;
-
-        const observer = new IntersectionObserver(([entry]) => {
-            setIsInCenter(entry.isIntersecting);
-        }, {
-            rootMargin: "-35% 0px -35% 0px", 
-            threshold: 0
-        });
-
-        observer.observe(element);
-        return () => observer.disconnect();
-    }, []);
-
-    return { ref, isInCenter };
-}
+import { FadeIn } from "@/shared/ui/fade-in";
 
 export function Footer() {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const { ref: ctaRef, isInCenter: isCtaActive } = useInCenter();
-
   return (
-    <footer className="relative bg-[var(--color-footer-bg)] text-white font-sans mt-32 border-t border-white/5">
-      
-      {/* BACKGROUND ELEMENTS */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-          <AnimatedBackground 
-            icon={HeartIcon} 
-            variant="section" 
-            color="text-[var(--color-primary)]" 
-            count={8} 
-            className="opacity-40" 
-         />
-          <div className="absolute inset-0 opacity-[0.03]" 
-               style={{ 
-                 backgroundImage: 'radial-gradient(var(--color-primary) 1px, transparent 1px)', 
-                 backgroundSize: '40px 40px' 
-               }} />
-      </div>
-
-      {/* ========================================================= */}
-      {/* PRE-FOOTER CTA                                            */}
-      {/* ========================================================= */}
-      <div className="relative z-50 container px-4 md:px-6">
-        <FadeIn delay={0.1} direction="up" className="w-full">
-            <div 
-                ref={ctaRef}
-                className={cn(
-                    "-mt-24 bg-[var(--color-primary)] rounded-[3rem] p-10 md:p-14 flex flex-col lg:flex-row items-center justify-between gap-10 relative overflow-hidden group border border-white/20 transition-all duration-700 transform-gpu shadow-2xl",
-                    isCtaActive 
-                        ? "scale-[1.02] shadow-[var(--color-primary)]/40" 
-                        : "hover:scale-[1.01]"
-                )}
-            >
-                {/* Visual FX im CTA */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:animate-[shimmer_2.5s_infinite] pointer-events-none" />
-                <div className="absolute -right-20 -top-20 w-80 h-80 bg-white/10 rounded-full blur-[80px] pointer-events-none" />
-
-                <div className="relative z-10 text-center lg:text-left">
-                    <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/10 text-white text-xs font-black uppercase tracking-widest mb-6 border border-white/10 backdrop-blur-md">
-                        <motion.div
-                            animate={{ scale: [1, 1.2, 1] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                        >
-                            <HeartHandshake className="w-4 h-4 text-[var(--color-accent)]" />
-                        </motion.div>
-                        Wir sind für Sie da
-                    </div>
-                    <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight leading-[1.1]">
-                        Noch Fragen offen?
-                    </h2>
-                    <p className="text-white/80 text-xl font-medium max-w-lg leading-relaxed font-script italic">
-                        Lassen Sie uns persönlich über Ihr Anliegen sprechen.
-                    </p>
-                </div>
-
-                <div className="relative z-10 flex flex-col sm:flex-row gap-5 w-full lg:w-auto">
-                    <a href={`tel:${siteConfig.contact.phone}`} className={cn(
-                        "h-16 px-10 bg-white text-[var(--color-primary-deep)] hover:bg-[var(--color-accent)] hover:text-white font-black text-lg rounded-2xl shadow-xl transition-all flex items-center justify-center gap-3 active:scale-95"
-                    )}>
-                        <Phone className="w-5 h-5" />
-                        {siteConfig.contact.phone}
-                    </a>
-                    
-                    <Link href="/kontakt" className="w-full sm:w-auto">
-                        <div className={cn(
-                            "h-16 px-10 bg-transparent text-white border-2 border-white/30 hover:border-white hover:bg-white/10 font-black text-lg rounded-2xl transition-all flex items-center justify-center cursor-pointer active:scale-95"
-                        )}>
-                            Anfrage senden
-                        </div>
-                    </Link>
-                </div>
-            </div>
-        </FadeIn>
-      </div>
-
-
-      {/* ========================================================= */}
-      {/* MAIN FOOTER CONTENT                                       */}
-      {/* ========================================================= */}
-      <div className="container px-4 md:px-6 relative z-10 pb-12 pt-20 md:pt-28 text-left">
+    <footer className="bg-black text-white pt-20 pb-10 border-t border-white/10">
+      <div className="container mx-auto px-6">
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-12 mb-20">
-            
-            {/* SPALTE 1: BRANDING */}
-            <FadeIn delay={0.2} className="space-y-8">
-               <Link href="/" className="inline-block transition-transform hover:scale-[1.02]">
-                    <DalasLogo variant="light" className="w-64 md:w-72" />
-               </Link>
-                <p className="text-white/50 leading-relaxed text-base font-medium max-w-xs text-pretty">
-                    Ihre Experten für würdevolle Pflege und ambulante Versorgung in Frankfurt. Menschlichkeit als höchstes Gebot.
-                </p>
-                <div className="flex gap-4">
-                    {[Facebook, Instagram, Linkedin].map((Icon, i) => (
-                        <a key={i} href="#" className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:bg-[var(--color-accent)] hover:border-transparent hover:text-white hover:-translate-y-1 transition-all duration-300 shadow-sm">
-                            <Icon className="w-5 h-5" />
-                        </a>
-                    ))}
-                </div>
-            </FadeIn>
+        {/* --- TOP ROW: LOGO & BACK TO TOP --- */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-16">
+          <FadeIn>
+            <Link href="/" className="block">
+               {/* Nutze die weiße Version des Logos */}
+               <DalasLogo variant="light" className="w-48 md:w-64" />
+            </Link>
+          </FadeIn>
 
-            {/* SPALTE 2: NAVIGATION */}
-            <FadeIn delay={0.3}>
-                <h4 className="text-sm font-black text-white/40 uppercase tracking-[0.3em] mb-10">Navigation</h4>
-                <ul className="space-y-4">
-                    {siteConfig.nav.map((item) => (
-                        <li key={item.label}>
-                            <Link href={item.href || "#"} className="group flex items-center gap-3 text-white/70 hover:text-[var(--color-accent)] transition-colors text-base font-bold">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)] group-hover:bg-[var(--color-accent)] transition-colors" />
-                                <span className="group-hover:translate-x-1 transition-transform duration-300">{item.label}</span>
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
-            </FadeIn>
+          <FadeIn delay={0.1}>
+            <button 
+              onClick={scrollToTop}
+              className="group flex items-center gap-3 px-6 py-3 rounded-full border border-white/20 hover:border-white hover:bg-white hover:text-black transition-all duration-300 text-sm font-bold uppercase tracking-widest"
+            >
+              Back to top
+              <ArrowUp className="w-4 h-4 group-hover:-translate-y-1 transition-transform" />
+            </button>
+          </FadeIn>
+        </div>
 
-            {/* SPALTE 3: LEISTUNGEN */}
-            <FadeIn delay={0.4}>
-                <h4 className="text-sm font-black text-white/40 uppercase tracking-[0.3em] mb-10">Unsere Pflege</h4>
-                <ul className="space-y-4">
-                    {['Grundpflege', 'Behandlungspflege', 'Intensivpflege', 'Betreuung', 'MDK-Beratung'].map((item) => (
-                        <li key={item}>
-                            <Link href="/leistungen" className="group flex items-center gap-3 text-white/70 hover:text-[var(--color-accent)] transition-colors text-base font-bold">
-                                <ArrowRight className="w-4 h-4 text-[var(--color-primary)] group-hover:text-[var(--color-accent)] transition-colors" />
-                                <span className="group-hover:translate-x-1 transition-transform duration-300">{item}</span>
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
-            </FadeIn>
+        {/* --- SOCIALS ROW --- */}
+        <div className="mb-20">
+          <FadeIn delay={0.2}>
+            <h4 className="text-lg font-medium text-white mb-4">Contact us</h4>
+            <div className="flex gap-4">
+              <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="p-2 bg-white/10 rounded-lg hover:bg-white hover:text-black transition-colors">
+                <Linkedin className="w-5 h-5" />
+              </a>
+              <a href="https://instagram.com" target="_blank" rel="noreferrer" className="p-2 bg-white/10 rounded-lg hover:bg-white hover:text-black transition-colors">
+                <Instagram className="w-5 h-5" />
+              </a>
+              <a href={`mailto:${siteConfig.contact.email}`} className="p-2 bg-white/10 rounded-lg hover:bg-white hover:text-black transition-colors">
+                <Mail className="w-5 h-5" />
+              </a>
+            </div>
+          </FadeIn>
+        </div>
 
-            {/* SPALTE 4: KONTAKT */}
-            <FadeIn delay={0.5}>
-                <h4 className="text-sm font-black text-white/40 uppercase tracking-[0.3em] mb-10">Kontakt</h4>
-                <ul className="space-y-6 text-left">
-                    <li className="flex gap-5">
-                        <div className="shrink-0 w-12 h-12 rounded-2xl bg-[var(--color-primary)]/20 flex items-center justify-center text-[var(--color-accent)] border border-white/5 shadow-sm">
-                            <MapPin className="w-6 h-6" />
-                        </div>
-                        <div className="text-base text-white/70 font-bold">
-                            <span className="block text-white/40 text-[10px] uppercase tracking-widest mb-1">Anschrift</span>
-                            {siteConfig.contact.address} <br/>
-                            Frankfurt am Main
-                        </div>
-                    </li>
-                    <li className="flex gap-5">
-                        <div className="shrink-0 w-12 h-12 rounded-2xl bg-[var(--color-primary)]/20 flex items-center justify-center text-[var(--color-accent)] border border-white/5 shadow-sm">
-                            <Phone className="w-6 h-6" />
-                        </div>
-                        <div className="text-base text-white/70 font-bold">
-                            <span className="block text-white/40 text-[10px] uppercase tracking-widest mb-1">Direktkontakt</span>
-                            <a href={`tel:${siteConfig.contact.phone}`} className="hover:text-white transition-colors">{siteConfig.contact.phone}</a>
-                        </div>
-                    </li>
-                    <li className="flex gap-5">
-                        <div className="shrink-0 w-12 h-12 rounded-2xl bg-[var(--color-primary)]/20 flex items-center justify-center text-[var(--color-accent)] border border-white/5 shadow-sm">
-                            <Mail className="w-6 h-6" />
-                        </div>
-                        <div className="text-base text-white/70 font-bold">
-                            <span className="block text-white/40 text-[10px] uppercase tracking-widest mb-1">E-Mail</span>
-                            <a href={`mailto:${siteConfig.contact.email}`} className="hover:text-white transition-colors break-all">{siteConfig.contact.email}</a>
-                        </div>
-                    </li>
-                </ul>
-            </FadeIn>
+        {/* --- MAIN GRID (Spalten wie bei Hunter) --- */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-24">
+          
+          {/* SPALTE 1: NAVIGATION */}
+          <FadeIn delay={0.3}>
+            <h3 className="text-2xl text-white/40 mb-6 font-medium">Navigation</h3>
+            <ul className="space-y-4">
+              {siteConfig.nav.map((item) => (
+                <li key={item.label}>
+                  <Link href={item.href || "#"} className="text-lg font-medium text-white hover:text-[var(--color-primary)] transition-colors block">
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </FadeIn>
+
+          {/* SPALTE 2: LEISTUNGEN */}
+          <FadeIn delay={0.4}>
+            <h3 className="text-2xl text-white/40 mb-6 font-medium">Leistungen</h3>
+            <ul className="space-y-4">
+              {['Ambulante Pflege', 'Intensivpflege', 'Palliativpflege', 'Betreuung', 'Beratung'].map((item) => (
+                <li key={item}>
+                  <Link href="/leistungen" className="text-lg font-medium text-white hover:text-[var(--color-primary)] transition-colors block">
+                    {item}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </FadeIn>
+
+          {/* SPALTE 3: ANSCHRIFT */}
+          <FadeIn delay={0.5}>
+            <h3 className="text-2xl text-white/40 mb-6 font-medium">Frankfurt</h3>
+            <address className="not-italic space-y-2">
+              <p className="text-lg font-medium text-white">{siteConfig.contact.address}</p>
+              <p className="text-lg font-medium text-white">60388 Frankfurt am Main</p>
+              <p className="text-lg font-medium text-[var(--color-primary)] pt-2">Deutschland</p>
+            </address>
+          </FadeIn>
+
+          {/* SPALTE 4: KONTAKT DATEN */}
+          <FadeIn delay={0.6}>
+            <h3 className="text-2xl text-white/40 mb-6 font-medium">Kontakt</h3>
+            <div className="space-y-4">
+              <a href={`tel:${siteConfig.contact.phone}`} className="block text-lg font-medium text-[var(--color-primary)] hover:text-white transition-colors">
+                {siteConfig.contact.phone}
+              </a>
+              <a href={`mailto:${siteConfig.contact.email}`} className="block text-lg font-medium text-[var(--color-primary)] hover:text-white transition-colors">
+                {siteConfig.contact.email}
+              </a>
+              <p className="text-white/50 text-sm pt-4 leading-relaxed">
+                24h Notruf für unsere Patienten verfügbar.
+              </p>
+            </div>
+          </FadeIn>
 
         </div>
 
-        {/* BOTTOM BAR */}
-        <FadeIn delay={0.6}>
-            <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6 text-[13px] font-bold text-white/30">
-                <div className="text-center md:text-left">
-                    &copy; {new Date().getFullYear()} Dalas GmbH. Alle Rechte vorbehalten.
-                </div>
-                <div className="flex flex-wrap justify-center gap-8">
-                    <Link href="/impressum" className="hover:text-white transition-colors">Impressum</Link>
-                    <Link href="/datenschutz" className="hover:text-white transition-colors">Datenschutz</Link>
-                    <Link href="/agb" className="hover:text-white transition-colors">AGB</Link>
-                </div>
-                <button 
-                    onClick={scrollToTop} 
-                    className="p-4 bg-white/5 hover:bg-[var(--color-accent)] text-white rounded-2xl transition-all group shadow-sm active:scale-90"
-                    aria-label="Nach oben scrollen"
-                >
-                    <ArrowUp className="w-5 h-5 group-hover:-translate-y-1 transition-transform" />
-                </button>
+        {/* --- BOTTOM ROW: LEGAL --- */}
+        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-xs md:text-sm text-white/40 font-medium">
+          <FadeIn delay={0.7}>
+            <p>&copy; {new Date().getFullYear()} Dalas UG. Alle Rechte vorbehalten.</p>
+          </FadeIn>
+          
+          <FadeIn delay={0.8}>
+            <div className="flex flex-wrap justify-center gap-8">
+              <Link href="/impressum" className="hover:text-white transition-colors">Impressum</Link>
+              <Link href="/datenschutz" className="hover:text-white transition-colors">Datenschutz</Link>
+              <Link href="/agb" className="hover:text-white transition-colors">AGB</Link>
+              <Link href="/cookies" className="hover:text-white transition-colors">Cookies</Link>
             </div>
-        </FadeIn>
+          </FadeIn>
+        </div>
 
       </div>
     </footer>

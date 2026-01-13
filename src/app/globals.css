@@ -182,4 +182,15 @@
     page-break-after: always !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; box-shadow: none !important; 
   }
   .no-print { display: none !important; }
+}/* In globals.css */
+@layer utilities {
+  /* Versteckt die Scrollbar für Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  /* Versteckt die Scrollbar für IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
 }
