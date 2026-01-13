@@ -9,8 +9,8 @@ import Link from "next/link";
 import { HeroVideos } from "../components/hero-videos"; 
 import { HeroTextSlider } from "../components/hero-text-slider";
 
-// --- NEU: Das organische Design-Element aus deinem Flyer ---
-// Eine weiche, fließende Form in der Farbe deiner Marke
+// --- NEU: Das organische Design-Element ---
+// Eine weiche, fließende Form
 const OrganicBlob = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className={className}>
     <path fill="currentColor" d="M44.7,-76.4C58.9,-69.2,71.8,-59.1,79.6,-46.9C87.4,-34.7,90.1,-20.4,85.8,-8.3C81.5,3.8,70.2,13.7,60.8,22.5C51.4,31.3,43.9,39,35.2,45.8C26.5,52.6,16.6,58.5,5.6,60.3C-5.4,62.1,-17.5,59.8,-28.3,53.8C-39.1,47.8,-48.6,38.1,-56.3,27.1C-64,16.1,-69.9,3.8,-70.5,-9.1C-71.1,-22,-66.4,-35.5,-56.9,-44.7C-47.4,-53.9,-33.1,-58.8,-19.5,-66.4C-5.9,-74,7,-84.3,19.3,-84.3C31.6,-84.3,43.3,-74,55,-63.5Z" transform="translate(100 100)" />
@@ -56,10 +56,10 @@ export function Hero() {
           {/* LINKS: Content */}
           <div className="flex flex-col relative z-20 pt-8 lg:pt-12">
             
-            {/* NEU: Der organische Blob im Hintergrund des Textes */}
-            {/* Er liegt hinter dem Text (z-[-1]) und nutzt deine Primärfarbe mit wenig Deckkraft */}
-            <div className="absolute -top-20 -left-20 w-[140%] h-[140%] z-[-1] opacity-10 pointer-events-none">
-                 <OrganicBlob className="w-full h-full text-[var(--color-primary)]" />
+            {/* NEU: Der organische Blob im Hintergrund */}
+            {/* Farbe auf 'secondary' (Creme) geändert, Opacity erhöht, damit man die Farbe sieht */}
+            <div className="absolute -top-20 -left-20 w-[140%] h-[140%] z-[-1] opacity-60 pointer-events-none">
+                 <OrganicBlob className="w-full h-full text-[var(--color-secondary)]" />
             </div>
 
             <Marker className="-left-4 top-0" />

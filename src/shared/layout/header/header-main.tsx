@@ -23,7 +23,6 @@ export function HeaderMain({ scrolled, isOpen, setIsOpen, closeMenu }: HeaderMai
     return pathname.startsWith(href);
   };
 
-  // Helper für Textfarbe der Navigation (nicht des Logos!)
   const navTextColor = (isOpen) 
       ? "text-[var(--color-primary-deep)]" 
       : (scrolled ? "text-white" : "text-[var(--color-primary-deep)]");
@@ -33,16 +32,15 @@ export function HeaderMain({ scrolled, isOpen, setIsOpen, closeMenu }: HeaderMai
       : (scrolled ? "hover:text-white/80" : "hover:text-[var(--color-primary)]");
 
   return (
-    <div className="container mx-auto px-6 relative z-20">
+    // ÄNDERUNG: 'container mx-auto' entfernt. 'w-full px-6 lg:px-12' für volle Breite.
+    <div className="w-full px-6 lg:px-12 relative z-20">
       <div className="flex items-center justify-between h-20 lg:h-24 transition-all duration-300">
         
         {/* LOGO */}
         <Link href="/" className="relative z-[60] block shrink-0" onClick={closeMenu}>
-            {/* KORREKTUR: Keine 'textColor' Klasse mehr am Wrapper, keine 'text-current' am Logo */}
             <div className="w-[130px] md:w-[160px] transition-all duration-300"> 
                 <DalasLogo 
                   variant="default"
-                  // WICHTIG: Hier geben wir den Scroll-Status weiter
                   scrolled={scrolled} 
                   className="origin-left"
                 />
@@ -59,9 +57,7 @@ export function HeaderMain({ scrolled, isOpen, setIsOpen, closeMenu }: HeaderMai
                         className={cn(
                             "flex items-center gap-1 text-[13px] py-2 transition-all duration-300 font-bold tracking-tight uppercase", 
                             isActive(item.href) 
-                                // Active State Logik
                                 ? (scrolled ? "text-white underline underline-offset-4 decoration-2" : "text-[var(--color-primary)]") 
-                                // Default State Logik
                                 : cn(navTextColor, navHoverColor)
                         )}
                     >
@@ -69,6 +65,7 @@ export function HeaderMain({ scrolled, isOpen, setIsOpen, closeMenu }: HeaderMai
                         {item.items && <ChevronDown className="h-3 w-3 opacity-40 group-hover:opacity-100 transition-all" />}
                     </Link>
 
+                    {/* Dropdown */}
                     {item.items && (
                          <div className="absolute top-full right-0 pt-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                            <div className="w-64 bg-white border border-[var(--color-primary-deep)]/10 p-0 shadow-2xl">

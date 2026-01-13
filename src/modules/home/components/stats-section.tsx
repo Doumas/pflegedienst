@@ -7,7 +7,7 @@ export function StatsSection() {
   return (
     <section className="relative w-full bg-[var(--color-primary-deep)] text-white py-24 lg:py-32 overflow-hidden">
       
-      {/* Grid Lines Overlay (Subtil, nur ganz leicht sichtbar für Struktur) */}
+      {/* Grid Lines Overlay */}
       <div className="absolute inset-0 pointer-events-none opacity-10">
         <div className="container mx-auto h-full border-x border-white/20">
              <div className="absolute top-1/2 w-full h-px bg-white/20" />
@@ -18,12 +18,11 @@ export function StatsSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-0 items-center">
           
           {/* --- LINKS: DIE RIESIGE ZAHL --- */}
-          {/* Border-Right auf Desktop, Border-Bottom auf Mobile */}
           <div className="flex flex-col justify-center items-center lg:items-start lg:pr-20 border-b lg:border-b-0 lg:border-r border-white/10 pb-16 lg:pb-0 h-full">
             <FadeIn>
                 <div className="relative">
-                    {/* Die Zahl in Primary-Farbe (Türkis) - Extrem groß */}
-                    <span className="block text-[7rem] sm:text-[10rem] lg:text-[13rem] font-bold leading-[0.8] tracking-tighter text-[var(--color-primary)]">
+                    {/* HIER GEÄNDERT: Creme (Secondary) statt Grün (Primary) */}
+                    <span className="block text-[7rem] sm:text-[10rem] lg:text-[13rem] font-bold leading-[0.8] tracking-tighter text-[var(--color-secondary)]">
                         24/7
                     </span>
                     <span className="absolute -bottom-6 right-2 text-xs lg:text-sm font-bold uppercase tracking-[0.3em] text-white/50">
@@ -44,7 +43,8 @@ export function StatsSection() {
              <FadeIn delay={0.3}>
                 <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.1] mb-12">
                     Mehr als nur Pflege. <br/>
-                    <span className="text-[var(--color-primary)]">Verantwortung.</span>
+                    {/* HIER GEÄNDERT: Creme (Secondary) */}
+                    <span className="text-[var(--color-secondary)]">Verantwortung.</span>
                 </h2>
              </FadeIn>
 
@@ -63,10 +63,11 @@ export function StatsSection() {
                         Wir pflegen so, wie wir selbst gepflegt werden möchten. Mit Respekt, Zeit und einem offenen Ohr.
                     </p>
                     
-                    {/* Kleiner Footer im Textblock (Swiss Style Detail) */}
+                    {/* Kleiner Footer im Textblock */}
                     <div className="pt-6 border-t border-white/10 flex items-center gap-4">
-                        <div className="w-2 h-2 rounded-full bg-[var(--color-primary)] animate-pulse" />
-                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-primary)]">
+                        {/* HIER GEÄNDERT: Punkt und Text jetzt auch in Creme */}
+                        <div className="w-2 h-2 rounded-full bg-[var(--color-secondary)] animate-pulse" />
+                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-secondary)]">
                             Qualität aus Frankfurt
                         </span>
                     </div>

@@ -135,7 +135,7 @@ export function ContentSlider({ title, items, id, bgColor = "bg-white", textColo
               onMouseEnter={() => setActiveIdx(index)}
               className={`
                 relative flex-shrink-0 
-                w-[85vw] sm:w-[45vw] lg:w-[400px] h-[550px] 
+                w-[85vw] sm:w-[45vw] lg:w-[400px] h-[350px] 
                 
                 /* HIER DIE ÄNDERUNG: Dynamische Farbe (Weiß oder Soft-Grün) */
                 ${cardBgClass}

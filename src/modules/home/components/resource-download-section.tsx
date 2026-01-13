@@ -6,7 +6,7 @@ import { Download, ArrowRight, Calculator, Phone } from "lucide-react";
 import { FadeIn } from "@/shared/ui/fade-in";
 import Link from "next/link";
 
-// --- DATEN bleiben gleich ---
+// --- DATEN: DOWNLOADS (Linke Seite) ---
 const RESOURCES = [
   {
     category: "UNTERNEHMEN",
@@ -34,6 +34,7 @@ const RESOURCES = [
   }
 ];
 
+// --- DATEN: TOOLS (Rechte Seite - Slider) ---
 const TOOLS = [
   {
     id: 1,
@@ -42,7 +43,7 @@ const TOOLS = [
     title: "Der Pflege-Konfigurator",
     text: "Sie sind unsicher, welcher Pflegegrad Ihnen zusteht oder welche Leistungen die Kasse übernimmt? Nutzen Sie unseren kostenlosen Assistenten.",
     action: "Jetzt konfigurieren",
-    href: "/#pflege-check"
+    href: "/#pflege-check" // Anker zum Configurator
   },
   {
     id: 2,
@@ -62,8 +63,7 @@ export function ResourceDownloadSection() {
   const prevTool = () => setCurrentTool((prev) => (prev - 1 + TOOLS.length) % TOOLS.length);
 
   return (
-    // ÄNDERUNG 1: Helles Grau (Slate-50) statt Weiß
-    <section className="w-full bg-slate-50 py-24 lg:py-32 overflow-hidden border-t border-[var(--color-primary-deep)]/5">
+    <section className="w-full bg-white py-24 lg:py-32 overflow-hidden border-t border-[var(--color-primary-deep)]/5">
       <div className="container mx-auto px-6">
         
         {/* HEADER */}
@@ -91,8 +91,7 @@ export function ResourceDownloadSection() {
                 <div className="flex flex-col divide-y divide-[var(--color-primary-deep)]/10">
                     {RESOURCES.map((item, index) => (
                         <FadeIn key={index} delay={index * 0.1} className="group relative">
-                            {/* ÄNDERUNG 2: Hover wird WEISS (Lift-Effekt auf Grau) */}
-                            <a href={item.href} target="_blank" className="block py-10 pr-8 pl-4 hover:bg-white hover:shadow-sm transition-all duration-300">
+                            <a href={item.href} target="_blank" className="block py-10 pr-8 pl-4 hover:bg-[var(--color-secondary)] transition-colors duration-500">
                                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                                     
                                     {/* Meta Info */}
@@ -125,8 +124,8 @@ export function ResourceDownloadSection() {
             </div>
 
             {/* --- RECHTS: TOOL SLIDER (Span 5) --- */}
-            {/* ÄNDERUNG 3: Hintergrund WEISS (Pop-Out Effekt) */}
-            <div className="lg:col-span-5 bg-white relative flex flex-col justify-between min-h-[500px]">
+            {/* Das ist die "Highlight Box" aus dem Screenshot */}
+            <div className="lg:col-span-5 bg-[var(--color-secondary)]/30 relative flex flex-col justify-between min-h-[500px]">
                 
                 {/* Content Area */}
                 <div className="flex-1 p-10 lg:p-16 flex flex-col justify-center relative overflow-hidden">
@@ -173,17 +172,16 @@ export function ResourceDownloadSection() {
                 </div>
 
                 {/* Navigation Buttons (Unten angedockt) */}
-                {/* ÄNDERUNG 4: Nav-Hintergrund Grau (Kontrast zur weißen Box) */}
-                <div className="flex border-t border-[var(--color-primary-deep)]/10 bg-slate-50">
+                <div className="flex border-t border-[var(--color-primary-deep)]/10 bg-white">
                     <button 
                         onClick={prevTool}
-                        className="flex-1 py-6 flex items-center justify-center border-r border-[var(--color-primary-deep)]/10 hover:bg-white transition-colors group"
+                        className="flex-1 py-6 flex items-center justify-center border-r border-[var(--color-primary-deep)]/10 hover:bg-[var(--color-secondary)] transition-colors group"
                     >
                         <ArrowRight className="w-5 h-5 rotate-180 text-[var(--color-primary-deep)] group-hover:text-[var(--color-primary)] transition-colors" />
                     </button>
                     <button 
                         onClick={nextTool}
-                        className="flex-1 py-6 flex items-center justify-center hover:bg-white transition-colors group"
+                        className="flex-1 py-6 flex items-center justify-center hover:bg-[var(--color-secondary)] transition-colors group"
                     >
                         <ArrowRight className="w-5 h-5 text-[var(--color-primary-deep)] group-hover:text-[var(--color-primary)] transition-colors" />
                     </button>
