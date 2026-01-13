@@ -8,7 +8,6 @@ import Link from "next/link";
 import { ServiceItem } from "@/shared/data/service-data";
 
 // --- HELPER: DRAG SCROLL ---
-// FIX: Hier haben wir "| null" hinzugefügt, damit TypeScript nicht meckert
 function useDraggableScroll(ref: React.RefObject<HTMLDivElement | null>) {
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
@@ -44,13 +43,17 @@ interface ContentSliderProps {
 }
 
 export function ContentSlider({ title, items, id, bgColor = "bg-white", textColor = "text-[var(--color-text-main)]" }: ContentSliderProps) {
-  // useRef wird mit null initialisiert, daher ist der Typ effektiv RefObject<HTMLDivElement | null>
   const scrollRef = useRef<HTMLDivElement>(null);
   
   const { onMouseDown, onMouseLeave, onMouseUp, onMouseMove, isDragging } = useDraggableScroll(scrollRef);
   
   const [activeIdx, setActiveIdx] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+
+  // LOGIK: Wenn der Hintergrund der Sektion dunkel/grün ist, sollen die Karten WEISS sein.
+  // Wenn der Hintergrund aber WEISS ist, sollen die Karten den leichten GRÜN-Ton haben.
+  const isDarkBg = bgColor.includes("primary") || bgColor.includes("black");
+  const cardBgClass = isDarkBg ? "bg-white" : "bg-[var(--color-primary)]/5"; 
 
   // AUTO-PLAY
   useEffect(() => {
@@ -82,9 +85,6 @@ export function ContentSlider({ title, items, id, bgColor = "bg-white", textColo
 
   const nextSlide = () => setActiveIdx((p) => (p + 1) % items.length);
   const prevSlide = () => setActiveIdx((p) => (p - 1 + items.length) % items.length);
-
-  // Helper um zu prüfen ob der Hintergrund dunkel ist
-  const isDarkBg = bgColor.includes("primary") || bgColor.includes("black");
 
   return (
     <div className={`py-20 lg:py-24 border-b border-[var(--color-primary-deep)]/5 last:border-0 w-full ${bgColor} overflow-hidden transition-colors duration-500`}>
@@ -136,7 +136,10 @@ export function ContentSlider({ title, items, id, bgColor = "bg-white", textColo
               className={`
                 relative flex-shrink-0 
                 w-[85vw] sm:w-[45vw] lg:w-[400px] h-[550px] 
-                bg-white 
+                
+                /* HIER DIE ÄNDERUNG: Dynamische Farbe (Weiß oder Soft-Grün) */
+                ${cardBgClass}
+                
                 flex flex-col justify-between p-10 
                 transition-all duration-500 overflow-hidden
                 group select-none 

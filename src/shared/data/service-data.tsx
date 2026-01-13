@@ -7,6 +7,11 @@ import {
   Sunset, 
   Coffee, 
   Umbrella, 
+  // Neue Icons
+  Stethoscope,
+  Brain,
+  GraduationCap,
+  Sparkles,
   LucideIcon 
 } from "lucide-react";
 
@@ -31,7 +36,7 @@ export const SECTORS: ServiceItem[] = [
     description: "Höchste medizinische Sicherheit für beatmungspflichtige Patienten im eigenen Zuhause.",
     icon: Activity,
     href: "/leistungen/intensivpflege",
-    image: "/images/home/hero-bg.jpg", // Bitte Bild anpassen
+    image: "/images/home/hero-bg.jpg", 
     features: ["Beatmungspflege", "Trachealkanülenmanagement", "24h Monitoring", "Enge Kooperation mit Fachärzten"],
     details: "Schwerstpflegebedürftigkeit bedeutet nicht, dass das Leben im eigenen Zuhause enden muss. Wir schaffen eine Umgebung, die maximale Sicherheit mit menschlicher Wärme verbindet."
   },
@@ -42,7 +47,7 @@ export const SECTORS: ServiceItem[] = [
     description: "Große Hilfe für kleine Helden. Fachkompetenz mit ganz viel Herz.",
     icon: Baby,
     href: "/leistungen/kinderintensivpflege",
-    image: "/images/home/hero-bg2.jpg", // Bitte Bild anpassen
+    image: "/images/home/hero-bg2.jpg", 
     features: ["Schul- & Kitaservice", "Häusliche Beatmung", "Entlastung der Eltern", "Familienintegration"],
     details: "Kinder sind keine kleinen Erwachsenen. Wir begleiten schwerkranke Kinder in ihrem Alltag und ermöglichen ihnen so viel Normalität wie möglich."
   },
@@ -53,7 +58,7 @@ export const SECTORS: ServiceItem[] = [
     description: "Begleitung auf dem letzten Weg – schmerzfrei, würdevoll und geborgen.",
     icon: Sunset,
     href: "/leistungen/palliativpflege",
-    image: "/images/home/hero-bg3.jpg", // Bitte Bild anpassen
+    image: "/images/home/hero-bg3.jpg", 
     features: ["Schmerztherapie", "Psychosoziale Begleitung", "24h Rufbereitschaft", "Hospiz-Kooperation"],
     details: "In der letzten Lebensphase geht es nicht mehr um Heilung, sondern um Lebensqualität. Wir sorgen für eine schmerzfreie Zeit im Kreise der Familie."
   },
@@ -64,7 +69,7 @@ export const SECTORS: ServiceItem[] = [
     description: "Rund-um-die-Uhr Präsenz für ein Leben ohne Angst und Einsamkeit.",
     icon: UserCheck,
     href: "/leistungen/24h-betreuung",
-    image: "/images/home/hero-bg4.jpg", // Bitte Bild anpassen
+    image: "/images/home/hero-bg4.jpg", 
     features: ["1:1 Versorgung", "Strukturierter Tagesablauf", "Nächtliche Sicherheit", "Teilhabe am Leben"],
     details: "Eine echte Alternative zum Pflegeheim. Ein festes Team wechselt sich ab, sodass lückenlos jemand vor Ort ist – für Sicherheit und Gesellschaft."
   }
@@ -115,5 +120,50 @@ export const SERVICES: ServiceItem[] = [
     image: "/images/home/hero-bg3.jpg",
     features: ["Nachweis Pflegekasse", "Pflegegrad-Check", "Hilfsmittel-Tipps", "Schulung"],
     details: "Wir sehen das nicht als Kontrolle, sondern als Coaching. Wir prüfen, ob Ihnen höhere Zuschüsse oder Hilfsmittel zustehen."
+  },
+  // --- NEUE LEISTUNGEN (Erweiterung) ---
+  {
+    id: "05",
+    title: "Wundversorgung",
+    slug: "wundversorgung",
+    description: "Professionelles Wundmanagement für schnellere Heilung chronischer Wunden.",
+    icon: Stethoscope,
+    href: "/leistungen/wundversorgung",
+    image: "/images/home/hero-bg.jpg", 
+    features: ["ICW-Wundexperten", "Verbandswechsel", "Zusammenarbeit mit Ärzten", "Schmerzlinderung"],
+    details: "Chronische Wunden belasten den Alltag stark. Unsere spezialisierten Wundexperten sorgen mit modernen Therapiemethoden für eine schnellere und schmerzarme Heilung."
+  },
+  {
+    id: "06",
+    title: "Demenzbetreuung",
+    slug: "demenzbetreuung",
+    description: "Einfühlsame Begleitung, um Erinnerungen zu bewahren und Sicherheit zu geben.",
+    icon: Brain,
+    href: "/leistungen/demenzbetreuung",
+    image: "/images/home/hero-bg2.jpg", 
+    features: ["Biografiearbeit", "Tagesstrukturierung", "Gedächtnisübungen", "Entlastung Angehöriger"],
+    details: "Menschen mit Demenz leben in ihrer eigenen Welt. Wir holen sie dort ab, wo sie sind, und schaffen Momente der Freude und Orientierung im gewohnten Umfeld."
+  },
+  {
+    id: "07",
+    title: "Schulbegleitung",
+    slug: "schulbegleitung",
+    description: "Inklusion leben: Wir begleiten Kinder mit Hilfsbedarf in Schule und Kita.",
+    icon: GraduationCap,
+    href: "/leistungen/schulbegleitung",
+    image: "/images/home/hero-bg3.jpg", 
+    features: ["Pflege in der Schule", "Begleitung im Unterricht", "Kita-Assistenz", "Ausflugs-Begleitung"],
+    details: "Jedes Kind hat ein Recht auf Bildung und Gemeinschaft. Unsere Fachkräfte stellen sicher, dass die medizinische Versorgung auch während des Unterrichts gewährleistet ist."
+  },
+  {
+    id: "08",
+    title: "Service Plus (Privat)",
+    slug: "service-plus",
+    description: "Mehr als der Standard. Individuelle Komfortleistungen nach Ihren Wünschen.",
+    icon: Sparkles,
+    href: "/leistungen/service-plus",
+    image: "/images/home/hero-bg4.jpg", 
+    features: ["Reisebegleitung", "Erweiterte Hauswirtschaft", "Kulturbegleitung", "Concierge-Services"],
+    details: "Die Pflegekasse deckt nicht alles ab, was das Leben schön macht. Mit unserem Service Plus buchen Sie sich genau das Extra an Komfort und Freiheit dazu, das Sie sich wünschen."
   }
 ];
