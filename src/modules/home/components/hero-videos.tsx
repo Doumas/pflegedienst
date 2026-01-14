@@ -2,9 +2,12 @@
 
 export function HeroVideos() {
   return (
-    /* FIX: lg:min-h-[500px] ist der Sweetspot. 
-       Groß genug für Wirkung, klein genug für das Layout. */
-    <div className="relative w-full h-full min-h-[400px] lg:min-h-[500px]">
+    // FIX: 
+    // 1. lg:h-[550px] -> Feste Höhe auf Desktop. Verhindert das "Zusammendrücken".
+    // 2. lg:max-w-[650px] -> Maximale Breite. Verhindert das "Ausleiern" nach rechts.
+    // 3. lg:ml-auto -> Schiebt die Box im Grid-Container nach rechts (Hunter Style).
+    // 4. w-full -> Auf kleineren Screens nimmt es den Platz, den es kriegt.
+    <div className="relative w-full h-[400px] lg:h-[550px] lg:max-w-[650px] lg:ml-auto">
       
       {/* 1. Das große Hintergrund-Video (Oben Rechts) */}
       <div className="absolute top-0 right-0 w-[85%] h-[80%] overflow-hidden shadow-lg z-0 rounded-sm">
@@ -18,7 +21,7 @@ export function HeroVideos() {
           <source src="/videos/Patient_im_Rollstuhl_im_Park.mp4" type="video/mp4" />
         </video>
         
-        {/* BRAND LAYER: Türkis Overlay */}
+        {/* BRAND LAYER */}
         <div className="absolute inset-0 bg-[var(--color-primary)] opacity-20 mix-blend-multiply pointer-events-none" />
       </div>
 
