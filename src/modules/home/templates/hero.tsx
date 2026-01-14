@@ -31,7 +31,7 @@ const TEXT_SLIDES = [
 
 const Marker = ({ className }: { className?: string }) => (
   <div className={`crosshair-marker ${className}`} aria-hidden="true" />
-);
+); 
 
 export function Hero() {
   const [current, setCurrent] = useState(0);
