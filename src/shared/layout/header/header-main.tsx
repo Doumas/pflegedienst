@@ -23,31 +23,40 @@ export function HeaderMain({ scrolled, isOpen, setIsOpen, closeMenu }: HeaderMai
     return pathname.startsWith(href);
   };
 
-  const navTextColor = (isOpen) 
-      ? "text-[var(--color-primary-deep)]" 
+  // LOGIK: Wenn Menü offen -> Immer Weiß (weil Hintergrund Türkis). Sonst Standard-Logik.
+  const navTextColor = isOpen 
+      ? "text-white" 
       : (scrolled ? "text-white" : "text-[var(--color-primary-deep)]");
       
-  const navHoverColor = (isOpen) 
-      ? "hover:text-[var(--color-primary)]" 
+  const navHoverColor = isOpen 
+      ? "hover:text-white/80" 
       : (scrolled ? "hover:text-white/80" : "hover:text-[var(--color-primary)]");
 
   return (
-    // ÄNDERUNG: 'container mx-auto' entfernt. 'w-full px-6 lg:px-12' für volle Breite.
-    <div className="w-full px-6 lg:px-12 relative z-20">
+    // ÄNDERUNG: Hintergrund-Logik hier eingefügt!
+    // Wenn isOpen -> bg-[var(--color-primary)] (Türkis) und volle Höhe, um den Creme-Hintergrund des Eltern-Elements zu verdecken.
+    <div className={cn(
+        "w-full px-6 lg:px-12 relative z-20 transition-colors duration-300",
+        isOpen ? "bg-[var(--color-primary)]" : "bg-transparent"
+    )}>
       <div className="flex items-center justify-between h-20 lg:h-24 transition-all duration-300">
         
         {/* LOGO */}
         <Link href="/" className="relative z-[60] block shrink-0" onClick={closeMenu}>
-            <div className="w-[130px] md:w-[160px] transition-all duration-300"> 
+            {/* ÄNDERUNG: Wenn isOpen, erzwingen wir Weiß für das Logo via text-white (falls SVG currentColor nutzt) oder Logo-Variante */}
+            <div className={cn("w-[130px] md:w-[160px] transition-all duration-300", isOpen && "text-white")}> 
                 <DalasLogo 
                   variant="default"
-                  scrolled={scrolled} 
+                  // Trick: Wenn isOpen, tun wir so, als wäre es scrolled (falls scrolled=true weißes Logo bedeutet), 
+                  // oder wir verlassen uns auf die Klasse 'text-white' oben.
+                  // Am sichersten: Logo Farbe manuell überschreiben, falls DalasLogo das unterstützt.
+                  scrolled={scrolled || isOpen} 
                   className="origin-left"
                 />
             </div>
         </Link>
 
-        {/* DESKTOP NAV */}
+        {/* DESKTOP NAV (Bleibt meist unverändert, da hidden lg:flex) */}
         <div className="hidden lg:flex items-center gap-8">
             <nav className="flex items-center gap-6">
               {siteConfig.nav.map((item) => (
@@ -102,8 +111,9 @@ export function HeaderMain({ scrolled, isOpen, setIsOpen, closeMenu }: HeaderMai
               onClick={() => setIsOpen(!isOpen)} 
               className={cn(
                   "flex items-center gap-3 px-4 py-2.5 transition-all duration-300 rounded-none shadow-sm border",
+                  // ÄNDERUNG: Styles für isOpen angepasst -> Weißer Text, Transparenter BG, Weißer Border (dezent)
                   isOpen 
-                    ? "bg-transparent border-transparent text-[var(--color-primary-deep)]"
+                    ? "bg-transparent border-white/30 text-white hover:bg-white/10"
                     : scrolled 
                         ? "bg-transparent border-white/30 text-white hover:bg-white/10"
                         : "bg-white border-[var(--color-primary-deep)]/10 text-[var(--color-primary-deep)]"

@@ -27,7 +27,6 @@ export function HeaderMobileMenu({ isOpen, closeMenu }: HeaderMobileMenuProps) {
         y: 0, 
         transition: { 
             duration: 0.4, 
-            // FIX: 'as const' macht das Array zum Tuple, was TypeScript glücklich macht
             ease: [0.32, 0.72, 0, 1] as const 
         } 
     }
@@ -41,29 +40,31 @@ export function HeaderMobileMenu({ isOpen, closeMenu }: HeaderMobileMenuProps) {
             animate="open"
             exit="closed"
             variants={menuVariants}
-            className="lg:hidden fixed inset-0 z-[40] bg-[var(--color-secondary)] pt-[160px] px-6 pb-10 flex flex-col h-[100dvh] overflow-y-auto"
+            // ÄNDERUNG: Hintergrund ist jetzt Primary (Blau/Türkis), Text Weiß
+            className="lg:hidden fixed inset-0 z-[40] bg-[var(--color-primary)] text-white pt-[160px] px-6 pb-10 flex flex-col h-[100dvh] overflow-y-auto"
           >
-             {/* NAVIGATION - Hunter Style (Listen mit Linien) */}
-             <nav className="flex flex-col w-full border-t border-[var(--color-primary-deep)]/10">
+             {/* NAVIGATION - Linien jetzt in Weiß mit Deckkraft */}
+             <nav className="flex flex-col w-full border-t border-white/20">
                {siteConfig.nav.map((item, i) => {
                  const isExpanded = openSection === item.label;
                  
                  return (
-                   <div key={item.label} className="border-b border-[var(--color-primary-deep)]/10">
+                   <div key={item.label} className="border-b border-white/20">
                       {item.items ? (
-                        // --- DROPDOWN ITEM (Accordion Style) ---
+                        // --- DROPDOWN ITEM ---
                         <div className="group">
                            <button 
                               onClick={() => toggleSection(item.label)}
                               className="w-full flex justify-between items-center py-5 text-left"
                            >
-                              <span className="text-2xl font-bold text-[var(--color-primary-deep)] tracking-tight">
+                              {/* Text ist jetzt Weiß */}
+                              <span className="text-2xl font-bold text-white tracking-tight">
                                 {item.label}
                               </span>
                               {isExpanded ? (
-                                <Minus className="w-5 h-5 text-[var(--color-primary)]" />
+                                <Minus className="w-6 h-6 text-white" />
                               ) : (
-                                <Plus className="w-5 h-5 text-[var(--color-primary-deep)] opacity-50" />
+                                <Plus className="w-6 h-6 text-white/70" />
                               )}
                            </button>
                            
@@ -74,17 +75,19 @@ export function HeaderMobileMenu({ isOpen, closeMenu }: HeaderMobileMenuProps) {
                                  initial={{ height: 0, opacity: 0 }}
                                  animate={{ height: "auto", opacity: 1 }}
                                  exit={{ height: 0, opacity: 0 }}
-                                 className="overflow-hidden bg-[var(--color-primary-deep)]/5 -mx-6 px-6"
+                                 // ÄNDERUNG: Hintergrund leichtes Weiß (Glas-Effekt) statt Grau
+                                 className="overflow-hidden bg-white/10 -mx-6 px-6"
                                >
-                                  <div className="py-4 flex flex-col gap-4">
+                                  <div className="py-6 flex flex-col gap-4">
                                       {item.items.map(sub => (
                                           <Link 
                                               key={sub.href} 
                                               href={sub.href} 
                                               onClick={closeMenu}
-                                              className="text-base font-medium text-slate-600 hover:text-[var(--color-primary)] flex items-center gap-3 pl-2"
+                                              // ÄNDERUNG: Sub-Links in Weiß/80%
+                                              className="text-lg font-medium text-white/90 hover:text-white flex items-center gap-3 pl-2 transition-colors"
                                           >
-                                              <ArrowRight className="w-4 h-4 opacity-50" />
+                                              <ArrowRight className="w-4 h-4 text-white/60" />
                                               {sub.label}
                                           </Link>
                                       ))}
@@ -100,7 +103,7 @@ export function HeaderMobileMenu({ isOpen, closeMenu }: HeaderMobileMenuProps) {
                             onClick={closeMenu} 
                             className="w-full flex justify-between items-center py-5 group"
                         >
-                            <span className="text-2xl font-bold text-[var(--color-primary-deep)] tracking-tight group-hover:text-[var(--color-primary)] transition-colors">
+                            <span className="text-2xl font-bold text-white tracking-tight group-hover:text-white/80 transition-colors">
                                 {item.label}
                             </span>
                         </Link>
@@ -110,27 +113,28 @@ export function HeaderMobileMenu({ isOpen, closeMenu }: HeaderMobileMenuProps) {
                })}
                
                {/* KARRIERE (Extrapunkt) */}
-               <div className="border-b border-[var(--color-primary-deep)]/10">
+               <div className="border-b border-white/20">
                     <Link href="/karriere" onClick={closeMenu} className="w-full flex justify-between items-center py-5 group">
-                        <span className="text-2xl font-bold text-[var(--color-primary)] tracking-tight">
+                        <span className="text-2xl font-bold text-white tracking-tight">
                             Karriere
                         </span>
-                        <ArrowRight className="w-5 h-5 text-[var(--color-primary)] -rotate-45" />
+                        <ArrowRight className="w-6 h-6 text-white -rotate-45" />
                     </Link>
                </div>
              </nav>
              
-             {/* FOOTER INFO - Ganz unten positioniert */}
+             {/* FOOTER INFO */}
              <div className="mt-auto pt-12">
                 <div className="grid grid-cols-1 gap-6">
                     <div>
-                        <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--color-primary)] mb-2">
+                        {/* Label leicht transparent */}
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-white/60 mb-2">
                              Direktkontakt
                         </p>
-                        <a href={`tel:${siteConfig.contact.phone}`} className="text-xl font-bold text-[var(--color-primary-deep)] block mb-1">
+                        <a href={`tel:${siteConfig.contact.phone}`} className="text-xl font-bold text-white block mb-1">
                             {siteConfig.contact.phone}
                         </a>
-                        <a href={`mailto:${siteConfig.contact.email}`} className="text-sm font-medium text-slate-500 block">
+                        <a href={`mailto:${siteConfig.contact.email}`} className="text-sm font-medium text-white/80 block">
                             {siteConfig.contact.email}
                         </a>
                     </div>
