@@ -69,7 +69,7 @@ export function ResourceDownloadSection() {
         {/* HEADER */}
         <div className="flex flex-col lg:flex-row justify-between items-end mb-20 gap-8">
             <FadeIn>
-                <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-[var(--color-text-main)] leading-[1.0]">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight text-[var(--color-text-main)] leading-[1.0]">
                     Wissen & <br/>
                     <span className="text-[var(--color-primary)]">Werkzeuge</span>
                 </h2>
@@ -150,7 +150,7 @@ export function ResourceDownloadSection() {
                                 {TOOLS[currentTool].label}
                             </span>
                             
-                            <h3 className="text-3xl font-bold text-[var(--color-primary-deep)] mb-6 leading-tight">
+                            <h3 className="text-2xl font-bold text-[var(--color-primary-deep)] mb-6 leading-tight">
                                 &quot;{TOOLS[currentTool].title}&quot;
                             </h3>
                             

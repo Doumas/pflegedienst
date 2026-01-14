@@ -69,7 +69,7 @@ export function ContactGridSection() {
       {/* --- HEADER --- */}
       <div className="container mx-auto px-6 pt-16 lg:pt-24 pb-12">
         <FadeIn>
-            <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-[var(--color-text-main)] mb-12">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight  text-[var(--color-text-main)] mb-12">
               Kontakt <br className="md:hidden"/>
               <span className="text-[var(--color-primary)]">aufnehmen</span>
             </h2>

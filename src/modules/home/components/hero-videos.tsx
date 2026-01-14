@@ -13,16 +13,17 @@ export function HeroVideos() {
           loop
           playsInline
         >
-          {/* Hier das Video für die "große" Szene (z.B. die Hände oder Pflege zu Hause) */}
           <source src="/videos/Patient_im_Rollstuhl_im_Park.mp4" type="video/mp4" />
         </video>
-        {/* Leichter Overlay für edleren Look */}
-        <div className="absolute inset-0 bg-black/10 pointer-events-none" />
+        
+        {/* BRAND LAYER: Hauchdünnes Türkis (Primary) im "Multiply" Modus. 
+            Das färbt die dunklen Stellen leicht ein, behält aber den Kontrast. */}
+        <div className="absolute inset-0 bg-[var(--color-primary)] opacity-20 mix-blend-multiply pointer-events-none" />
       </div>
 
-      {/* 2. Das kleine Vordergrund-Video (Unten Links - Überlappend) */}
-      {/* Der Border muss die gleiche Farbe haben wie dein Hintergrund (var(--color-secondary)), damit es "ausgeschnitten" wirkt */}
-      <div className="absolute bottom-8 left-0 w-[55%] h-[50%]  overflow-hidden shadow-2xl z-10  border-[var(--color-secondary)]">
+      {/* 2. Das kleine Vordergrund-Video (Unten Links) */}
+      {/* FIX: Border entfernt! Nur Shadow bleibt. */}
+      <div className="absolute bottom-8 left-0 w-[55%] h-[50%] overflow-hidden shadow-2xl z-10">
         <video
           className="w-full h-full object-cover"
           autoPlay
@@ -30,9 +31,11 @@ export function HeroVideos() {
           loop
           playsInline
         >
-          {/* Hier das Video für die "kleine" Szene (z.B. Park/Rollstuhl) */}
-                    <source src="/videos/Fürsorgliche_Pflege_für_Senioren.mp4" type="video/mp4" />
+          <source src="/videos/Fürsorgliche_Pflege_für_Senioren.mp4" type="video/mp4" />
         </video>
+
+        {/* BRAND LAYER: Auch hier für einheitlichen Look */}
+        <div className="absolute inset-0 bg-[var(--color-primary)] opacity-20 mix-blend-multiply pointer-events-none" />
       </div>
 
     </div>
