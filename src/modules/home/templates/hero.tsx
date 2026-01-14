@@ -47,13 +47,14 @@ export function Hero() {
   const prev = () => setCurrent((p) => (p - 1 + TEXT_SLIDES.length) % TEXT_SLIDES.length);
 
   return (
-    <section className="relative w-full pt-32 lg:pt-40 bg-white overflow-hidden flex flex-col justify-between min-h-screen">
+    // FIX 1: Padding oben deutlich erhöht (pt-44 lg:pt-64) für mehr Luftigkeit
+    <section className="relative w-full pt-44 lg:pt-64 bg-white overflow-hidden flex flex-col justify-between min-h-screen">
       
       <div className="container mx-auto px-6 relative z-10 flex-1">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 h-full items-start">
           
           {/* LINKS: Content */}
-          <div className="flex flex-col relative z-20 pt-8 lg:pt-12">
+          <div className="flex flex-col relative z-20 pt-2 lg:pt-0"> {/* Kleines Feintuning: pt-2 auf Mobile */}
             
             {/* Background Blob (Creme) */}
             <div className="absolute -top-20 -left-20 w-[140%] h-[140%] z-[-1] opacity-60 pointer-events-none">
@@ -69,7 +70,8 @@ export function Hero() {
             </FadeIn>
 
             <FadeIn delay={0.2}>
-              <p className="text-lg md:text-xl text-slate-600 leading-relaxed max-w-lg mb-10">
+              {/* FIX 2: Schriftgröße angepasst (kleiner und feiner: text-base md:text-lg) */}
+              <p className="text-base md:text-lg text-slate-600 leading-relaxed max-w-lg mb-10">
                 Ob anspruchsvolle Intensivpflege oder Unterstützung im Alltag: Wir sind Ihr verlässlicher Partner in Frankfurt. Medizinisch höchst kompetent, menschlich immer nah.
               </p>
             </FadeIn>
@@ -88,25 +90,24 @@ export function Hero() {
           {/* RECHTS: Video Component (Desktop) */}
           <div className="relative w-full h-full hidden lg:block text-[var(--color-primary-deep)]">
              
-             {/* HIER IST DER FIX: Das Raster ist jetzt ein eigener Layer im Hintergrund */}
-             {/* Es hat opacity-15, aber der Inhalt darüber (Videos) bleibt bei 100% */}
+             {/* Raster Hintergrund */}
              <div className="absolute inset-0 bg-pattern-cross-dots opacity-15 pointer-events-none" />
 
              <Marker className="-top-4 -left-4" />
              
-             {/* Wrapper z-10 damit Videos über dem Raster liegen */}
+             {/* Wrapper */}
              <div className="relative z-10 h-full">
                 <HeroVideos />
              </div>
           </div>
           
           {/* Mobile Fallback */}
-          <div className="lg:hidden w-full h-[350px] relative mt-8 text-[var(--color-primary-deep)]">
+          <div className="lg:hidden w-full h-[350px] relative mt-12 text-[var(--color-primary-deep)]">
              
-             {/* HIER EBENFALLS FIX: Separater Layer für das Raster */}
+             {/* Raster Hintergrund */}
              <div className="absolute inset-0 bg-pattern-cross-dots opacity-15 pointer-events-none" />
 
-             {/* Wrapper z-10 */}
+             {/* Wrapper */}
              <div className="relative z-10 h-full">
                 <HeroVideos />
              </div>

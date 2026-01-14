@@ -13,7 +13,7 @@ export function ServiceSectorSlider() {
         {/* SLIDER 1: FACHBEREICHE (WEISS) */}
         <FadeIn>
             <ContentSlider 
-                title={<span>Unsere <span className="text-[var(--color-primary)]">Fachbereiche</span></span>} 
+                title={<span>Alle <span className="text-[var(--color-primary)]">Fachbereiche</span></span>} 
                 items={SECTORS} 
                 id="sectors"
                 // Design Konfiguration
@@ -27,7 +27,7 @@ export function ServiceSectorSlider() {
         <FadeIn delay={0.2}>
             <div>
                 <ContentSlider 
-                    title={<span>Unser <span className="text-[var(--color-primary)]">Service</span></span>} 
+                    title={<span>Unsere <span className="text-[var(--color-primary)]">Leistung</span></span>} 
                     items={SERVICES} 
                     id="services"
                     // HIER WAR DER FEHLER: Jetzt bg-white statt secondary
