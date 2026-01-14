@@ -150,7 +150,7 @@ export function ResourceDownloadSection() {
                                 {TOOLS[currentTool].label}
                             </span>
                             
-                            <h3 className="text-2xl font-bold text-[var(--color-primary-deep)] mb-6 leading-tight">
+                            <h3 className="text-3xl font-bold text-[var(--color-primary-deep)] mb-6 leading-tight">
                                 &quot;{TOOLS[currentTool].title}&quot;
                             </h3>
                             
