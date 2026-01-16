@@ -7,6 +7,22 @@ export function StatsSection() {
   return (
     <section className="relative w-full bg-[var(--color-primary-deep)] text-white py-24 lg:py-32 overflow-hidden">
       
+      {/* --- HINTERGRUND DEKO --- */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {/* 1. Soft Glow (Türkis) */}
+          <div className="absolute -top-[30%] -right-[10%] w-[800px] h-[800px] bg-[var(--color-primary)]/10 blur-[120px] rounded-full mix-blend-screen opacity-60" />
+
+          {/* 2. Soft Glow (Creme) */}
+          <div className="absolute -bottom-[20%] -left-[10%] w-[600px] h-[600px] bg-[var(--color-secondary)]/5 blur-[100px] rounded-full mix-blend-screen opacity-50" />
+
+          {/* 3. Das "Kreuz" als riesiges Outline-Watermark */}
+          <div className="absolute top-1/2 left-0 lg:left-1/4 -translate-y-1/2 -translate-x-1/2 opacity-[0.03]">
+             <svg width="600" height="600" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M40 0H60V40H100V60H60V100H40V60H0V40H40V0Z" fill="currentColor"/>
+             </svg>
+          </div>
+      </div>
+
       {/* Grid Lines Overlay */}
       <div className="absolute inset-0 pointer-events-none opacity-10">
         <div className="container mx-auto h-full border-x border-white/20">
@@ -21,8 +37,8 @@ export function StatsSection() {
           <div className="flex flex-col justify-center items-center lg:items-start lg:pr-20 border-b lg:border-b-0 lg:border-r border-white/10 pb-16 lg:pb-0 h-full">
             <FadeIn>
                 <div className="relative">
-                    {/* HIER GEÄNDERT: Creme (Secondary) statt Grün (Primary) */}
-                    <span className="block text-[7rem] sm:text-[10rem] lg:text-[13rem] font-bold leading-[0.8] tracking-tighter text-[var(--color-secondary)]">
+                    {/* WIEDER GRÜN (Primary) */}
+                    <span className="block text-[7rem] sm:text-[10rem] lg:text-[13rem] font-bold leading-[0.8] tracking-tighter text-[var(--color-primary)]">
                         24/7
                     </span>
                     <span className="absolute -bottom-6 right-2 text-xs lg:text-sm font-bold uppercase tracking-[0.3em] text-white/50">
@@ -41,10 +57,11 @@ export function StatsSection() {
           {/* --- RECHTS: TEXT INHALT --- */}
           <div className="flex flex-col justify-center lg:pl-24 h-full pt-4 lg:pt-0">
              <FadeIn delay={0.3}>
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.1] mb-12">
+                {/* WICHTIG: 'text-white' hinzugefügt, damit der Haupttext auf dem dunklen Hintergrund sichtbar ist */}
+                <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.1] mb-12 text-white">
                     Mehr als nur Pflege. <br/>
-                    {/* HIER GEÄNDERT: Creme (Secondary) */}
-                    <span className="text-[var(--color-secondary)]">Verantwortung.</span>
+                    {/* WIEDER GRÜN (Primary) */}
+                    <span className="text-[var(--color-primary)]">Verantwortung.</span>
                 </h2>
              </FadeIn>
 
@@ -65,9 +82,9 @@ export function StatsSection() {
                     
                     {/* Kleiner Footer im Textblock */}
                     <div className="pt-6 border-t border-white/10 flex items-center gap-4">
-                        {/* HIER GEÄNDERT: Punkt und Text jetzt auch in Creme */}
-                        <div className="w-2 h-2 rounded-full bg-[var(--color-secondary)] animate-pulse" />
-                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-secondary)]">
+                        {/* Auch hier wieder Grün für Konsistenz */}
+                        <div className="w-2 h-2 rounded-full bg-[var(--color-primary)] animate-pulse" />
+                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-primary)]">
                             Qualität aus Frankfurt
                         </span>
                     </div>

@@ -154,7 +154,7 @@ export function ResourceDownloadSection() {
                                 &quot;{TOOLS[currentTool].title}&quot;
                             </h3>
                             
-                            <p className="text-lg text-slate-600 font-medium leading-relaxed mb-8">
+                      <p className="text-slate-600 leading-relaxed mb-8 max-w-sm">
                                 {TOOLS[currentTool].text}
                             </p>
 

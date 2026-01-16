@@ -69,7 +69,7 @@ export function Hero() {
             </FadeIn>
 
             <FadeIn delay={0.2}>
-              <p className="text-lg md:text-xl text-slate-600 leading-relaxed max-w-lg mb-10">
+                      <p className="text-slate-600  leading-relaxed mb-8 max-w-sm">
                 Ob anspruchsvolle Intensivpflege oder Unterstützung im Alltag: Wir sind Ihr verlässlicher Partner in Frankfurt. Medizinisch höchst kompetent, menschlich immer nah.
               </p>
             </FadeIn>
