@@ -1,3 +1,5 @@
+import { SERVICES } from "@/shared/data/service-data";
+
 export type NavItem = {
   label: string;
   href?: string;
@@ -5,12 +7,13 @@ export type NavItem = {
 };
 
 export const siteConfig = {
-  name: "DALAS",
-  description: "Ihr zuverlässiger Partner für häusliche Intensivpflege und Betreuung.",
+  name: "Dalas Pflegedienst",
+  description: "Ihr verlässlicher Partner für Intensiv- und Ambulante Pflege in Frankfurt.",
   contact: {
-    phone: "089 / 123 456 78",
-    email: "info@herz-hand-pflege.de",
-    address: "Musterstraße 49, 80331 München"
+    // Deine echten Daten (statt München/Platzhalter)
+    phone: "069 / 123 456 78",
+    email: "info@dalas-pflege.de",
+    address: "Borsigallee 37, 60388 Frankfurt am Main"
   },
   nav: [
     { 
@@ -24,16 +27,12 @@ export const siteConfig = {
     { 
       label: "Leistungen", 
       href: "/leistungen",
-      items: [
-        { label: "Ambulante Pflege", href: "/leistungen/ambulante-pflege" },
-        { label: "Intensivpflege", href: "/leistungen/intensivpflege" },
-        { label: "24-Stunden-Betreuung", href: "/leistungen/24h-betreuung" },
-        { label: "Palliativpflege (SAPV)", href: "/leistungen/palliativpflege" },
-        { label: "Kinderintensivpflege", href: "/leistungen/kinderintensivpflege" },
-        { label: "Verhinderungspflege", href: "/leistungen/verhinderungspflege" },
-        { label: "Hauswirtschaft & Betreuung", href: "/leistungen/betreuung" },
-        { label: "Beratungseinsatz § 37.3", href: "/leistungen/beratungseinsatz" },
-      ] 
+      // WICHTIG: Hier ziehen wir die Daten dynamisch!
+      // Das Array "items" wird jetzt automatisch anhand deiner Service-Daten generiert.
+      items: SERVICES.map((service) => ({
+        label: service.title,
+        href: service.href
+      }))
     },
     { 
       label: "Karriere",

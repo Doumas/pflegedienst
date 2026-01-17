@@ -1,17 +1,16 @@
 import { 
   Activity, 
   UserCheck, 
-  Baby, 
   FileText, 
   Home, 
   Sunset, 
   Coffee, 
   Umbrella, 
-  // Neue Icons
   Stethoscope,
-  Brain,
-  GraduationCap,
-  Sparkles,
+  Heart,
+  Syringe,
+  ShieldCheck,
+  Brain, // WICHTIG: Das fehlte vorher
   LucideIcon 
 } from "lucide-react";
 
@@ -27,143 +26,119 @@ export interface ServiceItem {
   details: string;
 }
 
-// --- GRUPPE 1: FACHBEREICHE (Spezialisierte Pflege) ---
-export const SECTORS: ServiceItem[] = [
+// --- HAUPTLISTE: UMFASSENDE PFLEGELEISTUNGEN ---
+export const SERVICES: ServiceItem[] = [
   {
     id: "01",
     title: "Außerklinische Intensivpflege",
     slug: "intensivpflege",
-    description: "Höchste medizinische Sicherheit für beatmungspflichtige Patienten im eigenen Zuhause.",
+    description: "Spezialisierte 1:1 Versorgung für beatmungspflichtige Patienten zuhause.",
     icon: Activity,
     href: "/leistungen/intensivpflege",
-    image: "/images/home/hero-bg.jpg", 
-    features: ["Beatmungspflege", "Trachealkanülenmanagement", "24h Monitoring", "Enge Kooperation mit Fachärzten"],
-    details: "Schwerstpflegebedürftigkeit bedeutet nicht, dass das Leben im eigenen Zuhause enden muss. Wir schaffen eine Umgebung, die maximale Sicherheit mit menschlicher Wärme verbindet."
+    image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80", 
+    features: ["Beatmungspflege (invasiv/non-invasiv)", "Trachealkanülenmanagement", "24h Monitoring", "Notfallmanagement"],
+    details: "Unser spezialisiertes Team ermöglicht schwerstpflegebedürftigen Menschen ein Leben in den eigenen vier Wänden. Mit modernster Technik und viel menschlicher Wärme garantieren wir maximale Sicherheit rund um die Uhr."
   },
   {
     id: "02",
-    title: "Kinderintensivpflege",
-    slug: "kinderintensivpflege",
-    description: "Große Hilfe für kleine Helden. Fachkompetenz mit ganz viel Herz.",
-    icon: Baby,
-    href: "/leistungen/kinderintensivpflege",
-    image: "/images/home/hero-bg2.jpg", 
-    features: ["Schul- & Kitaservice", "Häusliche Beatmung", "Entlastung der Eltern", "Familienintegration"],
-    details: "Kinder sind keine kleinen Erwachsenen. Wir begleiten schwerkranke Kinder in ihrem Alltag und ermöglichen ihnen so viel Normalität wie möglich."
+    title: "Medizinische Behandlungspflege",
+    slug: "behandlungspflege",
+    description: "Medizinische Leistungen nach ärztlicher Verordnung (SGB V).",
+    icon: Syringe,
+    href: "/leistungen/behandlungspflege",
+    image: "https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&q=80",
+    features: ["Injektionen (Insulin, Heparin)", "Wundversorgung", "Medikamentengabe", "Kompressionsverbände"],
+    details: "Wir übernehmen die professionelle Durchführung medizinischer Maßnahmen, die Ihr Haus- oder Facharzt verordnet hat. Unsere examinierten Fachkräfte sorgen für eine sterile und fachgerechte Versorgung."
   },
   {
     id: "03",
+    title: "Ambulante Grundpflege",
+    slug: "grundpflege",
+    description: "Unterstützung bei der Körperpflege, Ernährung und Mobilität (SGB XI).",
+    icon: Home,
+    href: "/leistungen/grundpflege",
+    image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80",
+    features: ["Körperpflege (Waschen, Duschen)", "An- und Auskleiden", "Hilfe bei der Nahrungsaufnahme", "Lagerung & Mobilisation"],
+    details: "Pflege ist Vertrauenssache. Wir unterstützen Sie respektvoll bei den alltäglichen Dingen des Lebens, damit Sie Ihre Selbstständigkeit so lange wie möglich bewahren können."
+  },
+  {
+    id: "04",
     title: "Palliativpflege (SAPV)",
     slug: "palliativpflege",
-    description: "Begleitung auf dem letzten Weg – schmerzfrei, würdevoll und geborgen.",
+    description: "Würdevolle Begleitung in der letzten Lebensphase.",
     icon: Sunset,
     href: "/leistungen/palliativpflege",
-    image: "/images/home/hero-bg3.jpg", 
-    features: ["Schmerztherapie", "Psychosoziale Begleitung", "24h Rufbereitschaft", "Hospiz-Kooperation"],
-    details: "In der letzten Lebensphase geht es nicht mehr um Heilung, sondern um Lebensqualität. Wir sorgen für eine schmerzfreie Zeit im Kreise der Familie."
+    image: "https://images.unsplash.com/photo-1544027993-37dbfe43562a?auto=format&fit=crop&q=80", 
+    features: ["Symptomkontrolle", "Schmerzmanagement", "Psychosoziale Unterstützung", "24h Rufbereitschaft"],
+    details: "Wenn eine Heilung nicht mehr möglich ist, steht die Lebensqualität an erster Stelle. Wir begleiten Patienten und Angehörige einfühlsam, schmerzfrei und geborgen auf ihrem letzten Weg."
   },
-  {
-    id: "04",
-    title: "24-Stunden-Betreuung",
-    slug: "24h-betreuung",
-    description: "Rund-um-die-Uhr Präsenz für ein Leben ohne Angst und Einsamkeit.",
-    icon: UserCheck,
-    href: "/leistungen/24h-betreuung",
-    image: "/images/home/hero-bg4.jpg", 
-    features: ["1:1 Versorgung", "Strukturierter Tagesablauf", "Nächtliche Sicherheit", "Teilhabe am Leben"],
-    details: "Eine echte Alternative zum Pflegeheim. Ein festes Team wechselt sich ab, sodass lückenlos jemand vor Ort ist – für Sicherheit und Gesellschaft."
-  }
-];
-
-// --- GRUPPE 2: UNSERE LEISTUNGEN (Allgemeine Versorgung) ---
-export const SERVICES: ServiceItem[] = [
-  {
-    id: "01",
-    title: "Ambulante Pflege",
-    slug: "ambulante-pflege",
-    description: "Der Klassiker: Medizinische und pflegerische Unterstützung direkt bei Ihnen.",
-    icon: Home,
-    href: "/leistungen/ambulante-pflege",
-    image: "/images/home/hero-bg4.jpg",
-    features: ["Grundpflege", "Behandlungspflege", "Medikamentengabe", "Mobilisation"],
-    details: "Wir kommen nicht nur zum 'Waschen', sondern um Lebensqualität zu erhalten. Pünktlich, professionell und immer mit einem freundlichen Wort."
-  },
-  {
-    id: "02",
-    title: "Verhinderungspflege",
-    slug: "verhinderungspflege",
-    description: "Ihre Auszeit ist wichtig. Wir übernehmen, wenn Sie verhindert sind.",
-    icon: Umbrella,
-    href: "/leistungen/verhinderungspflege",
-    image: "/images/home/hero-bg.jpg",
-    features: ["Urlaubsvertretung", "Stundenweise Entlastung", "Kassenabrechnung", "Flexibel abrufbar"],
-    details: "Pflegende Angehörige leisten Übermenschliches. Tanken Sie Kraft – wir springen flexibel ein, sei es stundenweise oder für den Urlaub."
-  },
-  {
-    id: "03",
-    title: "Hauswirtschaft & Betreuung",
-    slug: "betreuung",
-    description: "Entlastung im Haushalt und Freude im Alltag (§ 45b SGB XI).",
-    icon: Coffee,
-    href: "/leistungen/betreuung",
-    image: "/images/home/hero-bg2.jpg",
-    features: ["Reinigung & Einkäufe", "Gedächtnistraining", "Begleitung zu Terminen", "Spaziergänge"],
-    details: "Oft sind es die kleinen Dinge, die schwerfallen. Wir sorgen für ein sauberes Zuhause und leisten Gesellschaft."
-  },
-  {
-    id: "04",
-    title: "Beratungseinsatz § 37.3",
-    slug: "beratungseinsatz",
-    description: "Pflichttermin? Nein, Ihre Chance auf wertvolle Tipps und höhere Zuschüsse.",
-    icon: FileText,
-    href: "/leistungen/beratungseinsatz",
-    image: "/images/home/hero-bg3.jpg",
-    features: ["Nachweis Pflegekasse", "Pflegegrad-Check", "Hilfsmittel-Tipps", "Schulung"],
-    details: "Wir sehen das nicht als Kontrolle, sondern als Coaching. Wir prüfen, ob Ihnen höhere Zuschüsse oder Hilfsmittel zustehen."
-  },
-  // --- NEUE LEISTUNGEN (Erweiterung) ---
   {
     id: "05",
-    title: "Wundversorgung",
+    title: "Wundmanagement",
     slug: "wundversorgung",
-    description: "Professionelles Wundmanagement für schnellere Heilung chronischer Wunden.",
+    description: "Zertifizierte Wundversorgung für chronische und akute Wunden.",
     icon: Stethoscope,
     href: "/leistungen/wundversorgung",
-    image: "/images/home/hero-bg.jpg", 
-    features: ["ICW-Wundexperten", "Verbandswechsel", "Zusammenarbeit mit Ärzten", "Schmerzlinderung"],
-    details: "Chronische Wunden belasten den Alltag stark. Unsere spezialisierten Wundexperten sorgen mit modernen Therapiemethoden für eine schnellere und schmerzarme Heilung."
+    image: "https://images.unsplash.com/photo-1631815589968-fdb09a223b1e?auto=format&fit=crop&q=80", 
+    features: ["Versorgung durch Wundexperten (ICW)", "Dekubitusbehandlung", "Ulcus Cruris Therapie", "Digitale Wunddokumentation"],
+    details: "Chronische Wunden schränken die Lebensqualität massiv ein. Unsere Wundexperten arbeiten eng mit Ärzten zusammen, um Heilungsprozesse durch moderne Wundauflagen zu beschleunigen."
   },
   {
     id: "06",
-    title: "Demenzbetreuung",
-    slug: "demenzbetreuung",
-    description: "Einfühlsame Begleitung, um Erinnerungen zu bewahren und Sicherheit zu geben.",
-    icon: Brain,
-    href: "/leistungen/demenzbetreuung",
-    image: "/images/home/hero-bg2.jpg", 
-    features: ["Biografiearbeit", "Tagesstrukturierung", "Gedächtnisübungen", "Entlastung Angehöriger"],
-    details: "Menschen mit Demenz leben in ihrer eigenen Welt. Wir holen sie dort ab, wo sie sind, und schaffen Momente der Freude und Orientierung im gewohnten Umfeld."
+    title: "Verhinderungspflege",
+    slug: "verhinderungspflege",
+    description: "Urlaubs- und Krankheitsvertretung für pflegende Angehörige.",
+    icon: Umbrella,
+    href: "/leistungen/verhinderungspflege",
+    image: "https://images.unsplash.com/photo-1581056771107-24ca5f033842?auto=format&fit=crop&q=80",
+    features: ["Stundenweise Entlastung", "Urlaubsvertretung", "Abrechnung direkt mit der Kasse", "Flexibler Einsatz"],
+    details: "Pflegende Angehörige brauchen Pausen. Wir springen ein, wenn Sie krank sind, in den Urlaub fahren oder einfach mal Zeit für sich brauchen – die Kosten übernimmt oft komplett die Kasse."
   },
   {
     id: "07",
-    title: "Schulbegleitung",
-    slug: "schulbegleitung",
-    description: "Inklusion leben: Wir begleiten Kinder mit Hilfsbedarf in Schule und Kita.",
-    icon: GraduationCap,
-    href: "/leistungen/schulbegleitung",
-    image: "/images/home/hero-bg3.jpg", 
-    features: ["Pflege in der Schule", "Begleitung im Unterricht", "Kita-Assistenz", "Ausflugs-Begleitung"],
-    details: "Jedes Kind hat ein Recht auf Bildung und Gemeinschaft. Unsere Fachkräfte stellen sicher, dass die medizinische Versorgung auch während des Unterrichts gewährleistet ist."
+    title: "Hauswirtschaft & Betreuung",
+    slug: "betreuung",
+    description: "Hilfe im Haushalt und soziale Betreuung (§ 45b SGB XI).",
+    icon: Coffee,
+    href: "/leistungen/betreuung",
+    image: "https://images.unsplash.com/photo-1516738901171-8eb4fc13bd20?auto=format&fit=crop&q=80",
+    features: ["Reinigung der Wohnung", "Einkaufsservice", "Begleitung zu Ärzten", "Gedächtnistraining"],
+    details: "Ein sauberes Zuhause und soziale Kontakte sind wichtig für das Wohlbefinden. Unsere Betreuungskräfte leisten Gesellschaft, gehen mit Ihnen spazieren oder erledigen den Wocheneinkauf."
   },
   {
     id: "08",
-    title: "Service Plus (Privat)",
-    slug: "service-plus",
-    description: "Mehr als der Standard. Individuelle Komfortleistungen nach Ihren Wünschen.",
-    icon: Sparkles,
-    href: "/leistungen/service-plus",
-    image: "/images/home/hero-bg4.jpg", 
-    features: ["Reisebegleitung", "Erweiterte Hauswirtschaft", "Kulturbegleitung", "Concierge-Services"],
-    details: "Die Pflegekasse deckt nicht alles ab, was das Leben schön macht. Mit unserem Service Plus buchen Sie sich genau das Extra an Komfort und Freiheit dazu, das Sie sich wünschen."
+    title: "Demenzbetreuung",
+    slug: "demenzbetreuung",
+    description: "Spezialisierte Betreuung für Menschen mit Demenz.",
+    icon: Brain,
+    href: "/leistungen/demenzbetreuung",
+    image: "https://images.unsplash.com/photo-1534349762913-96c8713025bf?auto=format&fit=crop&q=80", 
+    features: ["Biografiearbeit", "Tagesstrukturierung", "Validation", "Entlastung der Familie"],
+    details: "Demenz verändert den Alltag. Wir begegnen Betroffenen mit Geduld und Verständnis, schaffen Orientierung und sorgen für Sicherheit im gewohnten Umfeld."
+  },
+  {
+    id: "09",
+    title: "Beratungseinsatz § 37.3",
+    slug: "beratungseinsatz",
+    description: "Pflichtberatung für Pflegegeldempfänger.",
+    icon: FileText,
+    href: "/leistungen/beratungseinsatz",
+    image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&q=80",
+    features: ["Nachweis für die Pflegekasse", "Pflegegrad-Überprüfung", "Hilfsmittelberatung", "Schulung von Angehörigen"],
+    details: "Wir führen die gesetzlich vorgeschriebenen Beratungsbesuche kompetent durch. Dabei kontrollieren wir nicht, sondern beraten Sie, wie Sie die Pflege optimieren und mehr Leistungen erhalten können."
+  },
+  {
+    id: "10",
+    title: "Sicherheits-Check & Notruf",
+    slug: "sicherheit",
+    description: "Wohnraumanpassung und Hausnotruf-Vermittlung.",
+    icon: ShieldCheck,
+    href: "/leistungen/sicherheit",
+    image: "https://images.unsplash.com/photo-1516574187841-69301976e499?auto=format&fit=crop&q=80",
+    features: ["Wohnraum-Beratung", "Hausnotruf-Installation", "Sturzprophylaxe", "Hilfsmittel-Check"],
+    details: "Oft genügen kleine Anpassungen (Haltegriffe, Teppiche entfernen), um Stürze zu vermeiden. Wir beraten Sie zur Wohnraumanpassung und vermitteln moderne Hausnotruf-Systeme."
   }
 ];
+
+// Helper: Kompatibilität
+export const ALL_SERVICES = SERVICES;

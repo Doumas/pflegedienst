@@ -6,7 +6,7 @@ import { Download, ArrowRight, Calculator, Phone } from "lucide-react";
 import { FadeIn } from "@/shared/ui/fade-in";
 import Link from "next/link";
 
-// --- DATEN: DOWNLOADS (Linke Seite) ---
+// --- DATEN: DOWNLOADS ---
 const RESOURCES = [
   {
     category: "UNTERNEHMEN",
@@ -34,7 +34,7 @@ const RESOURCES = [
   }
 ];
 
-// --- DATEN: TOOLS (Rechte Seite - Slider) ---
+// --- DATEN: TOOLS ---
 const TOOLS = [
   {
     id: 1,
@@ -43,7 +43,7 @@ const TOOLS = [
     title: "Der Pflege-Konfigurator",
     text: "Sie sind unsicher, welcher Pflegegrad Ihnen zusteht oder welche Leistungen die Kasse übernimmt? Nutzen Sie unseren kostenlosen Assistenten.",
     action: "Jetzt konfigurieren",
-    href: "/#pflege-check" // Anker zum Configurator
+    href: "/#pflege-check"
   },
   {
     id: 2,
@@ -93,8 +93,6 @@ export function ResourceDownloadSection() {
                         <FadeIn key={index} delay={index * 0.1} className="group relative">
                             <a href={item.href} target="_blank" className="block py-10 pr-8 pl-4 hover:bg-[var(--color-secondary)] transition-colors duration-500">
                                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                                    
-                                    {/* Meta Info */}
                                     <div className="w-40 shrink-0">
                                         <span className="block text-[10px] font-bold uppercase tracking-widest text-[var(--color-primary)] mb-2">
                                             {item.category}
@@ -103,15 +101,11 @@ export function ResourceDownloadSection() {
                                             {item.date}
                                         </span>
                                     </div>
-
-                                    {/* Title */}
                                     <div className="flex-1">
                                         <h3 className="text-xl font-bold text-[var(--color-primary-deep)] group-hover:text-[var(--color-primary)] transition-colors">
                                             {item.title}
                                         </h3>
                                     </div>
-
-                                    {/* Action */}
                                     <div className="flex items-center gap-2 text-[var(--color-primary-deep)] opacity-40 group-hover:opacity-100 transition-all transform group-hover:translate-x-2">
                                         <span className="text-xs font-bold uppercase tracking-wider hidden md:block">Download</span>
                                         <Download className="w-5 h-5" />
@@ -124,11 +118,21 @@ export function ResourceDownloadSection() {
             </div>
 
             {/* --- RECHTS: TOOL SLIDER (Span 5) --- */}
-            {/* Das ist die "Highlight Box" aus dem Screenshot */}
-            <div className="lg:col-span-5 bg-[var(--color-secondary)]/30 relative flex flex-col justify-between min-h-[500px]">
+            <div className="lg:col-span-5 bg-[var(--color-secondary)]/50 relative flex flex-col justify-between min-h-[500px]">
                 
+                {/* DEKO HINTERGRUND (Punkte entfernt, nur noch Watermark) */}
+                <div className="absolute inset-0 pointer-events-none opacity-40">
+                    {/* Großes Watermark Icon */}
+                    <div className="absolute -top-12 -right-12 text-[var(--color-primary)] opacity-10">
+                        {(() => {
+                             const Icon = TOOLS[currentTool].icon;
+                             return <Icon className="w-64 h-64 rotate-12" strokeWidth={1} />;
+                        })()}
+                    </div>
+                </div>
+
                 {/* Content Area */}
-                <div className="flex-1 p-10 lg:p-16 flex flex-col justify-center relative overflow-hidden">
+                <div className="flex-1 p-10 lg:p-16 flex flex-col justify-center relative overflow-hidden z-10">
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={currentTool}
@@ -136,10 +140,10 @@ export function ResourceDownloadSection() {
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -20 }}
                             transition={{ duration: 0.4 }}
-                            className="relative z-10"
+                            className="relative"
                         >
-                            {/* Icon als großes Wasserzeichen */}
-                            <div className="mb-8">
+                            {/* Icon Circle */}
+                            <div className="mb-8 inline-block">
                                 {(() => {
                                     const Icon = TOOLS[currentTool].icon;
                                     return <Icon className="w-16 h-16 text-[var(--color-primary)]" strokeWidth={1.5} />;
@@ -154,7 +158,7 @@ export function ResourceDownloadSection() {
                                 &quot;{TOOLS[currentTool].title}&quot;
                             </h3>
                             
-                      <p className="text-slate-600 leading-relaxed mb-8 max-w-sm">
+                            <p className="text-slate-600 leading-relaxed mb-8 max-w-sm">
                                 {TOOLS[currentTool].text}
                             </p>
 
@@ -171,8 +175,8 @@ export function ResourceDownloadSection() {
                     </div>
                 </div>
 
-                {/* Navigation Buttons (Unten angedockt) */}
-                <div className="flex border-t border-[var(--color-primary-deep)]/10 bg-white">
+                {/* Navigation Buttons */}
+                <div className="flex border-t border-[var(--color-primary-deep)]/10 bg-white relative z-20">
                     <button 
                         onClick={prevTool}
                         className="flex-1 py-6 flex items-center justify-center border-r border-[var(--color-primary-deep)]/10 hover:bg-[var(--color-secondary)] transition-colors group"

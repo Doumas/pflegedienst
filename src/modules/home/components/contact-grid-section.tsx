@@ -141,7 +141,7 @@ export function ContactGridSection() {
                           Wir sind für Sie da.<br/>
                           <span className="text-[var(--color-primary)]">Vor Ort & Digital.</span>
                       </h3>
-                      <p className="text-slate-600 leading-relaxed mb-8 max-w-sm">
+                      <p className="text-slate-600 font-medium leading-relaxed mb-8 max-w-sm">
                           Egal ob Sie eine Frage zur Abrechnung haben oder einen Notfall melden müssen – wir helfen sofort.
                       </p>
                       

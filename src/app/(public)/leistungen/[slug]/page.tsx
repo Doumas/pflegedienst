@@ -1,45 +1,42 @@
-import { notFound } from "next/navigation";
-// Achte darauf, dass dieser Pfad zu deinem Template stimmt
 import { ServiceDetailTemplate } from "@/modules/services/templates/service-detail-template";
+import { SERVICES } from "@/shared/data/service-data";
+import { notFound } from "next/navigation";
 
-// KORREKTUR: Wir importieren jetzt die BEIDEN neuen Listen
-// Der Pfad muss auf deine Datei zeigen (laut Fehlermeldung: modules/services/data/services)
-import { SERVICES, SECTORS } from "@/modules/services/data/services";
+// --- WICHTIG FÜR DEINE VERSION: params als Promise typisieren ---
+type Props = {
+  params: Promise<{ slug: string }>;
+};
 
-// Wir werfen beide Listen zusammen, damit wir in ALLEN Leistungen suchen können
-const ALL_SERVICES = [...SECTORS, ...SERVICES];
-
-interface PageProps {
-  params: {
-    slug: string;
-  };
-}
-
-// Generiert statische Pfade für ALLE Leistungen (SEO & Performance)
-export function generateStaticParams() {
-  return ALL_SERVICES.map((service) => ({
+// 1. Statische Pfade generieren (bleibt gleich)
+export async function generateStaticParams() {
+  return SERVICES.map((service) => ({
     slug: service.slug,
   }));
 }
 
-export function generateMetadata({ params }: PageProps) {
-  const service = ALL_SERVICES.find((s) => s.slug === params.slug);
-  if (!service) return;
-
+// 2. Metadaten generieren (jetzt async mit await params)
+export async function generateMetadata({ params }: Props) {
+  const { slug } = await params; // WICHTIG: awaiten
+  const service = SERVICES.find((s) => s.slug === slug);
+  
+  if (!service) return { title: "Leistung nicht gefunden" };
+  
   return {
-    title: `${service.title} | Dalas Pflege`,
+    title: `${service.title} | Dalas Pflegedienst`,
     description: service.description,
   };
 }
 
-export default function ServicePage({ params }: PageProps) {
-  // Wir suchen den Slug in der kombinierten Liste
-  const service = ALL_SERVICES.find((s) => s.slug === params.slug);
+// 3. Die eigentliche Seite (jetzt async mit await params)
+export default async function ServiceDetailPage({ params }: Props) {
+  // WICHTIG: Hier müssen wir auf die Params warten
+  const { slug } = await params;
+
+  const service = SERVICES.find((s) => s.slug === slug);
 
   if (!service) {
     notFound();
   }
 
-  // Wir übergeben die gefundenen Daten an dein Template
-  return <ServiceDetailTemplate service={service} />;
+  return <ServiceDetailTemplate slug={slug} />;
 }

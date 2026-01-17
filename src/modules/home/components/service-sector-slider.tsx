@@ -13,7 +13,7 @@ export function ServiceSectorSlider() {
         
         <FadeIn>
             <ContentSlider 
-                title={<span>Unsere <span className="text-[var(--color-primary)]">Leistung</span></span>} 
+                title={<span>Alle <span className="text-[var(--color-primary)]">Leistungen</span></span>} 
                 items={SERVICES} 
                 id="services"
                 sectionBgColor="bg-white" 
