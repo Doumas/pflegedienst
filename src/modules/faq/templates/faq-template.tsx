@@ -83,29 +83,28 @@ export function FAQTemplate() {
          <div className="absolute bottom-24 right-1/4 text-[var(--color-primary)] opacity-30 text-2xl select-none">+</div>
       </div>
 
-      <div className="hide-on-print relative z-10">
+    <div className="w-full bg-white text-[var(--color-text-main)] min-h-screen pt-40 lg:pt-48 pb-24 overflow-hidden relative">
       
-        {/* --- HEADER (Linksbündig & Clean) --- */}
-        <section className="pt-32 pb-16 lg:pt-48 lg:pb-24 px-6 border-b border-slate-100">
-          <div className="container mx-auto">
-            <FadeIn delay={0.1}>
-                {/* Kleine Label-Zeile */}
-                <span className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-6">
-                    Wissenswertes & Hilfe
-                </span>
-
-                <h1 className="font-heading text-5xl md:text-6xl lg:text-8xl font-black text-[var(--color-primary-deep)] mb-8 tracking-tight leading-[0.9]">
-                    Häufige <br/> Fragen.
+      {/* --- HERO SECTION --- */}
+      <section className="container mx-auto px-6 mb-24 lg:mb-32 relative z-10">
+        <div className="max-w-4xl">
+            <FadeIn>
+                <div className="flex items-center gap-3 mb-6">
+                    <div className="h-[1px] w-8 bg-[var(--color-primary)]" />
+                    <span className="text-xs font-bold uppercase tracking-widest text-[var(--color-primary)]">Fragen zu DALAS</span>
+                </div>
+                
+                <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.0] text-[var(--color-primary-deep)] mb-8">
+                    Häufige 
+                    <span className="text-[var(--color-primary)]"> Fragen</span>
                 </h1>
-            </FadeIn>
-            
-            <FadeIn delay={0.2}>
-                <p className="text-xl md:text-2xl text-slate-500 font-medium leading-relaxed max-w-2xl border-l-4 border-[var(--color-primary)] pl-6 mt-8">
-                    Transparenz schafft Vertrauen. Hier finden Sie klare Antworten auf die wichtigsten Fragen rund um Pflege und Kosten.
+                
+                <p className="text-lg md:text-xl text-slate-500 font-medium leading-relaxed font-body max-w-2xl">
+                    Wir suchen Menschen, keine Maschinen. Bei uns zählt der Mensch – egal ob Patient oder Mitarbeiter. Entdecke deine Möglichkeiten in einem Team, das zusammenhält.
                 </p>
             </FadeIn>
-          </div>
-        </section>
+        </div>
+      </section>
 
         {/* --- CONTENT GRID --- */}
         <div className="container px-6 mx-auto pt-16">

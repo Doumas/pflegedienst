@@ -60,16 +60,18 @@ export function Hero() {
                  <OrganicBlob className="w-full h-full text-[var(--color-secondary)]" />
             </div>
 
-            <Marker className="-left-4 top-0" />
-            
+  <div className="flex items-center gap-3 mb-6 max-w-4xl">
+                    <div className="h-[1px] w-8 bg-[var(--color-primary)]" />
+                    <span className="text-xs font-bold uppercase tracking-widest text-[var(--color-primary)]">Willkommen bei DALAS</span>
+                </div>            
             <FadeIn>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold leading-[1.0] tracking-tight text-[var(--color-text-main)] mb-8 relative">
+                <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.0] text-[var(--color-primary-deep)] mb-6 lg:mb-8">
                 Sicherheit und Geborgenheit <span className="text-[var(--color-primary)]">Zuhause</span>
               </h1>
             </FadeIn>
 
             <FadeIn delay={0.2}>
-                      <p className="text-slate-600  leading-relaxed mb-8 max-w-sm">
+                    <p className="text-base md:text-lg text-slate-500 font-medium leading-relaxed font-body">
                 Ob anspruchsvolle Intensivpflege oder Unterstützung im Alltag: Wir sind Ihr verlässlicher Partner in Frankfurt. Medizinisch höchst kompetent, menschlich immer nah.
               </p>
             </FadeIn>

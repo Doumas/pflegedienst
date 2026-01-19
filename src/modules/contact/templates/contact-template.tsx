@@ -40,19 +40,21 @@ export function ContactTemplate() {
 
   return (
     // FIX: pt-40 (Mobile) und lg:pt-48 (Desktop) sorgen dafür, dass der Header nicht mehr überlappt
-    <main className="w-full bg-white text-[var(--color-text-main)] overflow-hidden pt-40 lg:pt-48">
+    <div className="w-full bg-white text-[var(--color-text-main)] min-h-screen pt-40 lg:pt-48 pb-24 overflow-hidden relative">
       
       {/* =====================================================================
           1. HEADER SECTION
       ===================================================================== */}
-      <section className="container mx-auto px-6 mb-12 lg:mb-24 relative">
+      <section className="container mx-auto px-6 mb-24 lg:mb-32 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24 items-start lg:items-center">
             
             {/* LINKS: Headline & Intro */}
-            <FadeIn className="order-1 pt-4 lg:pt-0">
+            <FadeIn>
                 {/* Deko Kreuz */}
-                <Plus className="w-5 h-5 text-[var(--color-primary)]/50 absolute -top-12 left-0 hidden lg:block" />
-
+  <div className="flex items-center gap-3 mb-6 max-w-4xl">
+                    <div className="h-[1px] w-8 bg-[var(--color-primary)]" />
+                    <span className="text-xs font-bold uppercase tracking-widest text-[var(--color-primary)]">Kontakt mit DALAS</span>
+                </div>
                 <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.0] text-[var(--color-primary-deep)] mb-6 lg:mb-8">
                     Willkommen <br />
                     bei <span className="text-[var(--color-primary)]">Dalas.</span>
@@ -283,6 +285,6 @@ export function ContactTemplate() {
          </div>
       </section>
 
-    </main>
+    </div>
   );
 }

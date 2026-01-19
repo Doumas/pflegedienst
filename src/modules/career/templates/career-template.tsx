@@ -66,7 +66,7 @@ export function CareerTemplate() {
             <FadeIn>
                 <div className="flex items-center gap-3 mb-6">
                     <div className="h-[1px] w-8 bg-[var(--color-primary)]" />
-                    <span className="text-xs font-bold uppercase tracking-widest text-[var(--color-primary)]">Karriere bei Dalas</span>
+                    <span className="text-xs font-bold uppercase tracking-widest text-[var(--color-primary)]">Karriere bei DALAS</span>
                 </div>
                 
                 <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.0] text-[var(--color-primary-deep)] mb-8">
