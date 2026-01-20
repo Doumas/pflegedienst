@@ -9,13 +9,6 @@ import Link from "next/link";
 import { HeroVideos } from "../components/hero-videos"; 
 import { HeroTextSlider } from "../components/hero-text-slider";
 
-// --- ORGANIC BLOB ---
-const OrganicBlob = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className={className}>
-    <path fill="currentColor" d="M44.7,-76.4C58.9,-69.2,71.8,-59.1,79.6,-46.9C87.4,-34.7,90.1,-20.4,85.8,-8.3C81.5,3.8,70.2,13.7,60.8,22.5C51.4,31.3,43.9,39,35.2,45.8C26.5,52.6,16.6,58.5,5.6,60.3C-5.4,62.1,-17.5,59.8,-28.3,53.8C-39.1,47.8,-48.6,38.1,-56.3,27.1C-64,16.1,-69.9,3.8,-70.5,-9.1C-71.1,-22,-66.4,-35.5,-56.9,-44.7C-47.4,-53.9,-33.1,-58.8,-19.5,-66.4C-5.9,-74,7,-84.3,19.3,-84.3C31.6,-84.3,43.3,-74,55,-63.5Z" transform="translate(100 100)" />
-  </svg>
-);
-
 const TEXT_SLIDES = [
   { id: 1, label: "Persönliche Nähe", description: "Wir nehmen uns Zeit für echte Begegnungen und hören zu." },
   { id: 2, label: "Fachkompetenz", description: "Stetige Fortbildung für medizinische Versorgung auf höchstem Niveau." },
@@ -47,33 +40,32 @@ export function Hero() {
   const prev = () => setCurrent((p) => (p - 1 + TEXT_SLIDES.length) % TEXT_SLIDES.length);
 
   return (
-    <section className="relative w-full pt-32 lg:pt-40 bg-white overflow-hidden flex flex-col justify-between min-h-screen">
+    // FIX: Nur Padding angepasst! pt-40 (statt pt-32) für Mobile, lg:pt-48 bleibt.
+    <section className="relative w-full pt-40 lg:pt-48 bg-white overflow-hidden flex flex-col justify-between min-h-screen">
+      
+      {/* KORREKTUR: Kein globales Hintergrund-Raster mehr! Der Textbereich bleibt weiß. */}
       
       <div className="container mx-auto px-6 relative z-10 flex-1">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 h-full items-start">
           
-          {/* LINKS: Content */}
-          <div className="flex flex-col relative z-20 pt-8 lg:pt-12">
+          {/* --- LINKS: Content (Clean White) --- */}
+          <div className="flex flex-col relative z-20">
             
-            {/* Background Blob (Creme) */}
-            <div className="absolute -top-20 -left-20 w-[140%] h-[140%] z-[-1] opacity-60 pointer-events-none">
-                 <OrganicBlob className="w-full h-full text-[var(--color-secondary)]" />
-            </div>
-
-  <div className="flex items-center gap-3 mb-6 max-w-4xl">
+            <FadeIn>
+                <div className="flex items-center gap-3 mb-6 max-w-4xl">
                     <div className="h-[1px] w-8 bg-[var(--color-primary)]" />
                     <span className="text-xs font-bold uppercase tracking-widest text-[var(--color-primary)]">Willkommen bei DALAS</span>
                 </div>            
-            <FadeIn>
+                
                 <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.0] text-[var(--color-primary-deep)] mb-6 lg:mb-8">
-                Sicherheit und Geborgenheit <span className="text-[var(--color-primary)]">Zuhause</span>
-              </h1>
+                    Sicherheit und Geborgenheit <span className="text-[var(--color-primary)]">Zuhause</span>
+                </h1>
             </FadeIn>
 
             <FadeIn delay={0.2}>
-                    <p className="text-base md:text-lg text-slate-500 font-medium leading-relaxed font-body">
-                Ob anspruchsvolle Intensivpflege oder Unterstützung im Alltag: Wir sind Ihr verlässlicher Partner in Frankfurt. Medizinisch höchst kompetent, menschlich immer nah.
-              </p>
+                <p className="text-base md:text-lg text-slate-500 font-medium leading-relaxed font-body max-w-lg mb-8">
+                    Ob anspruchsvolle Intensivpflege oder Unterstützung im Alltag: Wir sind Ihr verlässlicher Partner in Frankfurt. Medizinisch höchst kompetent, menschlich immer nah.
+                </p>
             </FadeIn>
 
             <FadeIn delay={0.3}>
@@ -87,14 +79,17 @@ export function Hero() {
             </FadeIn>
           </div>
 
-          {/* RECHTS: Video Component (Desktop) */}
-          <div className="relative w-full h-full hidden lg:block text-[var(--color-primary-deep)]">
+          {/* --- RECHTS: Video Component + Raster NUR HIER --- */}
+          <div className="relative w-full h-full hidden lg:block text-[var(--color-primary-deep)] mt-4 lg:mt-0">
              
-             {/* HIER IST DER FIX: Das Raster ist jetzt ein eigener Layer im Hintergrund */}
-             {/* Es hat opacity-15, aber der Inhalt darüber (Videos) bleibt bei 100% */}
-             <div className="absolute inset-0 bg-pattern-cross-dots opacity-15 pointer-events-none" />
+             {/* KORREKTUR: Raster nur hinter dem Video-Bereich */}
+             <div className="absolute top-0 right-0 w-full h-[90%] -z-10">
+                 <div className="w-full h-full bg-pattern-cross-dots text-[var(--color-primary)] opacity-20 scale-90" />
+             </div>
 
+             {/* Deko Kreuze passend zum Raster */}
              <Marker className="-top-4 -left-4" />
+             <div className="absolute top-1/2 -right-8 text-[var(--color-primary)] opacity-30 text-2xl select-none">+</div>
              
              {/* Wrapper z-10 damit Videos über dem Raster liegen */}
              <div className="relative z-10 h-full">
@@ -102,13 +97,11 @@ export function Hero() {
              </div>
           </div>
           
-          {/* Mobile Fallback */}
+          {/* Mobile Fallback: Original h-[350px] und mt-8 belassen */}
           <div className="lg:hidden w-full h-[350px] relative mt-8 text-[var(--color-primary-deep)]">
+             {/* Raster auch mobil nur hinter dem Video */}
+             <div className="absolute inset-0 bg-pattern-cross-dots opacity-15 pointer-events-none -z-10" />
              
-             {/* HIER EBENFALLS FIX: Separater Layer für das Raster */}
-             <div className="absolute inset-0 bg-pattern-cross-dots opacity-15 pointer-events-none" />
-
-             {/* Wrapper z-10 */}
              <div className="relative z-10 h-full">
                 <HeroVideos />
              </div>
@@ -116,11 +109,11 @@ export function Hero() {
         </div>
       </div>
 
-      {/* 2. TEXT-SLIDER BEREICH */}
+      {/* 2. TEXT-SLIDER BEREICH (Footer) - Original mt-16 belassen */}
       <div className="w-full border-t border-[var(--color-primary-deep)]/10 mt-16 lg:mt-0 bg-white relative z-30">
         <div className="container mx-auto px-6">
           <div className="flex flex-col lg:flex-row h-auto lg:h-48">
-            <div className="flex-1 py-8 lg:py-0 border-r border-[var(--color-primary-deep)]/10 lg:border-none overflow-hidden">
+            <div className="flex-1 py-8 lg:py-0 border-r border-[var(--color-primary-deep)]/10 lg:border-none overflow-hidden flex items-center">
                 <HeroTextSlider slides={TEXT_SLIDES} current={current} />
             </div>
             <div className="flex lg:flex-col border-t lg:border-t-0 lg:border-l border-[var(--color-primary-deep)]/10 h-16 lg:h-auto w-full lg:w-24 shrink-0">
@@ -128,14 +121,14 @@ export function Hero() {
                 {/* BUTTONS */}
                 <button 
                   onClick={prev} 
-                  className="flex-1 flex items-center justify-center bg-white hover:bg-white hover:text-[var(--color-primary)] transition-colors border-r lg:border-r-0 lg:border-b border-[var(--color-primary-deep)]/10 group"
+                  className="flex-1 flex items-center justify-center bg-white hover:bg-slate-50 text-[var(--color-primary-deep)] hover:text-[var(--color-primary)] transition-colors border-r lg:border-r-0 lg:border-b border-[var(--color-primary-deep)]/10 group"
                 >
                     <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
                 </button>
                 
                 <button 
                   onClick={next} 
-                  className="flex-1 flex items-center justify-center bg-white hover:bg-white hover:text-[var(--color-primary)] transition-colors group"
+                  className="flex-1 flex items-center justify-center bg-white hover:bg-slate-50 text-[var(--color-primary-deep)] hover:text-[var(--color-primary)] transition-colors group"
                 >
                     <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                 </button>

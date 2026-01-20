@@ -69,7 +69,7 @@ export function CareerTemplate() {
                     <span className="text-xs font-bold uppercase tracking-widest text-[var(--color-primary)]">Karriere bei DALAS</span>
                 </div>
                 
-                <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.0] text-[var(--color-primary-deep)] mb-8">
+                <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.0] text-[var(--color-primary-deep)] mb-6 lg:mb-8">
                     Arbeit, die <br/>
                     <span className="text-[var(--color-primary)]">Wertschätzung</span> verdient.
                 </h1>

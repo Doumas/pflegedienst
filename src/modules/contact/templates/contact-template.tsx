@@ -39,19 +39,21 @@ export function ContactTemplate() {
   };
 
   return (
-    // FIX: pt-40 (Mobile) und lg:pt-48 (Desktop) sorgen dafür, dass der Header nicht mehr überlappt
+    // FIX: Konsistentes Padding wie auf About/Services (pt-32 für Mobile, pt-48 für Desktop)
     <div className="w-full bg-white text-[var(--color-text-main)] min-h-screen pt-40 lg:pt-48 pb-24 overflow-hidden relative">
       
       {/* =====================================================================
           1. HEADER SECTION
       ===================================================================== */}
-      <section className="container mx-auto px-6 mb-24 lg:mb-32 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24 items-start lg:items-center">
+      {/* FIX: Margin-Bottom vereinheitlicht auf mb-32 */}
+      <section className="container mx-auto px-6 mb-32 relative z-10">
+        {/* FIX: items-start, damit der Text oben bündig bleibt und nicht rutscht */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-24 items-start">
             
             {/* LINKS: Headline & Intro */}
             <FadeIn>
                 {/* Deko Kreuz */}
-  <div className="flex items-center gap-3 mb-6 max-w-4xl">
+                <div className="flex items-center gap-3 mb-6 max-w-4xl">
                     <div className="h-[1px] w-8 bg-[var(--color-primary)]" />
                     <span className="text-xs font-bold uppercase tracking-widest text-[var(--color-primary)]">Kontakt mit DALAS</span>
                 </div>
