@@ -9,6 +9,13 @@ import Link from "next/link";
 import { HeroVideos } from "../components/hero-videos"; 
 import { HeroTextSlider } from "../components/hero-text-slider";
 
+// --- ORGANIC BLOB (Wieder eingefügt) ---
+const OrganicBlob = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <path fill="currentColor" d="M44.7,-76.4C58.9,-69.2,71.8,-59.1,79.6,-46.9C87.4,-34.7,90.1,-20.4,85.8,-8.3C81.5,3.8,70.2,13.7,60.8,22.5C51.4,31.3,43.9,39,35.2,45.8C26.5,52.6,16.6,58.5,5.6,60.3C-5.4,62.1,-17.5,59.8,-28.3,53.8C-39.1,47.8,-48.6,38.1,-56.3,27.1C-64,16.1,-69.9,3.8,-70.5,-9.1C-71.1,-22,-66.4,-35.5,-56.9,-44.7C-47.4,-53.9,-33.1,-58.8,-19.5,-66.4C-5.9,-74,7,-84.3,19.3,-84.3C31.6,-84.3,43.3,-74,55,-63.5Z" transform="translate(100 100)" />
+  </svg>
+);
+
 const TEXT_SLIDES = [
   { id: 1, label: "Persönliche Nähe", description: "Wir nehmen uns Zeit für echte Begegnungen und hören zu." },
   { id: 2, label: "Fachkompetenz", description: "Stetige Fortbildung für medizinische Versorgung auf höchstem Niveau." },
@@ -40,16 +47,19 @@ export function Hero() {
   const prev = () => setCurrent((p) => (p - 1 + TEXT_SLIDES.length) % TEXT_SLIDES.length);
 
   return (
-    // FIX: Nur Padding angepasst! pt-40 (statt pt-32) für Mobile, lg:pt-48 bleibt.
+    // FIX 1: Padding pt-40 (Mobile) / lg:pt-48 (Desktop)
     <section className="relative w-full pt-40 lg:pt-48 bg-white overflow-hidden flex flex-col justify-between min-h-screen">
-      
-      {/* KORREKTUR: Kein globales Hintergrund-Raster mehr! Der Textbereich bleibt weiß. */}
       
       <div className="container mx-auto px-6 relative z-10 flex-1">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 h-full items-start">
           
-          {/* --- LINKS: Content (Clean White) --- */}
+          {/* --- LINKS: Content --- */}
           <div className="flex flex-col relative z-20">
+            
+            {/* WIEDERHERGESTELLT: Background Blob - Absolut positioniert, verschiebt nichts! */}
+            <div className="absolute -top-20 -left-20 w-[140%] h-[140%] z-[-1] opacity-50 pointer-events-none mix-blend-multiply">
+                 <OrganicBlob className="w-full h-full text-[var(--color-secondary)]" />
+            </div>
             
             <FadeIn>
                 <div className="flex items-center gap-3 mb-6 max-w-4xl">
@@ -82,7 +92,7 @@ export function Hero() {
           {/* --- RECHTS: Video Component + Raster NUR HIER --- */}
           <div className="relative w-full h-full hidden lg:block text-[var(--color-primary-deep)] mt-4 lg:mt-0">
              
-             {/* KORREKTUR: Raster nur hinter dem Video-Bereich */}
+             {/* Raster nur hinter dem Video-Bereich */}
              <div className="absolute top-0 right-0 w-full h-[90%] -z-10">
                  <div className="w-full h-full bg-pattern-cross-dots text-[var(--color-primary)] opacity-20 scale-90" />
              </div>

@@ -43,7 +43,7 @@ const CONTACT_DETAILS = [
     label: "Zentrale Frankfurt",
     value: "Borsigallee 37, 60388 Frankfurt am Main",
     sub: "Besuche nach Terminvereinbarung",
-    href: "https://maps.google.com/?q=Borsigallee+37,+60388+Frankfurt+am+Main", // Link gefixt
+    href: "https://maps.google.com/?q=Borsigallee+37,+60388+Frankfurt+am+Main",
     icon: MapPin
   },
   {
@@ -120,14 +120,13 @@ export function ContactGridSection() {
 
       {/* --- TEIL 2: DIE LISTE (Details) --- */}
       {/* BACKGROUND PASTELL GRÜN */}
-      <div className="relative w-full bg-[var(--color-primary)]/10 py-24 lg:py-32 border-t border-[var(--color-primary)]/10">
+      <div className="relative w-full bg-[var(--color-primary)]/10 py-24 lg:py-32 border-t border-[var(--color-primary)]/10 overflow-hidden">
         
-        {/* --- HINTERGRUND DEKO (Punkte + Watermark) --- */}
-        <div className="absolute inset-0 pointer-events-none opacity-40">
-           {/* Das Raster aus Punkten (aus globals.css) */}
-           <div className="absolute inset-0 bg-pattern-cross-dots opacity-30 text-[var(--color-primary)]" />
+        {/* --- HINTERGRUND DEKO (Clean) --- */}
+        <div className="absolute inset-0 pointer-events-none">
+           {/* FIX: RASTER KOMPLETT ENTFERNT */}
            
-           {/* Watermark Icon (Map Pin oder Logo Fragment) rechts unten */}
+           {/* Watermark Icon rechts unten bleibt */}
            <MapPin className="absolute -bottom-12 -right-12 w-96 h-96 text-[var(--color-primary)] opacity-[0.05] rotate-12" />
         </div>
 
