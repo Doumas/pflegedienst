@@ -34,11 +34,13 @@ export function StatsSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-0 items-center">
           
           {/* --- LINKS: DIE RIESIGE ZAHL --- */}
-          <div className="flex flex-col justify-center items-center lg:items-start lg:pr-20 border-b lg:border-b-0 lg:border-r border-white/10 pb-16 lg:pb-0 h-full">
+          {/* FIX: pr-20 reduziert auf pr-12 für Laptops, damit mehr Platz bleibt */}
+          <div className="flex flex-col justify-center items-center lg:items-start lg:pr-12 xl:pr-20 border-b lg:border-b-0 lg:border-r border-white/10 pb-16 lg:pb-0 h-full">
             <FadeIn>
                 <div className="relative">
                     {/* WIEDER GRÜN (Primary) */}
-                    <span className="block text-[7rem] sm:text-[10rem] lg:text-[13rem] font-bold leading-[0.8] tracking-tighter text-[var(--color-primary)]">
+                    {/* FIX: Schriftgröße responsive angepasst (10rem bei lg, 13rem erst bei xl) */}
+                    <span className="block text-[7rem] sm:text-[10rem] lg:text-[10rem] xl:text-[13rem] font-bold leading-[0.8] tracking-tighter text-[var(--color-primary)]">
                         24/7
                     </span>
                     <span className="absolute -bottom-6 right-2 text-xs lg:text-sm font-bold uppercase tracking-[0.3em] text-white/50">
@@ -55,17 +57,21 @@ export function StatsSection() {
           </div>
 
           {/* --- RECHTS: TEXT INHALT --- */}
-          <div className="flex flex-col justify-center lg:pl-24 h-full pt-4 lg:pt-0">
+          {/* FIX: Padding angepasst (pl-12 bei lg, pl-24 erst bei xl) */}
+          <div className="flex flex-col justify-center lg:pl-12 xl:pl-24 h-full pt-4 lg:pt-0">
              <FadeIn delay={0.3}>
-                {/* WICHTIG: 'text-white' hinzugefügt, damit der Haupttext auf dem dunklen Hintergrund sichtbar ist */}
                 <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.1] mb-12 text-white">
                     Mehr als nur Pflege. <br/>
-                    {/* WIEDER GRÜN (Primary) */}
                     <span className="text-[var(--color-primary)]">Verantwortung.</span>
                 </h2>
              </FadeIn>
 
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+             {/* FIX DES LAYOUT PROBLEMS:
+                 1. md:grid-cols-2 -> Auf Tablets (volle Breite) 2 Spalten.
+                 2. lg:grid-cols-1 -> Auf kleinen Desktops (halbe Breite) 1 Spalte (STABILITÄT!).
+                 3. xl:grid-cols-2 -> Auf großen Desktops wieder 2 Spalten.
+             */}
+             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-8 lg:gap-12">
                 <FadeIn delay={0.4}>
                     <p className="text-lg text-white/90 leading-relaxed font-medium">
                         Wir wissen, dass die Entscheidung für einen Pflegedienst Vertrauenssache ist. 
@@ -82,7 +88,6 @@ export function StatsSection() {
                     
                     {/* Kleiner Footer im Textblock */}
                     <div className="pt-6 border-t border-white/10 flex items-center gap-4">
-                        {/* Auch hier wieder Grün für Konsistenz */}
                         <div className="w-2 h-2 rounded-full bg-[var(--color-primary)] animate-pulse" />
                         <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-primary)]">
                             Qualität aus Frankfurt

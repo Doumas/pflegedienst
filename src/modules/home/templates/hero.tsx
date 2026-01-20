@@ -5,16 +5,8 @@ import { ArrowLeft, ArrowRight, ArrowRight as LinkArrow } from "lucide-react";
 import { FadeIn } from "@/shared/ui/fade-in";
 import Link from "next/link";
 
-// Deine existierenden Komponenten
 import { HeroVideos } from "../components/hero-videos"; 
 import { HeroTextSlider } from "../components/hero-text-slider";
-
-// --- ORGANIC BLOB (Wieder eingefügt) ---
-const OrganicBlob = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className={className}>
-    <path fill="currentColor" d="M44.7,-76.4C58.9,-69.2,71.8,-59.1,79.6,-46.9C87.4,-34.7,90.1,-20.4,85.8,-8.3C81.5,3.8,70.2,13.7,60.8,22.5C51.4,31.3,43.9,39,35.2,45.8C26.5,52.6,16.6,58.5,5.6,60.3C-5.4,62.1,-17.5,59.8,-28.3,53.8C-39.1,47.8,-48.6,38.1,-56.3,27.1C-64,16.1,-69.9,3.8,-70.5,-9.1C-71.1,-22,-66.4,-35.5,-56.9,-44.7C-47.4,-53.9,-33.1,-58.8,-19.5,-66.4C-5.9,-74,7,-84.3,19.3,-84.3C31.6,-84.3,43.3,-74,55,-63.5Z" transform="translate(100 100)" />
-  </svg>
-);
 
 const TEXT_SLIDES = [
   { id: 1, label: "Persönliche Nähe", description: "Wir nehmen uns Zeit für echte Begegnungen und hören zu." },
@@ -47,20 +39,13 @@ export function Hero() {
   const prev = () => setCurrent((p) => (p - 1 + TEXT_SLIDES.length) % TEXT_SLIDES.length);
 
   return (
-    // FIX 1: Padding pt-40 (Mobile) / lg:pt-48 (Desktop)
     <section className="relative w-full pt-40 lg:pt-48 bg-white overflow-hidden flex flex-col justify-between min-h-screen">
       
       <div className="container mx-auto px-6 relative z-10 flex-1">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 h-full items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 h-full items-center">
           
           {/* --- LINKS: Content --- */}
           <div className="flex flex-col relative z-20">
-            
-            {/* WIEDERHERGESTELLT: Background Blob - Absolut positioniert, verschiebt nichts! */}
-            <div className="absolute -top-20 -left-20 w-[140%] h-[140%] z-[-1] opacity-50 pointer-events-none mix-blend-multiply">
-                 <OrganicBlob className="w-full h-full text-[var(--color-secondary)]" />
-            </div>
-            
             <FadeIn>
                 <div className="flex items-center gap-3 mb-6 max-w-4xl">
                     <div className="h-[1px] w-8 bg-[var(--color-primary)]" />
@@ -89,65 +74,62 @@ export function Hero() {
             </FadeIn>
           </div>
 
-          {/* --- RECHTS: Video Component + Raster NUR HIER --- */}
-          <div className="relative w-full h-full hidden lg:block text-[var(--color-primary-deep)] mt-4 lg:mt-0">
+          {/* --- RECHTS: Video Component (Desktop) --- */}
+          <div className="relative w-full hidden lg:block text-[var(--color-primary-deep)] mt-4 lg:mt-0">
              
-             {/* Raster nur hinter dem Video-Bereich */}
-             <div className="absolute top-0 right-0 w-full h-[90%] -z-10">
-                 <div className="w-full h-full bg-pattern-cross-dots text-[var(--color-primary)] opacity-20 scale-90" />
+             {/* FIX: Muster jetzt "left-0", damit es hinter dem linksbündigen Video liegt */}
+             <div className="absolute top-0 left-0 w-full max-w-[650px] h-[90%] -z-10">
+                 <div className="w-full h-full bg-pattern-cross-dots text-slate-300 opacity-40 scale-90" />
              </div>
 
-             {/* Deko Kreuze passend zum Raster */}
+             {/* Marker bleibt so auch schön in der Nähe */}
              <Marker className="-top-4 -left-4" />
-             <div className="absolute top-1/2 -right-8 text-[var(--color-primary)] opacity-30 text-2xl select-none">+</div>
              
-             {/* Wrapper z-10 damit Videos über dem Raster liegen */}
+             {/* Das Plus schieben wir etwas weiter nach links, damit es nicht "abhaut" (war -right-8) */}
+             <div className="absolute top-1/2 right-12 text-[var(--color-primary)] opacity-30 text-2xl select-none">+</div>
+             
              <div className="relative z-10 h-full">
                 <HeroVideos />
              </div>
           </div>
           
-          {/* Mobile Fallback: Original h-[350px] und mt-8 belassen */}
-          <div className="lg:hidden w-full h-[350px] relative mt-8 text-[var(--color-primary-deep)]">
-             {/* Raster auch mobil nur hinter dem Video */}
-             <div className="absolute inset-0 bg-pattern-cross-dots opacity-15 pointer-events-none -z-10" />
+          {/* --- MOBILE FALLBACK --- */}
+          <div className="lg:hidden w-full relative mt-16 text-[var(--color-primary-deep)]">
+             <div className="absolute inset-0 -z-10 max-w-[550px] mx-auto left-0 right-0">
+                 <div className="w-full h-full bg-pattern-cross-dots text-slate-300 opacity-30" />
+             </div>
              
-             <div className="relative z-10 h-full">
+             <div className="relative z-10">
                 <HeroVideos />
              </div>
           </div>
         </div>
       </div>
 
-      {/* 2. TEXT-SLIDER BEREICH (Footer) - Original mt-16 belassen */}
-      <div className="w-full border-t border-[var(--color-primary-deep)]/10 mt-16 lg:mt-0 bg-white relative z-30">
+      {/* 2. TEXT-SLIDER BEREICH (Footer) */}
+      <div className="w-full border-t border-[var(--color-primary-deep)]/10 mt-32 lg:mt-24 bg-white relative z-30">
         <div className="container mx-auto px-6">
           <div className="flex flex-col lg:flex-row h-auto lg:h-48">
             <div className="flex-1 py-8 lg:py-0 border-r border-[var(--color-primary-deep)]/10 lg:border-none overflow-hidden flex items-center">
                 <HeroTextSlider slides={TEXT_SLIDES} current={current} />
             </div>
             <div className="flex lg:flex-col border-t lg:border-t-0 lg:border-l border-[var(--color-primary-deep)]/10 h-16 lg:h-auto w-full lg:w-24 shrink-0">
-                
-                {/* BUTTONS */}
                 <button 
                   onClick={prev} 
                   className="flex-1 flex items-center justify-center bg-white hover:bg-slate-50 text-[var(--color-primary-deep)] hover:text-[var(--color-primary)] transition-colors border-r lg:border-r-0 lg:border-b border-[var(--color-primary-deep)]/10 group"
                 >
                     <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
                 </button>
-                
                 <button 
                   onClick={next} 
                   className="flex-1 flex items-center justify-center bg-white hover:bg-slate-50 text-[var(--color-primary-deep)] hover:text-[var(--color-primary)] transition-colors group"
                 >
                     <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                 </button>
-
             </div>
           </div>
         </div>
       </div>
-
     </section>
   );
 }
